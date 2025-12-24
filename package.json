@@ -4,6 +4,7 @@
   "description": "sistema version uno para la dminstracion de rifas, contiene esta version los modulos de pagos y gastos",
   "main": "index.js",
   "scripts": {
+    "start": "node src/index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -21,5 +22,11 @@
   "bugs": {
     "url": "https://github.com/WAYNE120804/sarc/issues"
   },
-  "homepage": "https://github.com/WAYNE120804/sarc#readme"
+  "homepage": "https://github.com/WAYNE120804/sarc#readme",
+  "dependencies": {
+    "express": "^4.19.2",
+    "pg": "^8.11.5",
+    "pg-hstore": "^2.3.4",
+    "sequelize": "^6.37.3"
+  }
 }
