@@ -104,7 +104,7 @@ const CrearAbono = () => {
                 <option value="">Selecciona vínculo</option>
                 {state.rifaVendedores.map((rv) => (
                   <option key={rv.id} value={rv.id}>
-                    {rv.rifa_id} - {rv.vendedor_id}
+                    {rv.Rifa?.nombre} - {rv.Vendedor?.nombre}
                   </option>
                 ))}
               </select>

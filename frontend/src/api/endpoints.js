@@ -9,6 +9,7 @@ export const endpoints = {
   vincularVendedor: () => '/rifa-vendedores/vincular',
   asignarBoletas: (id) => `/rifa-vendedores/${id}/asignar-boletas`,
   quitarBoletas: (id) => `/rifa-vendedores/${id}/quitar-boletas`,
+  asignacionesHistory: (id) => `/rifaVendedor/${id}/asignaciones`,
   abonosByRifaVendedor: (rifaVendedorId) => `/rifa-vendedores/${rifaVendedorId}/abonos`,
   crearAbono: (rifaVendedorId) => `/rifa-vendedores/${rifaVendedorId}/abonos`,
   cajas: () => '/cajas',

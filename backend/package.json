@@ -1,0 +1,38 @@
+{
+  "name": "sistema_administrador_rifas_chinchina",
+  "version": "1.0.0",
+  "description": "sistema version uno para la dminstracion de rifas, contiene esta version los modulos de pagos y gastos",
+  "main": "index.js",
+  "scripts": {
+    "start": "node src/index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/WAYNE120804/sarc.git"
+  },
+  "keywords": [
+    "rifas",
+    "administracion",
+    "contabilidad",
+    "vendedores"
+  ],
+  "author": "jhon sebastian diaz villa",
+  "license": "UNLICENSED",
+  "bugs": {
+    "url": "https://github.com/WAYNE120804/sarc/issues"
+  },
+  "homepage": "https://github.com/WAYNE120804/sarc#readme",
+  "dependencies": {
+    "@prisma/client": "^7.5.0",
+    "cors": "^2.8.5",
+    "express": "^4.19.2",
+    "pg": "^8.11.5",
+    "pg-hstore": "^2.3.4",
+    "sequelize": "^6.37.3"
+  },
+  "devDependencies": {
+    "@types/node": "^25.5.0",
+    "prisma": "^7.5.0"
+  }
+}

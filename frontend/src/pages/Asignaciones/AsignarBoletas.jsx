@@ -59,6 +59,19 @@ const AsignarBoletas = () => {
     loadData();
   }, []);
 
+  // Update effect to auto-calculate price
+  useEffect(() => {
+    if (linkForm.rifa_id && linkForm.comision_pct >= 0) {
+      const rifa = state.rifas.find(r => r.id === linkForm.rifa_id);
+      if (rifa) {
+        const precioBoleta = rifa.precio_boleta;
+        const comision = (precioBoleta * linkForm.comision_pct) / 100;
+        const precioCasa = precioBoleta - comision;
+        setLinkForm(prev => ({ ...prev, precio_casa: precioCasa }));
+      }
+    }
+  }, [linkForm.rifa_id, linkForm.comision_pct, state.rifas]);
+
   const selectedRifaVendedor = useMemo(() => {
     return state.rifaVendedores.find((rv) => rv.id === form.rifa_vendedor_id);
   }, [state.rifaVendedores, form.rifa_vendedor_id]);
@@ -124,7 +137,7 @@ const AsignarBoletas = () => {
                   <option value="">Selecciona un vínculo</option>
                   {state.rifaVendedores.map((rv) => (
                     <option key={rv.id} value={rv.id}>
-                      {rv.rifa_id} - {rv.vendedor_id}
+                      {rv.Rifa?.nombre} - {rv.Vendedor?.nombre}
                     </option>
                   ))}
                 </select>
@@ -186,59 +199,66 @@ const AsignarBoletas = () => {
 
             <form onSubmit={handleVincular} className="space-y-4 rounded-lg bg-white p-6 shadow-sm">
               <h3 className="text-base font-semibold">Vincular vendedor a rifa</h3>
-              <label className="block text-sm">
-                <span className="text-slate-600">Rifa</span>
-                <select
-                  className="mt-1 w-full rounded-md border border-slate-300 px-3 py-2"
-                  value={linkForm.rifa_id}
-                  onChange={(event) => setLinkForm((prev) => ({ ...prev, rifa_id: event.target.value }))}
-                  required
-                >
-                  <option value="">Selecciona una rifa</option>
-                  {state.rifas.map((rifa) => (
-                    <option key={rifa.id} value={rifa.id}>
-                      {rifa.nombre}
-                    </option>
-                  ))}
-                </select>
-              </label>
-              <label className="block text-sm">
-                <span className="text-slate-600">Vendedor</span>
-                <select
-                  className="mt-1 w-full rounded-md border border-slate-300 px-3 py-2"
-                  value={linkForm.vendedor_id}
-                  onChange={(event) => setLinkForm((prev) => ({ ...prev, vendedor_id: event.target.value }))}
-                  required
-                >
-                  <option value="">Selecciona un vendedor</option>
-                  {state.vendedores.map((vendedor) => (
-                    <option key={vendedor.id} value={vendedor.id}>
-                      {vendedor.nombre}
-                    </option>
-                  ))}
-                </select>
-              </label>
-              <label className="block text-sm">
-                <span className="text-slate-600">Comisión (%)</span>
-                <input
-                  type="number"
-                  className="mt-1 w-full rounded-md border border-slate-300 px-3 py-2"
-                  value={linkForm.comision_pct}
-                  onChange={(event) => setLinkForm((prev) => ({ ...prev, comision_pct: event.target.value }))}
-                />
-              </label>
-              <label className="block text-sm">
-                <span className="text-slate-600">Precio casa</span>
-                <input
-                  type="number"
-                  className="mt-1 w-full rounded-md border border-slate-300 px-3 py-2"
-                  value={linkForm.precio_casa}
-                  onChange={(event) => setLinkForm((prev) => ({ ...prev, precio_casa: event.target.value }))}
-                  required
-                />
-              </label>
-              <button className="rounded-md bg-slate-900 px-4 py-2 text-sm text-white" type="submit">
-                Vincular
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <label className="block text-sm">
+                  <span className="text-slate-600">Rifa</span>
+                  <select
+                    className="mt-1 w-full rounded-md border border-slate-300 px-3 py-2"
+                    value={linkForm.rifa_id}
+                    onChange={(event) => setLinkForm((prev) => ({ ...prev, rifa_id: event.target.value }))}
+                    required
+                  >
+                    <option value="">Selecciona una rifa</option>
+                    {state.rifas.map((rifa) => (
+                      <option key={rifa.id} value={rifa.id}>
+                        {rifa.nombre} (${rifa.precio_boleta?.toLocaleString()})
+                      </option>
+                    ))}
+                  </select>
+                </label>
+                <label className="block text-sm">
+                  <span className="text-slate-600">Vendedor</span>
+                  <select
+                    className="mt-1 w-full rounded-md border border-slate-300 px-3 py-2"
+                    value={linkForm.vendedor_id}
+                    onChange={(event) => setLinkForm((prev) => ({ ...prev, vendedor_id: event.target.value }))}
+                    required
+                  >
+                    <option value="">Selecciona un vendedor</option>
+                    {state.vendedores.map((vendedor) => (
+                      <option key={vendedor.id} value={vendedor.id}>
+                        {vendedor.nombre}
+                      </option>
+                    ))}
+                  </select>
+                </label>
+                <label className="block text-sm">
+                  <span className="text-slate-600">Comisión (%)</span>
+                  <div className="flex items-center gap-2">
+                    <input
+                      type="number"
+                      className="mt-1 w-full rounded-md border border-slate-300 px-3 py-2"
+                      value={linkForm.comision_pct}
+                      onChange={(event) => setLinkForm((prev) => ({ ...prev, comision_pct: event.target.value }))}
+                      min="0"
+                      max="100"
+                    />
+                  </div>
+                </label>
+                <label className="block text-sm">
+                  <span className="text-slate-600">Precio a pagar a la Casa (por boleta)</span>
+                  <input
+                    type="number"
+                    className="mt-1 w-full rounded-md border border-slate-300 px-3 py-2 bg-slate-100 font-semibold text-slate-700"
+                    value={linkForm.precio_casa}
+                    onChange={(event) => setLinkForm((prev) => ({ ...prev, precio_casa: event.target.value }))}
+                    required
+                  />
+                  <p className="text-xs text-slate-400 mt-1">Calculado automáticamente: Precio Boleta - Comisión</p>
+                </label>
+              </div>
+              <button className="rounded-md bg-slate-900 px-4 py-2 text-sm text-white w-full md:w-auto" type="submit">
+                Vincular Nuevo
               </button>
             </form>
           </div>
