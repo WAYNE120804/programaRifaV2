@@ -1,38 +1,42 @@
 {
-  "name": "sistema_administrador_rifas_chinchina",
-  "version": "1.0.0",
-  "description": "sistema version uno para la dminstracion de rifas, contiene esta version los modulos de pagos y gastos",
-  "main": "index.js",
+  "name": "rifas-backend",
+  "version": "2.0.0",
+  "description": "Backend del sistema de rifas reconstruido sobre Express y Prisma",
+  "main": "dist/index.js",
   "scripts": {
-    "start": "node src/index.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/WAYNE120804/sarc.git"
+    "dev": "tsx watch src/index.ts",
+    "build": "tsc -p tsconfig.json",
+    "typecheck": "tsc --noEmit -p tsconfig.json",
+    "start": "node dist/index.js",
+    "prisma:generate": "prisma generate",
+    "prisma:migrate": "prisma migrate dev",
+    "prisma:studio": "prisma studio",
+    "db:purge:all": "prisma db execute --file prisma/purge-all.sql --schema prisma/schema.prisma",
+    "config:reset": "node scripts/reset-config.cjs",
+    "dev:reset:all": "npm run db:purge:all && npm run config:reset",
+    "test": "node -e \"console.log('No hay tests automatizados todavia')\""
   },
   "keywords": [
     "rifas",
-    "administracion",
-    "contabilidad",
-    "vendedores"
+    "prisma",
+    "express",
+    "postgresql"
   ],
   "author": "jhon sebastian diaz villa",
   "license": "UNLICENSED",
-  "bugs": {
-    "url": "https://github.com/WAYNE120804/sarc/issues"
-  },
-  "homepage": "https://github.com/WAYNE120804/sarc#readme",
   "dependencies": {
-    "@prisma/client": "^7.5.0",
+    "@prisma/client": "6.12.0",
     "cors": "^2.8.5",
+    "dotenv": "^17.2.3",
     "express": "^4.19.2",
-    "pg": "^8.11.5",
-    "pg-hstore": "^2.3.4",
-    "sequelize": "^6.37.3"
+    "pg": "^8.11.5"
   },
   "devDependencies": {
+    "@types/cors": "^2.8.19",
+    "@types/express": "^5.0.6",
     "@types/node": "^25.5.0",
-    "prisma": "^7.5.0"
+    "prisma": "6.12.0",
+    "tsx": "^4.21.0",
+    "typescript": "^6.0.2"
   }
 }

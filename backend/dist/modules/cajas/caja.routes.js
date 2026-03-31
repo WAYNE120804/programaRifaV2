@@ -1,0 +1,13 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.subCajaRouter = exports.cajaRouter = void 0;
+const express_1 = require("express");
+const caja_controller_1 = require("./caja.controller");
+exports.cajaRouter = (0, express_1.Router)();
+exports.subCajaRouter = (0, express_1.Router)();
+exports.cajaRouter.get('/', caja_controller_1.getAllCajas);
+exports.cajaRouter.get('/resumen', caja_controller_1.getCajaResumen);
+exports.cajaRouter.get('/:id', caja_controller_1.getCaja);
+exports.subCajaRouter.get('/', caja_controller_1.getSubCajas);
+exports.subCajaRouter.post('/', caja_controller_1.postSubCaja);
+exports.subCajaRouter.delete('/:id', caja_controller_1.removeSubCaja);

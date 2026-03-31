@@ -1,0 +1,11 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.rifaRouter = void 0;
+const express_1 = require("express");
+const rifa_controller_1 = require("./rifa.controller");
+exports.rifaRouter = (0, express_1.Router)();
+exports.rifaRouter.get('/', rifa_controller_1.getAllRifas);
+exports.rifaRouter.get('/:id', rifa_controller_1.getRifa);
+exports.rifaRouter.post('/', rifa_controller_1.postRifa);
+exports.rifaRouter.put('/:id', rifa_controller_1.putRifa);
+exports.rifaRouter.delete('/:id', rifa_controller_1.removeRifa);

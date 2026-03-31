@@ -6,6 +6,101 @@ body {
   font-family: 'Inter', system-ui, sans-serif;
 }
 
+.app-shell {
+  --sidebar-bg: #ffffff;
+  --sidebar-button-bg: #ffffff;
+  --sidebar-button-text: #334155;
+  --sidebar-active-bg: #e2e8f0;
+  --sidebar-active-text: #0f172a;
+  --topbar-bg: #ffffff;
+  --topbar-text: #0f172a;
+  --section-title-text: #0f172a;
+  --section-subtitle-text: #64748b;
+  --summary-label-text: #94a3b8;
+  --summary-value-text: #0f172a;
+  --table-header-bg: #f1f5f9;
+  --table-header-text: #475569;
+}
+
+.theme-sidebar {
+  background: var(--sidebar-bg);
+}
+
+.theme-sidebar-link {
+  background: var(--sidebar-button-bg);
+  color: var(--sidebar-button-text);
+}
+
+.theme-sidebar-link:hover {
+  filter: brightness(0.98);
+}
+
+.theme-sidebar-link-active {
+  background: var(--sidebar-active-bg);
+  color: var(--sidebar-active-text);
+}
+
+.theme-topbar {
+  background: var(--topbar-bg);
+  color: var(--topbar-text);
+}
+
+.theme-topbar h2,
+.theme-topbar a,
+.theme-topbar button,
+.theme-topbar span {
+  color: inherit;
+}
+
+.theme-table-head {
+  background: var(--table-header-bg);
+  color: var(--table-header-text);
+}
+
+.theme-main-title {
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.theme-content-title {
+  color: var(--section-title-text);
+}
+
+.theme-content-subtitle {
+  color: var(--section-subtitle-text);
+}
+
+.theme-nav-label {
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  font-weight: 600;
+}
+
+.theme-section-card {
+  background: color-mix(in srgb, var(--topbar-bg) 5%, white);
+  border: 1px solid color-mix(in srgb, var(--topbar-bg) 14%, #e2e8f0);
+}
+
+.theme-summary-card {
+  background: color-mix(in srgb, var(--topbar-bg) 9%, white);
+  border: 1px solid color-mix(in srgb, var(--topbar-bg) 18%, #cbd5e1);
+}
+
+.theme-summary-label {
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  font-size: 0.75rem;
+  color: var(--summary-label-text);
+}
+
+.theme-summary-value {
+  color: var(--summary-value-text);
+}
+
+.receipt-ticket {
+  border: 1px dashed #cbd5e1;
+}
+
 @media print {
   body {
     background: white;
@@ -18,8 +113,10 @@ body {
   }
 
   .receipt-ticket {
-    width: 280px;
+    width: 302px;
     margin: 0 auto;
     box-shadow: none;
+    border: 0;
+    border-radius: 0;
   }
 }

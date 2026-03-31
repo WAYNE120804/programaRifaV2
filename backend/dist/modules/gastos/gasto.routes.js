@@ -1,0 +1,10 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.gastoRouter = void 0;
+const express_1 = require("express");
+const gasto_controller_1 = require("./gasto.controller");
+exports.gastoRouter = (0, express_1.Router)();
+exports.gastoRouter.get('/', gasto_controller_1.getAllGastos);
+exports.gastoRouter.get('/:id', gasto_controller_1.getGasto);
+exports.gastoRouter.post('/', gasto_controller_1.postGasto);
+exports.gastoRouter.post('/:id/anular', gasto_controller_1.postAnularGasto);

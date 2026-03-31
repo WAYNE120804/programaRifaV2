@@ -1,0 +1,12 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.premioRouter = void 0;
+const express_1 = require("express");
+const premio_controller_1 = require("./premio.controller");
+exports.premioRouter = (0, express_1.Router)();
+exports.premioRouter.get('/', premio_controller_1.getPremiosByRifa);
+exports.premioRouter.get('/:id', premio_controller_1.getPremio);
+exports.premioRouter.post('/', premio_controller_1.postPremio);
+exports.premioRouter.put('/:id', premio_controller_1.putPremio);
+exports.premioRouter.put('/:id/boletas', premio_controller_1.putPremioBoletas);
+exports.premioRouter.delete('/:id', premio_controller_1.removePremio);

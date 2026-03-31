@@ -1,0 +1,528 @@
+generator client {
+  provider   = "prisma-client-js"
+  engineType = "binary"
+  output     = "../generated/prisma-client"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+//////////////////////////////////////
+// ENUMS
+//////////////////////////////////////
+
+enum RolUsuario {
+  ADMIN
+  VENDEDOR
+  CAJERO
+}
+
+enum EstadoRifa {
+  BORRADOR
+  ACTIVA
+  CERRADA
+  SORTEADA
+  ANULADA
+}
+
+enum EstadoBoleta {
+  DISPONIBLE
+  ASIGNADA
+  RESERVADA
+  VENDIDA
+  PAGADA
+  DEVUELTA
+  ANULADA
+}
+
+enum EstadoVenta {
+  PENDIENTE
+  ABONANDO
+  PAGADA
+  CANCELADA
+}
+
+enum TipoMovimientoCaja {
+  INGRESO
+  EGRESO
+}
+
+enum MetodoPago {
+  EFECTIVO
+  NEQUI
+  DAVIPLATA
+  TRANSFERENCIA
+}
+
+enum EstadoPago {
+  PENDIENTE
+  CONFIRMADO
+  RECHAZADO
+}
+
+enum TipoPremio {
+  MAYOR
+  ANTICIPADO
+}
+
+enum DestinoDevolucion {
+  DISPONIBLE
+  FUERA_CIRCULACION
+}
+
+enum CategoriaGasto {
+  SUELDOS
+  PUBLICIDAD
+  ARRIENDO
+  SERVICIOS_PUBLICOS
+  GASOLINA_TRANSPORTE
+  IMPRESION_PAPELERIA
+  PREMIOS_LOGISTICA
+  MANTENIMIENTO
+  COMISIONES_BANCARIAS
+  OTROS
+}
+
+//////////////////////////////////////
+// CONFIGURACION
+//////////////////////////////////////
+
+model ConfiguracionSistema {
+  id                           String   @id @default(cuid())
+  clave                        String   @unique @default("principal")
+  nombreCasaRifera             String   @default("Rifas Admin")
+  logoDataUrl                  String?  @db.Text
+  responsableNombre            String?
+  responsableTelefono          String?
+  responsableDireccion         String?
+  responsableCiudad            String?
+  responsableDepartamento      String?
+  numeroResolucionAutorizacion String?
+  entidadAutoriza              String?
+  createdAt                    DateTime @default(now())
+  updatedAt                    DateTime @updatedAt
+}
+
+//////////////////////////////////////
+// USUARIO
+//////////////////////////////////////
+
+model Usuario {
+  id        String     @id @default(cuid())
+  nombre    String
+  email     String     @unique
+  password  String
+  rol       RolUsuario
+  activo    Boolean    @default(true)
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+
+  rifasCreadas  Rifa[] @relation("RifaCreatedBy")
+  rifasEditadas Rifa[] @relation("RifaUpdatedBy")
+
+  asignaciones AsignacionBoletas[]
+  movimientos  MovimientoCaja[]
+}
+
+//////////////////////////////////////
+// RIFA
+//////////////////////////////////////
+
+model Rifa {
+  id            String     @id @default(cuid())
+  nombre        String
+  loteriaNombre String     @default("Sin definir")
+  numeroCifras  Int        @default(4)
+  fechaInicio   DateTime
+  fechaFin      DateTime
+  precioBoleta  Decimal    @db.Decimal(10, 2)
+  estado        EstadoRifa @default(BORRADOR)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  createdById String?
+  updatedById String?
+
+  createdBy Usuario? @relation("RifaCreatedBy", fields: [createdById], references: [id])
+  updatedBy Usuario? @relation("RifaUpdatedBy", fields: [updatedById], references: [id])
+
+  boletas     Boleta[]
+  vendedores  RifaVendedor[]
+  ventas      Venta[]
+  gastos      Gasto[]
+  cajas       Caja[]
+  movimientos MovimientoCaja[]
+  premios     Premio[]
+
+  @@index([estado])
+}
+
+//////////////////////////////////////
+// PREMIO
+//////////////////////////////////////
+
+model Premio {
+  id           String     @id @default(cuid())
+  rifaId       String
+  nombre       String
+  descripcion  String?
+  tipo         TipoPremio
+  mostrarValor Boolean    @default(false)
+  valor        Decimal?   @db.Decimal(12, 2)
+  fecha        DateTime
+
+  createdAt DateTime @default(now())
+
+  rifa Rifa @relation(fields: [rifaId], references: [id])
+
+  boletas BoletaPremio[]
+
+  @@index([rifaId])
+}
+
+//////////////////////////////////////
+// RELACION BOLETA - PREMIO
+//////////////////////////////////////
+
+model BoletaPremio {
+  id       String @id @default(cuid())
+  boletaId String
+  premioId String
+
+  boleta Boleta @relation(fields: [boletaId], references: [id])
+  premio Premio @relation(fields: [premioId], references: [id])
+
+  @@unique([boletaId, premioId])
+}
+
+//////////////////////////////////////
+// BOLETA
+//////////////////////////////////////
+
+model Boleta {
+  id           String       @id @default(cuid())
+  rifaId       String
+  numero       String
+  codigoBarras String?      @unique
+  estado       EstadoBoleta @default(DISPONIBLE)
+  juega        Boolean      @default(false)
+  precio       Decimal      @db.Decimal(10, 2)
+
+  rifaVendedorId String?
+  clienteId      String?
+  ventaId        String?
+
+  reservadaHasta            DateTime?
+  devueltaPorVendedorNombre String?
+  devueltaObservacion       String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  rifa         Rifa          @relation(fields: [rifaId], references: [id])
+  rifaVendedor RifaVendedor? @relation(fields: [rifaVendedorId], references: [id])
+  cliente      Cliente?      @relation(fields: [clienteId], references: [id])
+  venta        Venta?        @relation(fields: [ventaId], references: [id])
+
+  premios      BoletaPremio[]
+  asignaciones AsignacionDetalle[]
+  devoluciones DevolucionDetalle[]
+
+  @@unique([rifaId, numero])
+  @@index([estado])
+}
+
+//////////////////////////////////////
+// VENDEDORES
+//////////////////////////////////////
+
+model Vendedor {
+  id        String  @id @default(cuid())
+  nombre    String
+  telefono  String?
+  documento String?
+  direccion String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  rifas       RifaVendedor[]
+  movimientos MovimientoCaja[]
+}
+
+model RifaVendedor {
+  id         String @id @default(cuid())
+  rifaId     String
+  vendedorId String
+
+  comisionPct Decimal @db.Decimal(5, 2)
+  precioCasa  Decimal @db.Decimal(10, 2)
+  saldoActual Decimal @default(0) @db.Decimal(12, 2)
+
+  rifa     Rifa     @relation(fields: [rifaId], references: [id])
+  vendedor Vendedor @relation(fields: [vendedorId], references: [id])
+
+  asignaciones AsignacionBoletas[]
+  devoluciones DevolucionBoletas[]
+  abonos       AbonoVendedor[]
+  boletas      Boleta[]
+
+  @@unique([rifaId, vendedorId])
+  @@index([rifaId])
+}
+
+//////////////////////////////////////
+// ASIGNACION
+//////////////////////////////////////
+
+model AsignacionBoletas {
+  id             String   @id @default(cuid())
+  rifaVendedorId String
+  cantidad       Int
+  fecha          DateTime @default(now())
+
+  usuarioId String?
+
+  rifaVendedor RifaVendedor @relation(fields: [rifaVendedorId], references: [id])
+  usuario      Usuario?     @relation(fields: [usuarioId], references: [id])
+
+  detalle AsignacionDetalle[]
+}
+
+model AsignacionDetalle {
+  id           String @id @default(cuid())
+  asignacionId String
+  boletaId     String
+
+  asignacion AsignacionBoletas @relation(fields: [asignacionId], references: [id])
+  boleta     Boleta            @relation(fields: [boletaId], references: [id])
+}
+
+//////////////////////////////////////
+// DEVOLUCION
+//////////////////////////////////////
+
+model DevolucionBoletas {
+  id             String            @id @default(cuid())
+  rifaVendedorId String
+  destino        DestinoDevolucion @default(DISPONIBLE)
+  fecha          DateTime          @default(now())
+
+  rifaVendedor RifaVendedor        @relation(fields: [rifaVendedorId], references: [id])
+  detalle      DevolucionDetalle[]
+}
+
+model DevolucionDetalle {
+  id           String @id @default(cuid())
+  devolucionId String
+  boletaId     String
+
+  devolucion DevolucionBoletas @relation(fields: [devolucionId], references: [id])
+  boleta     Boleta            @relation(fields: [boletaId], references: [id])
+}
+
+//////////////////////////////////////
+// CLIENTE
+//////////////////////////////////////
+
+model Cliente {
+  id       String  @id @default(cuid())
+  nombre   String
+  email    String?
+  telefono String?
+
+  ventas      Venta[]
+  boletas     Boleta[]
+  movimientos MovimientoCaja[]
+}
+
+//////////////////////////////////////
+// VENTA
+//////////////////////////////////////
+
+model Venta {
+  id        String @id @default(cuid())
+  clienteId String
+  rifaId    String
+
+  estado         EstadoVenta @default(PENDIENTE)
+  total          Decimal     @db.Decimal(12, 2)
+  saldoPendiente Decimal     @db.Decimal(12, 2)
+
+  cliente Cliente @relation(fields: [clienteId], references: [id])
+  rifa    Rifa    @relation(fields: [rifaId], references: [id])
+
+  boletas     Boleta[]
+  pagos       PagoCliente[]
+  movimientos MovimientoCaja[]
+}
+
+//////////////////////////////////////
+// PAGOS CLIENTE
+//////////////////////////////////////
+
+model PagoCliente {
+  id         String     @id @default(cuid())
+  ventaId    String
+  monto      Decimal    @db.Decimal(12, 2)
+  fecha      DateTime   @default(now())
+  metodoPago MetodoPago
+  estado     EstadoPago @default(PENDIENTE)
+
+  venta Venta @relation(fields: [ventaId], references: [id])
+
+  movimientos MovimientoCaja[]
+}
+
+//////////////////////////////////////
+// ABONO VENDEDOR
+//////////////////////////////////////
+
+model AbonoVendedor {
+  id              String     @id @default(cuid())
+  rifaVendedorId  String
+  subCajaId       String?
+  valor           Decimal    @db.Decimal(12, 2)
+  fecha           DateTime   @default(now())
+  descripcion     String?    @db.Text
+  metodoPago      MetodoPago
+  estado          EstadoPago @default(PENDIENTE)
+  anuladoAt       DateTime?
+  anuladoMotivo   String?    @db.Text
+  saldoAnterior   Decimal    @db.Decimal(12, 2)
+  saldoDespues    Decimal    @db.Decimal(12, 2)
+  boletasActuales Int        @default(0)
+
+  rifaVendedor RifaVendedor @relation(fields: [rifaVendedorId], references: [id])
+  subCaja      SubCaja?     @relation(fields: [subCajaId], references: [id])
+  recibo       Recibo?
+
+  movimientos MovimientoCaja[]
+}
+
+//////////////////////////////////////
+// RECIBO
+//////////////////////////////////////
+
+model Recibo {
+  id          String   @id @default(cuid())
+  abonoId     String   @unique
+  consecutivo Int
+  codigoUnico String   @unique
+  fecha       DateTime @default(now())
+
+  abono AbonoVendedor @relation(fields: [abonoId], references: [id])
+}
+
+//////////////////////////////////////
+// CAJA
+//////////////////////////////////////
+
+model Caja {
+  id     String  @id @default(cuid())
+  nombre String
+  saldo  Decimal @default(0) @db.Decimal(12, 2)
+
+  rifaId String
+
+  rifa        Rifa             @relation(fields: [rifaId], references: [id])
+  subcajas    SubCaja[]
+  movimientos MovimientoCaja[]
+
+  @@unique([rifaId, nombre])
+}
+
+//////////////////////////////////////
+// SUBCAJA
+//////////////////////////////////////
+
+model SubCaja {
+  id     String  @id @default(cuid())
+  nombre String
+  saldo  Decimal @default(0) @db.Decimal(12, 2)
+
+  cajaId String
+
+  caja        Caja             @relation(fields: [cajaId], references: [id])
+  movimientos MovimientoCaja[]
+  abonos      AbonoVendedor[]
+  gastos      Gasto[]
+
+  @@unique([cajaId, nombre])
+}
+
+//////////////////////////////////////
+// MOVIMIENTO CAJA
+//////////////////////////////////////
+
+model MovimientoCaja {
+  id          String             @id @default(cuid())
+  tipo        TipoMovimientoCaja
+  valor       Decimal            @db.Decimal(12, 2)
+  descripcion String?
+  fecha       DateTime           @default(now())
+
+  cajaId    String
+  subCajaId String?
+
+  rifaId     String?
+  vendedorId String?
+  clienteId  String?
+  ventaId    String?
+  gastoId    String?
+
+  pagoClienteId   String?
+  abonoVendedorId String?
+
+  usuarioId String?
+
+  caja    Caja     @relation(fields: [cajaId], references: [id])
+  subCaja SubCaja? @relation(fields: [subCajaId], references: [id])
+
+  rifa     Rifa?     @relation(fields: [rifaId], references: [id])
+  vendedor Vendedor? @relation(fields: [vendedorId], references: [id])
+  cliente  Cliente?  @relation(fields: [clienteId], references: [id])
+  venta    Venta?    @relation(fields: [ventaId], references: [id])
+  gasto    Gasto?    @relation(fields: [gastoId], references: [id])
+
+  pagoCliente   PagoCliente?   @relation(fields: [pagoClienteId], references: [id])
+  abonoVendedor AbonoVendedor? @relation(fields: [abonoVendedorId], references: [id])
+
+  usuario Usuario? @relation(fields: [usuarioId], references: [id])
+
+  @@index([rifaId])
+}
+
+//////////////////////////////////////
+// GASTO
+//////////////////////////////////////
+
+model Gasto {
+  id            String         @id @default(cuid())
+  rifaId        String
+  subCajaId     String?
+  categoria     CategoriaGasto @default(OTROS)
+  descripcion   String
+  valor         Decimal        @db.Decimal(12, 2)
+  fecha         DateTime       @default(now())
+  anuladoAt     DateTime?
+  anuladoMotivo String?        @db.Text
+
+  rifa        Rifa             @relation(fields: [rifaId], references: [id])
+  subCaja     SubCaja?         @relation(fields: [subCajaId], references: [id])
+  movimientos MovimientoCaja[]
+  recibo      GastoRecibo?
+}
+
+model GastoRecibo {
+  id          String   @id @default(cuid())
+  gastoId     String   @unique
+  consecutivo Int
+  codigoUnico String   @unique
+  fecha       DateTime @default(now())
+
+  gasto Gasto @relation(fields: [gastoId], references: [id])
+}

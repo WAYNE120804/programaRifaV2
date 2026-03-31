@@ -1,0 +1,18 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.rifaVendedorRouter = void 0;
+const express_1 = require("express");
+const rifa_vendedor_controller_1 = require("./rifa-vendedor.controller");
+exports.rifaVendedorRouter = (0, express_1.Router)();
+exports.rifaVendedorRouter.get('/', rifa_vendedor_controller_1.getAllRifaVendedores);
+exports.rifaVendedorRouter.get('/:id/asignaciones', rifa_vendedor_controller_1.getAsignacionesRifaVendedor);
+exports.rifaVendedorRouter.post('/:id/asignaciones', rifa_vendedor_controller_1.postAsignacionRifaVendedor);
+exports.rifaVendedorRouter.get('/:id/devoluciones', rifa_vendedor_controller_1.getDevolucionesRifaVendedor);
+exports.rifaVendedorRouter.post('/:id/devoluciones', rifa_vendedor_controller_1.postDevolucionRifaVendedor);
+exports.rifaVendedorRouter.get('/:id/abonos', rifa_vendedor_controller_1.getAbonosRifaVendedor);
+exports.rifaVendedorRouter.post('/:id/abonos', rifa_vendedor_controller_1.postAbonoRifaVendedor);
+exports.rifaVendedorRouter.post('/:id/abonos/:abonoId/anular', rifa_vendedor_controller_1.postAnularAbono);
+exports.rifaVendedorRouter.get('/:id', rifa_vendedor_controller_1.getRifaVendedor);
+exports.rifaVendedorRouter.post('/', rifa_vendedor_controller_1.postRifaVendedor);
+exports.rifaVendedorRouter.put('/:id', rifa_vendedor_controller_1.putRifaVendedor);
+exports.rifaVendedorRouter.delete('/:id', rifa_vendedor_controller_1.removeRifaVendedor);

@@ -1,9 +1,12 @@
 generator client {
-  provider = "prisma-client-js"
+  provider   = "prisma-client-js"
+  engineType = "binary"
+  output     = "../generated/prisma-client"
 }
 
 datasource db {
   provider = "postgresql"
+  url      = env("DATABASE_URL")
 }
 
 //////////////////////////////////////
@@ -64,6 +67,44 @@ enum TipoPremio {
   ANTICIPADO
 }
 
+enum DestinoDevolucion {
+  DISPONIBLE
+  FUERA_CIRCULACION
+}
+
+enum CategoriaGasto {
+  SUELDOS
+  PUBLICIDAD
+  ARRIENDO
+  SERVICIOS_PUBLICOS
+  GASOLINA_TRANSPORTE
+  IMPRESION_PAPELERIA
+  PREMIOS_LOGISTICA
+  MANTENIMIENTO
+  COMISIONES_BANCARIAS
+  OTROS
+}
+
+//////////////////////////////////////
+// CONFIGURACION
+//////////////////////////////////////
+
+model ConfiguracionSistema {
+  id                           String   @id @default(cuid())
+  clave                        String   @unique @default("principal")
+  nombreCasaRifera             String   @default("Rifas Admin")
+  logoDataUrl                  String?  @db.Text
+  responsableNombre            String?
+  responsableTelefono          String?
+  responsableDireccion         String?
+  responsableCiudad            String?
+  responsableDepartamento      String?
+  numeroResolucionAutorizacion String?
+  entidadAutoriza              String?
+  createdAt                    DateTime @default(now())
+  updatedAt                    DateTime @updatedAt
+}
+
 //////////////////////////////////////
 // USUARIO
 //////////////////////////////////////
@@ -92,6 +133,8 @@ model Usuario {
 model Rifa {
   id           String     @id @default(cuid())
   nombre       String
+  loteriaNombre String     @default("Sin definir")
+  numeroCifras Int        @default(4)
   fechaInicio  DateTime
   fechaFin     DateTime
   precioBoleta Decimal    @db.Decimal(10,2)
@@ -125,8 +168,10 @@ model Premio {
   id        String      @id @default(cuid())
   rifaId    String
   nombre    String
+  descripcion String?
   tipo      TipoPremio
-  valor     Decimal     @db.Decimal(12,2)
+  mostrarValor Boolean  @default(false)
+  valor     Decimal?    @db.Decimal(12,2)
   fecha     DateTime
 
   createdAt DateTime @default(now())
@@ -163,6 +208,7 @@ model Boleta {
   numero       String
   codigoBarras String?      @unique
   estado       EstadoBoleta @default(DISPONIBLE)
+  juega        Boolean      @default(false)
   precio       Decimal      @db.Decimal(10,2)
 
   rifaVendedorId String?
@@ -170,6 +216,8 @@ model Boleta {
   ventaId        String?
 
   reservadaHasta DateTime?
+  devueltaPorVendedorNombre String?
+  devueltaObservacion       String?
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -223,6 +271,7 @@ model RifaVendedor {
   boletas      Boleta[]
 
   @@index([rifaId])
+  @@unique([rifaId, vendedorId])
 }
 
 //////////////////////////////////////
@@ -259,6 +308,7 @@ model AsignacionDetalle {
 model DevolucionBoletas {
   id             String   @id @default(cuid())
   rifaVendedorId String
+  destino        DestinoDevolucion @default(DISPONIBLE)
   fecha          DateTime @default(now())
 
   rifaVendedor RifaVendedor @relation(fields: [rifaVendedorId], references: [id])
@@ -334,12 +384,20 @@ model PagoCliente {
 model AbonoVendedor {
   id             String      @id @default(cuid())
   rifaVendedorId String
+  subCajaId      String?
   valor          Decimal     @db.Decimal(12,2)
   fecha          DateTime    @default(now())
+  descripcion    String?     @db.Text
   metodoPago     MetodoPago
   estado         EstadoPago  @default(PENDIENTE)
+  anuladoAt      DateTime?
+  anuladoMotivo  String?     @db.Text
+  saldoAnterior  Decimal     @db.Decimal(12,2)
+  saldoDespues   Decimal     @db.Decimal(12,2)
+  boletasActuales Int        @default(0)
 
   rifaVendedor RifaVendedor @relation(fields: [rifaVendedorId], references: [id])
+  subCaja      SubCaja?     @relation(fields: [subCajaId], references: [id])
   recibo       Recibo?
 
   movimientos MovimientoCaja[]
@@ -390,6 +448,10 @@ model SubCaja {
 
   caja        Caja              @relation(fields: [cajaId], references: [id])
   movimientos MovimientoCaja[]
+  abonos      AbonoVendedor[]
+  gastos      Gasto[]
+
+  @@unique([cajaId, nombre])
 }
 
 //////////////////////////////////////
@@ -441,10 +503,26 @@ model MovimientoCaja {
 model Gasto {
   id          String   @id @default(cuid())
   rifaId      String
+  subCajaId   String?
+  categoria   CategoriaGasto @default(OTROS)
   descripcion String
   valor       Decimal  @db.Decimal(12,2)
   fecha       DateTime @default(now())
+  anuladoAt   DateTime?
+  anuladoMotivo String? @db.Text
 
   rifa         Rifa              @relation(fields: [rifaId], references: [id])
+  subCaja      SubCaja?          @relation(fields: [subCajaId], references: [id])
   movimientos  MovimientoCaja[]
+  recibo       GastoRecibo?
+}
+
+model GastoRecibo {
+  id          String   @id @default(cuid())
+  gastoId      String   @unique
+  consecutivo  Int
+  codigoUnico  String   @unique
+  fecha        DateTime @default(now())
+
+  gasto Gasto @relation(fields: [gastoId], references: [id])
 }
