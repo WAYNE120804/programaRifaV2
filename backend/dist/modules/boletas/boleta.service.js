@@ -1,11 +1,13 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.listBoletas = listBoletas;
+exports.listPublicBoletas = listPublicBoletas;
 exports.getBoletaById = getBoletaById;
 exports.updateBoleta = updateBoleta;
 const prisma_client_1 = require("../../lib/prisma-client");
 const app_error_1 = require("../../lib/app-error");
 const prisma_1 = require("../../lib/prisma");
+const checkout_publico_service_1 = require("../checkout-publico/checkout-publico.service");
 const boletaInclude = {
     rifa: {
         select: {
@@ -75,6 +77,59 @@ async function listBoletas(filters) {
         include: boletaInclude,
         orderBy: [{ numero: 'asc' }],
     });
+}
+async function listPublicBoletas(filters) {
+    await (0, checkout_publico_service_1.releaseExpiredPublicReservations)();
+    const prisma = prismaClient();
+    const relation = await prisma.rifaVendedor.findFirst({
+        where: {
+            rifaId: filters.rifaId,
+            vendedor: {
+                nombre: 'PAGINA WEB',
+            },
+        },
+        select: {
+            id: true,
+            vendedor: {
+                select: {
+                    id: true,
+                    nombre: true,
+                },
+            },
+        },
+    });
+    if (!relation) {
+        return {
+            relation: null,
+            boletas: [],
+        };
+    }
+    const boletas = await prisma.boleta.findMany({
+        where: {
+            rifaId: filters.rifaId,
+            rifaVendedorId: relation.id,
+            estado: {
+                in: [
+                    prisma_client_1.EstadoBoleta.ASIGNADA,
+                    prisma_client_1.EstadoBoleta.RESERVADA,
+                    prisma_client_1.EstadoBoleta.VENDIDA,
+                    prisma_client_1.EstadoBoleta.PAGADA,
+                ],
+            },
+        },
+        select: {
+            id: true,
+            numero: true,
+            estado: true,
+            reservadaHasta: true,
+            precio: true,
+        },
+        orderBy: [{ numero: 'asc' }],
+    });
+    return {
+        relation,
+        boletas,
+    };
 }
 async function getBoletaById(id) {
     const boleta = await prismaClient().boleta.findUnique({

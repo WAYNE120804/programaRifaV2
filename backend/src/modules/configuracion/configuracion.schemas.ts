@@ -12,7 +12,33 @@ type ConfiguracionInput = {
   responsableDepartamento?: unknown;
   numeroResolucionAutorizacion?: unknown;
   entidadAutoriza?: unknown;
+  publicHeroTitle?: unknown;
+  publicHeroSubtitle?: unknown;
+  publicWhoWeAre?: unknown;
+  publicContactPhone?: unknown;
+  publicContactWhatsapp?: unknown;
+  publicContactEmail?: unknown;
+  publicAddress?: unknown;
+  publicCity?: unknown;
+  publicDepartment?: unknown;
+  publicFacebookUrl?: unknown;
+  publicInstagramUrl?: unknown;
+  publicTiktokUrl?: unknown;
+  publicPrimaryCtaText?: unknown;
+  publicSecondaryCtaText?: unknown;
+  publicSupportText?: unknown;
+  publicTermsText?: unknown;
+  publicHeroImageDataUrl?: unknown;
+  publicTicketBackgroundDataUrl?: unknown;
+  publicPrizeGallery?: unknown;
   themeColors?: unknown;
+};
+
+type PrizeGalleryItemPayload = {
+  id: string;
+  nombre: string | null;
+  descripcion: string | null;
+  dataUrl: string;
 };
 
 type ThemeColorsPayload = {
@@ -43,6 +69,25 @@ export type ConfiguracionPayload = {
   responsableDepartamento: string | null;
   numeroResolucionAutorizacion: string | null;
   entidadAutoriza: string | null;
+  publicHeroTitle: string | null;
+  publicHeroSubtitle: string | null;
+  publicWhoWeAre: string | null;
+  publicContactPhone: string | null;
+  publicContactWhatsapp: string | null;
+  publicContactEmail: string | null;
+  publicAddress: string | null;
+  publicCity: string | null;
+  publicDepartment: string | null;
+  publicFacebookUrl: string | null;
+  publicInstagramUrl: string | null;
+  publicTiktokUrl: string | null;
+  publicPrimaryCtaText: string | null;
+  publicSecondaryCtaText: string | null;
+  publicSupportText: string | null;
+  publicTermsText: string | null;
+  publicHeroImageDataUrl: string | null;
+  publicTicketBackgroundDataUrl: string | null;
+  publicPrizeGallery: PrizeGalleryItemPayload[];
   themeColors: ThemeColorsPayload;
 };
 
@@ -106,6 +151,24 @@ function parseOptionalDataUrl(value: unknown, fieldName: string) {
   return normalizedValue;
 }
 
+function parseOptionalImageDataUrl(value: unknown, fieldName: string) {
+  if (value === null || typeof value === 'undefined' || value === '') {
+    return null;
+  }
+
+  if (typeof value !== 'string') {
+    throw new AppError(`El campo "${fieldName}" debe ser una cadena valida o null.`);
+  }
+
+  const normalizedValue = value.trim();
+
+  if (!normalizedValue.startsWith('data:image/')) {
+    throw new AppError(`El campo "${fieldName}" debe enviarse como imagen en formato base64.`);
+  }
+
+  return normalizedValue;
+}
+
 function parseOptionalText(value: unknown, fieldName: string) {
   if (value === null || typeof value === 'undefined' || value === '') {
     return null;
@@ -152,6 +215,51 @@ function parseThemeColors(value: unknown): ThemeColorsPayload {
   return result;
 }
 
+function parsePrizeGallery(value: unknown): PrizeGalleryItemPayload[] {
+  if (value === null || typeof value === 'undefined') {
+    return [];
+  }
+
+  if (!Array.isArray(value)) {
+    throw new AppError('El campo "publicPrizeGallery" debe ser una lista valida.');
+  }
+
+  return value.map((item, index) => {
+    if (!item || typeof item !== 'object') {
+      throw new AppError(`La imagen ${index + 1} de la galeria no es valida.`);
+    }
+
+    const source = item as Record<string, unknown>;
+    const id =
+      typeof source.id === 'string' && source.id.trim().length
+        ? source.id.trim()
+        : `gallery-${index + 1}`;
+    const nombre =
+      typeof source.nombre === 'string' && source.nombre.trim().length
+        ? source.nombre.trim()
+        : null;
+    const descripcion =
+      typeof source.descripcion === 'string' && source.descripcion.trim().length
+        ? source.descripcion.trim()
+        : null;
+    const dataUrl = parseOptionalImageDataUrl(
+      source.dataUrl,
+      `publicPrizeGallery[${index}].dataUrl`
+    );
+
+    if (!dataUrl) {
+      throw new AppError(`La imagen ${index + 1} de la galeria debe tener archivo.`);
+    }
+
+    return {
+      id,
+      nombre,
+      descripcion,
+      dataUrl,
+    };
+  });
+}
+
 export function parseConfiguracionPayload(
   input: ConfiguracionInput
 ): ConfiguracionPayload {
@@ -176,6 +284,40 @@ export function parseConfiguracionPayload(
       'numeroResolucionAutorizacion'
     ),
     entidadAutoriza: parseOptionalText(input.entidadAutoriza, 'entidadAutoriza'),
+    publicHeroTitle: parseOptionalText(input.publicHeroTitle, 'publicHeroTitle'),
+    publicHeroSubtitle: parseOptionalText(input.publicHeroSubtitle, 'publicHeroSubtitle'),
+    publicWhoWeAre: parseOptionalText(input.publicWhoWeAre, 'publicWhoWeAre'),
+    publicContactPhone: parseOptionalText(input.publicContactPhone, 'publicContactPhone'),
+    publicContactWhatsapp: parseOptionalText(
+      input.publicContactWhatsapp,
+      'publicContactWhatsapp'
+    ),
+    publicContactEmail: parseOptionalText(input.publicContactEmail, 'publicContactEmail'),
+    publicAddress: parseOptionalText(input.publicAddress, 'publicAddress'),
+    publicCity: parseOptionalText(input.publicCity, 'publicCity'),
+    publicDepartment: parseOptionalText(input.publicDepartment, 'publicDepartment'),
+    publicFacebookUrl: parseOptionalText(input.publicFacebookUrl, 'publicFacebookUrl'),
+    publicInstagramUrl: parseOptionalText(input.publicInstagramUrl, 'publicInstagramUrl'),
+    publicTiktokUrl: parseOptionalText(input.publicTiktokUrl, 'publicTiktokUrl'),
+    publicPrimaryCtaText: parseOptionalText(
+      input.publicPrimaryCtaText,
+      'publicPrimaryCtaText'
+    ),
+    publicSecondaryCtaText: parseOptionalText(
+      input.publicSecondaryCtaText,
+      'publicSecondaryCtaText'
+    ),
+    publicSupportText: parseOptionalText(input.publicSupportText, 'publicSupportText'),
+    publicTermsText: parseOptionalText(input.publicTermsText, 'publicTermsText'),
+    publicHeroImageDataUrl: parseOptionalImageDataUrl(
+      input.publicHeroImageDataUrl,
+      'publicHeroImageDataUrl'
+    ),
+    publicTicketBackgroundDataUrl: parseOptionalImageDataUrl(
+      input.publicTicketBackgroundDataUrl,
+      'publicTicketBackgroundDataUrl'
+    ),
+    publicPrizeGallery: parsePrizeGallery(input.publicPrizeGallery),
     themeColors: parseThemeColors(input.themeColors),
   };
 }

@@ -45,22 +45,28 @@ const DevolucionesPage = () => {
     loading: true,
     loadingHistory: false,
     relaciones: [],
+    usuarios: [],
     returnHistory: [],
     error: null,
     success: '',
   });
   const [returnForm, setReturnForm] = useState(initialReturnForm);
+  const [selectedUsuarioId, setSelectedUsuarioId] = useState('');
   const [partialReturnConflict, setPartialReturnConflict] = useState(null);
   const [returnConfirm, setReturnConfirm] = useState(null);
 
   useEffect(() => {
     const loadRelations = async () => {
       try {
-        const { data } = await client.get(endpoints.rifaVendedores());
+        const [relationsRes, usuariosRes] = await Promise.all([
+          client.get(endpoints.rifaVendedores()),
+          client.get(endpoints.usuarios()),
+        ]);
         setState((prev) => ({
           ...prev,
           loading: false,
-          relaciones: data,
+          relaciones: relationsRes.data,
+          usuarios: usuariosRes.data,
           error: null,
         }));
       } catch (error) {
@@ -95,7 +101,12 @@ const DevolucionesPage = () => {
         }));
 
         const { data } = await client.get(
-          endpoints.devolucionesHistory(returnForm.rifaVendedorId)
+          endpoints.devolucionesHistory(returnForm.rifaVendedorId),
+          {
+            params: {
+              ...(selectedUsuarioId ? { usuarioId: selectedUsuarioId } : {}),
+            },
+          }
         );
 
         setState((prev) => ({
@@ -114,7 +125,7 @@ const DevolucionesPage = () => {
     };
 
     void loadHistory();
-  }, [returnForm.rifaVendedorId]);
+  }, [returnForm.rifaVendedorId, selectedUsuarioId]);
 
   const relationOptions = useMemo(
     () =>
@@ -129,6 +140,15 @@ const DevolucionesPage = () => {
     () =>
       state.relaciones.find((item) => item.id === returnForm.rifaVendedorId) || null,
     [state.relaciones, returnForm.rifaVendedorId]
+  );
+
+  const userOptions = useMemo(
+    () =>
+      state.usuarios.map((item) => ({
+        value: item.id,
+        label: `${item.nombre} - ${item.rol}`,
+      })),
+    [state.usuarios]
   );
 
   const executeReturn = async (permitirParcial = false) => {
@@ -225,6 +245,11 @@ const DevolucionesPage = () => {
       render: (row) => row.rifaVendedor?.vendedor?.nombre || 'N/D',
     },
     {
+      key: 'usuario',
+      header: 'Usuario',
+      render: (row) => row.usuario?.nombre || 'SISTEMA',
+    },
+    {
       key: 'fecha',
       header: 'Fecha',
       render: (row) => formatDateTime(row.fecha),
@@ -311,6 +336,19 @@ const DevolucionesPage = () => {
                     <option value="TODAS">Devolver todas</option>
                   </select>
                 </label>
+                <div>
+                  <span className="text-sm text-slate-600">Trabajador</span>
+                  <div className="mt-1">
+                    <SearchableSelect
+                      options={userOptions}
+                      value={selectedUsuarioId}
+                      onChange={setSelectedUsuarioId}
+                      placeholder="Todos los trabajadores"
+                      clearable
+                      clearLabel="Quitar filtro de trabajador"
+                    />
+                  </div>
+                </div>
               </div>
 
               <label className="block text-sm">

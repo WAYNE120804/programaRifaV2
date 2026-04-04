@@ -43,11 +43,21 @@ const SummaryCard = ({
         : tone === 'warning'
           ? 'text-amber-700'
           : 'theme-summary-value';
+  const compactValueClass =
+    value.length >= 13
+      ? 'text-[1.8rem]'
+      : value.length >= 11
+        ? 'text-[2.1rem]'
+        : 'text-[2.5rem]';
 
   return (
     <div className="theme-summary-card rounded-2xl p-5 shadow-sm">
       <p className="theme-summary-label">{label}</p>
-      <p className={`mt-3 text-4xl font-semibold ${toneClass}`}>{value}</p>
+      <p
+        className={`mt-3 max-w-full overflow-hidden whitespace-nowrap font-semibold leading-tight tracking-tight ${compactValueClass} ${toneClass}`}
+      >
+        {value}
+      </p>
       {helper ? <p className="mt-2 text-sm text-slate-500">{helper}</p> : null}
     </div>
   );

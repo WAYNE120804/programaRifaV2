@@ -16,11 +16,30 @@ import { formatCOP } from '../../utils/money';
 const initialForm = {
   nombre: '',
   descripcion: '',
+  imagenes: [] as Array<{
+    id: string;
+    nombre: string | null;
+    descripcion: string | null;
+    dataUrl: string;
+  }>,
   tipo: 'ANTICIPADO',
   mostrarValor: false,
   valor: '',
   fecha: '',
 };
+
+function fileToDataUrl(file: File) {
+  return new Promise<string>((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(String(reader.result || ''));
+    reader.onerror = () => reject(new Error('No se pudo leer el archivo seleccionado.'));
+    reader.readAsDataURL(file);
+  });
+}
+
+function createGalleryId() {
+  return `premio-${Date.now()}-${Math.random().toString(16).slice(2, 8)}`;
+}
 
 function numbersToText(boletas: Array<{ boleta?: { numero?: string } }>) {
   return boletas.map((item) => item.boleta?.numero).filter(Boolean).join(', ');
@@ -92,6 +111,7 @@ const RifaPremiosPage = () => {
     setForm({
       nombre: state.editing.nombre || '',
       descripcion: state.editing.descripcion || '',
+      imagenes: Array.isArray(state.editing.imagenesJson) ? state.editing.imagenesJson : [],
       tipo: state.editing.tipo || 'ANTICIPADO',
       mostrarValor: Boolean(state.editing.mostrarValor),
       valor: state.editing.valor ? String(Number(state.editing.valor || 0)) : '',
@@ -123,6 +143,7 @@ const RifaPremiosPage = () => {
         rifaId: id,
         nombre: form.nombre,
         descripcion: form.descripcion,
+        imagenes: form.imagenes,
         tipo: form.tipo,
         mostrarValor: form.mostrarValor,
         valor: form.mostrarValor ? Number(form.valor || 0) : null,
@@ -147,6 +168,40 @@ const RifaPremiosPage = () => {
       setState((prev) => ({
         ...prev,
         saving: false,
+        error: error.message,
+      }));
+    }
+  };
+
+  const handleAddPremioImages = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const files = Array.from(event.target.files || []);
+
+    if (!files.length) {
+      return;
+    }
+
+    try {
+      const items = await Promise.all(
+        files.map(async (file) => ({
+          id: createGalleryId(),
+          nombre: file.name,
+          descripcion: null,
+          dataUrl: await fileToDataUrl(file),
+        }))
+      );
+
+      setForm((prev) => ({
+        ...prev,
+        imagenes: [...prev.imagenes, ...items],
+      }));
+      setState((prev) => ({
+        ...prev,
+        error: null,
+        success: 'Imagenes del premio cargadas. Guarda el premio para dejarlas activas.',
+      }));
+    } catch (error: any) {
+      setState((prev) => ({
+        ...prev,
         error: error.message,
       }));
     }
@@ -265,6 +320,78 @@ const RifaPremiosPage = () => {
                   }
                 />
               </label>
+              <div className="md:col-span-2">
+                <label className="text-sm">
+                  <span className="text-slate-600">Fotos del premio para el carrusel publico</span>
+                  <input
+                    type="file"
+                    accept="image/*"
+                    multiple
+                    className="mt-1 block w-full text-sm text-slate-600"
+                    onChange={handleAddPremioImages}
+                  />
+                </label>
+                {form.imagenes.length ? (
+                  <div className="mt-4 grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+                    {form.imagenes.map((imagen) => (
+                      <div
+                        key={imagen.id}
+                        className="overflow-hidden rounded-lg border border-slate-200 bg-slate-50"
+                      >
+                        <img
+                          src={imagen.dataUrl}
+                          alt={imagen.nombre || 'Premio'}
+                          className="h-40 w-full object-cover"
+                        />
+                        <div className="space-y-3 p-3">
+                          <input
+                            className="w-full rounded-md border border-slate-300 px-3 py-2 text-sm"
+                            value={imagen.nombre || ''}
+                            onChange={(event) =>
+                              setForm((prev) => ({
+                                ...prev,
+                                imagenes: prev.imagenes.map((item) =>
+                                  item.id === imagen.id
+                                    ? { ...item, nombre: event.target.value }
+                                    : item
+                                ),
+                              }))
+                            }
+                            placeholder="Titulo o nombre corto"
+                          />
+                          <textarea
+                            className="min-h-20 w-full rounded-md border border-slate-300 px-3 py-2 text-sm"
+                            value={imagen.descripcion || ''}
+                            onChange={(event) =>
+                              setForm((prev) => ({
+                                ...prev,
+                                imagenes: prev.imagenes.map((item) =>
+                                  item.id === imagen.id
+                                    ? { ...item, descripcion: event.target.value }
+                                    : item
+                                ),
+                              }))
+                            }
+                            placeholder="Descripcion de la foto"
+                          />
+                          <button
+                            type="button"
+                            className="rounded-md border border-rose-300 px-3 py-2 text-sm text-rose-700"
+                            onClick={() =>
+                              setForm((prev) => ({
+                                ...prev,
+                                imagenes: prev.imagenes.filter((item) => item.id !== imagen.id),
+                              }))
+                            }
+                          >
+                            Quitar foto
+                          </button>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                ) : null}
+              </div>
               <label className="flex items-center gap-3 rounded-md border border-slate-200 px-4 py-3 text-sm">
                 <input
                   type="checkbox"
@@ -351,6 +478,9 @@ const RifaPremiosPage = () => {
                                 {premio.descripcion || 'Sin descripcion'}
                               </div>
                               <div className="mt-1 text-sm text-slate-500">
+                                Fotos para carrusel: {Array.isArray(premio.imagenesJson) ? premio.imagenesJson.length : 0}
+                              </div>
+                              <div className="mt-1 text-sm text-slate-500">
                                 Boletas que juegan: {premio.boletas?.length || 0}
                               </div>
                             </div>
@@ -373,6 +503,30 @@ const RifaPremiosPage = () => {
                           </div>
 
                           <div className="mt-4">
+                            {Array.isArray(premio.imagenesJson) && premio.imagenesJson.length ? (
+                              <div className="mb-4 grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+                                {premio.imagenesJson.map((imagen: any) => (
+                                  <div
+                                    key={imagen.id}
+                                    className="overflow-hidden rounded-lg border border-slate-200 bg-slate-50"
+                                  >
+                                    <img
+                                      src={imagen.dataUrl}
+                                      alt={imagen.nombre || premio.nombre}
+                                      className="h-36 w-full object-cover"
+                                    />
+                                    <div className="space-y-1 p-3 text-sm">
+                                      <div className="font-medium text-slate-800">
+                                        {imagen.nombre || 'Sin titulo'}
+                                      </div>
+                                      <div className="text-slate-500">
+                                        {imagen.descripcion || 'Sin descripcion'}
+                                      </div>
+                                    </div>
+                                  </div>
+                                ))}
+                              </div>
+                            ) : null}
                             <label className="text-sm">
                               <span className="text-slate-600">Boletas que juegan</span>
                               <textarea

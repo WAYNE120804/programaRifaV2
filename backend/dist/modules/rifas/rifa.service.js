@@ -63,7 +63,9 @@ const rifaDetailInclude = {
             id: true,
             nombre: true,
             descripcion: true,
+            imagenesJson: true,
             tipo: true,
+            mostrarValor: true,
             valor: true,
             fecha: true,
             _count: {

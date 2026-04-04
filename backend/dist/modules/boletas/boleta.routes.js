@@ -2,8 +2,11 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.boletaRouter = void 0;
 const express_1 = require("express");
+const prisma_client_1 = require("../../lib/prisma-client");
+const auth_1 = require("../../middlewares/auth");
 const boleta_controller_1 = require("./boleta.controller");
 exports.boletaRouter = (0, express_1.Router)();
 exports.boletaRouter.get('/', boleta_controller_1.getAllBoletas);
+exports.boletaRouter.get('/publicas', boleta_controller_1.getPublicBoletas);
 exports.boletaRouter.get('/:id', boleta_controller_1.getBoleta);
-exports.boletaRouter.put('/:id', boleta_controller_1.putBoleta);
+exports.boletaRouter.put('/:id', (0, auth_1.requireRole)(prisma_client_1.RolUsuario.ADMIN, prisma_client_1.RolUsuario.CAJERO), boleta_controller_1.putBoleta);

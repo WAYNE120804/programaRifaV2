@@ -2,7 +2,9 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.configuracionRouter = void 0;
 const express_1 = require("express");
+const prisma_client_1 = require("../../lib/prisma-client");
+const auth_1 = require("../../middlewares/auth");
 const configuracion_controller_1 = require("./configuracion.controller");
 exports.configuracionRouter = (0, express_1.Router)();
 exports.configuracionRouter.get('/', configuracion_controller_1.getConfiguracion);
-exports.configuracionRouter.put('/', configuracion_controller_1.putConfiguracion);
+exports.configuracionRouter.put('/', (0, auth_1.requireRole)(prisma_client_1.RolUsuario.ADMIN), configuracion_controller_1.putConfiguracion);

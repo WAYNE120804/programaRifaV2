@@ -167,6 +167,7 @@ exports.Prisma.PremioScalarFieldEnum = {
   rifaId: 'rifaId',
   nombre: 'nombre',
   descripcion: 'descripcion',
+  imagenesJson: 'imagenesJson',
   tipo: 'tipo',
   mostrarValor: 'mostrarValor',
   valor: 'valor',
@@ -235,7 +236,8 @@ exports.Prisma.DevolucionBoletasScalarFieldEnum = {
   id: 'id',
   rifaVendedorId: 'rifaVendedorId',
   destino: 'destino',
-  fecha: 'fecha'
+  fecha: 'fecha',
+  usuarioId: 'usuarioId'
 };
 
 exports.Prisma.DevolucionDetalleScalarFieldEnum = {
@@ -248,7 +250,8 @@ exports.Prisma.ClienteScalarFieldEnum = {
   id: 'id',
   nombre: 'nombre',
   email: 'email',
-  telefono: 'telefono'
+  telefono: 'telefono',
+  documento: 'documento'
 };
 
 exports.Prisma.VentaScalarFieldEnum = {
@@ -257,7 +260,13 @@ exports.Prisma.VentaScalarFieldEnum = {
   rifaId: 'rifaId',
   estado: 'estado',
   total: 'total',
-  saldoPendiente: 'saldoPendiente'
+  saldoPendiente: 'saldoPendiente',
+  referenciaPago: 'referenciaPago',
+  pasarelaPago: 'pasarelaPago',
+  pasarelaEstado: 'pasarelaEstado',
+  pasarelaTransaccionId: 'pasarelaTransaccionId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
 };
 
 exports.Prisma.PagoClienteScalarFieldEnum = {
@@ -273,6 +282,7 @@ exports.Prisma.AbonoVendedorScalarFieldEnum = {
   id: 'id',
   rifaVendedorId: 'rifaVendedorId',
   subCajaId: 'subCajaId',
+  usuarioId: 'usuarioId',
   valor: 'valor',
   fecha: 'fecha',
   descripcion: 'descripcion',
@@ -329,12 +339,22 @@ exports.Prisma.GastoScalarFieldEnum = {
   id: 'id',
   rifaId: 'rifaId',
   subCajaId: 'subCajaId',
+  usuarioId: 'usuarioId',
   categoria: 'categoria',
   descripcion: 'descripcion',
   valor: 'valor',
   fecha: 'fecha',
   anuladoAt: 'anuladoAt',
   anuladoMotivo: 'anuladoMotivo'
+};
+
+exports.Prisma.JuegoRegistroScalarFieldEnum = {
+  id: 'id',
+  rifaVendedorId: 'rifaVendedorId',
+  premioId: 'premioId',
+  usuarioId: 'usuarioId',
+  fecha: 'fecha',
+  totalBoletas: 'totalBoletas'
 };
 
 exports.Prisma.GastoReciboScalarFieldEnum = {
@@ -350,6 +370,11 @@ exports.Prisma.SortOrder = {
   desc: 'desc'
 };
 
+exports.Prisma.NullableJsonNullValueInput = {
+  DbNull: Prisma.DbNull,
+  JsonNull: Prisma.JsonNull
+};
+
 exports.Prisma.QueryMode = {
   default: 'default',
   insensitive: 'insensitive'
@@ -358,6 +383,12 @@ exports.Prisma.QueryMode = {
 exports.Prisma.NullsOrder = {
   first: 'first',
   last: 'last'
+};
+
+exports.Prisma.JsonNullValueFilter = {
+  DbNull: Prisma.DbNull,
+  JsonNull: Prisma.JsonNull,
+  AnyNull: Prisma.AnyNull
 };
 exports.RolUsuario = exports.$Enums.RolUsuario = {
   ADMIN: 'ADMIN',
@@ -404,7 +435,8 @@ exports.MetodoPago = exports.$Enums.MetodoPago = {
   EFECTIVO: 'EFECTIVO',
   NEQUI: 'NEQUI',
   DAVIPLATA: 'DAVIPLATA',
-  TRANSFERENCIA: 'TRANSFERENCIA'
+  TRANSFERENCIA: 'TRANSFERENCIA',
+  WOMPI: 'WOMPI'
 };
 
 exports.EstadoPago = exports.$Enums.EstadoPago = {
@@ -453,6 +485,7 @@ exports.Prisma.ModelName = {
   SubCaja: 'SubCaja',
   MovimientoCaja: 'MovimientoCaja',
   Gasto: 'Gasto',
+  JuegoRegistro: 'JuegoRegistro',
   GastoRecibo: 'GastoRecibo'
 };
 

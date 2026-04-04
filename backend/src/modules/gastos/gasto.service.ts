@@ -5,6 +5,14 @@ import { getPrisma } from '../../lib/prisma';
 import type { AnularGastoPayload, CreateGastoPayload } from './gasto.schemas';
 
 const gastoInclude = {
+  usuario: {
+    select: {
+      id: true,
+      nombre: true,
+      email: true,
+      rol: true,
+    },
+  },
   rifa: {
     select: {
       id: true,
@@ -88,11 +96,13 @@ function buildCodigoUnico(input: {
 export async function listGastos(filters?: {
   rifaId?: string;
   categoria?: string;
+  usuarioId?: string;
 }) {
   return prismaClient().gasto.findMany({
     where: {
       ...(filters?.rifaId ? { rifaId: filters.rifaId } : {}),
       ...(filters?.categoria ? { categoria: filters.categoria as CategoriaGasto } : {}),
+      ...(filters?.usuarioId ? { usuarioId: filters.usuarioId } : {}),
     },
     include: gastoInclude,
     orderBy: {
@@ -114,7 +124,7 @@ export async function getGastoById(id: string) {
   return gasto;
 }
 
-export async function createGasto(payload: CreateGastoPayload) {
+export async function createGasto(payload: CreateGastoPayload, usuarioId?: string) {
   const prisma = prismaClient();
   const rifa = await prisma.rifa.findUnique({
     where: { id: payload.rifaId },
@@ -180,6 +190,7 @@ export async function createGasto(payload: CreateGastoPayload) {
       data: {
         rifaId: payload.rifaId,
         subCajaId: payload.subCajaId,
+        usuarioId,
         categoria: payload.categoria,
         valor: payload.valor,
         fecha,
@@ -217,6 +228,7 @@ export async function createGasto(payload: CreateGastoPayload) {
           subCajaId: subCaja.id,
           rifaId: payload.rifaId,
           gastoId: gasto.id,
+          usuarioId,
         },
       });
     }
@@ -265,7 +277,11 @@ export async function getGastoReciboByCodigo(codigo: string) {
   return recibo;
 }
 
-export async function anularGasto(gastoId: string, payload: AnularGastoPayload) {
+export async function anularGasto(
+  gastoId: string,
+  payload: AnularGastoPayload,
+  usuarioId?: string
+) {
   const prisma = prismaClient();
   const gasto = (await prisma.gasto.findUnique({
     where: { id: gastoId },
@@ -333,6 +349,7 @@ export async function anularGasto(gastoId: string, payload: AnularGastoPayload) 
           subCajaId: gasto.subCajaId,
           rifaId: gasto.rifaId,
           gastoId: gasto.id,
+          usuarioId,
         },
       });
     }

@@ -20,19 +20,25 @@ const HistorialAsignaciones = () => {
     loadingHistory: false,
     error: null,
     relaciones: [],
+    usuarios: [],
     selected: '',
+    selectedUsuarioId: '',
     history: [],
   });
 
   useEffect(() => {
     const loadData = async () => {
       try {
-        const { data } = await client.get(endpoints.rifaVendedores());
+        const [relationsRes, usuariosRes] = await Promise.all([
+          client.get(endpoints.rifaVendedores()),
+          client.get(endpoints.usuarios()),
+        ]);
         setState((prev) => ({
           ...prev,
           loading: false,
           error: null,
-          relaciones: data,
+          relaciones: relationsRes.data,
+          usuarios: usuariosRes.data,
         }));
       } catch (error) {
         setState((prev) => ({
@@ -56,7 +62,11 @@ const HistorialAsignaciones = () => {
 
       try {
         setState((prev) => ({ ...prev, loadingHistory: true, error: null }));
-        const { data } = await client.get(endpoints.asignacionesHistory(state.selected));
+        const { data } = await client.get(endpoints.asignacionesHistory(state.selected), {
+          params: {
+            ...(state.selectedUsuarioId ? { usuarioId: state.selectedUsuarioId } : {}),
+          },
+        });
         setState((prev) => ({
           ...prev,
           history: data,
@@ -73,7 +83,7 @@ const HistorialAsignaciones = () => {
     };
 
     loadHistory();
-  }, [state.selected]);
+  }, [state.selected, state.selectedUsuarioId]);
 
   const relationOptions = useMemo(() => {
     return state.relaciones.map((item) => ({
@@ -85,6 +95,15 @@ const HistorialAsignaciones = () => {
   const selectedRelation = useMemo(
     () => state.relaciones.find((item) => item.id === state.selected) || null,
     [state.relaciones, state.selected]
+  );
+
+  const userOptions = useMemo(
+    () =>
+      state.usuarios.map((item) => ({
+        value: item.id,
+        label: `${item.nombre} - ${item.rol}`,
+      })),
+    [state.usuarios]
   );
 
   const handlePrintAssignment = (row) => {
@@ -135,6 +154,11 @@ const HistorialAsignaciones = () => {
       render: (row) => row.rifaVendedor?.vendedor?.nombre || 'N/D',
     },
     {
+      key: 'usuario',
+      header: 'Usuario',
+      render: (row) => row.usuario?.nombre || 'SISTEMA',
+    },
+    {
       key: 'fecha',
       header: 'Fecha',
       render: (row) => formatDateTime(row.fecha),
@@ -182,19 +206,36 @@ const HistorialAsignaciones = () => {
 
         {!state.loading ? (
           <div className="rounded-lg bg-white p-6 shadow-sm">
-            <div className="max-w-2xl">
-              <span className="text-sm text-slate-600">Relacion rifa-vendedor</span>
-              <div className="mt-1">
-                <SearchableSelect
-                  options={relationOptions}
-                  value={state.selected}
-                  onChange={(value) =>
-                    setState((prev) => ({ ...prev, selected: value }))
-                  }
-                  placeholder="Selecciona una relacion para ver su historial"
-                  clearable
-                  clearLabel="Quitar seleccion"
-                />
+            <div className="grid gap-4 lg:grid-cols-2">
+              <div>
+                <span className="text-sm text-slate-600">Relacion rifa-vendedor</span>
+                <div className="mt-1">
+                  <SearchableSelect
+                    options={relationOptions}
+                    value={state.selected}
+                    onChange={(value) =>
+                      setState((prev) => ({ ...prev, selected: value }))
+                    }
+                    placeholder="Selecciona una relacion para ver su historial"
+                    clearable
+                    clearLabel="Quitar seleccion"
+                  />
+                </div>
+              </div>
+              <div>
+                <span className="text-sm text-slate-600">Trabajador</span>
+                <div className="mt-1">
+                  <SearchableSelect
+                    options={userOptions}
+                    value={state.selectedUsuarioId}
+                    onChange={(value) =>
+                      setState((prev) => ({ ...prev, selectedUsuarioId: value }))
+                    }
+                    placeholder="Todos los trabajadores"
+                    clearable
+                    clearLabel="Quitar filtro de trabajador"
+                  />
+                </div>
               </div>
             </div>
           </div>

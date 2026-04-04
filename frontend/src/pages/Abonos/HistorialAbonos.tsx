@@ -17,7 +17,9 @@ import { printAbonosSummaryTicket } from '../../utils/print';
 const HistorialAbonos = () => {
   const { config } = useAppConfig();
   const [rifaVendedores, setRifaVendedores] = useState<any[]>([]);
+  const [usuarios, setUsuarios] = useState<any[]>([]);
   const [selected, setSelected] = useState('');
+  const [selectedUsuarioId, setSelectedUsuarioId] = useState('');
   const [abonos, setAbonos] = useState<any[]>([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [loading, setLoading] = useState(true);
@@ -27,8 +29,12 @@ const HistorialAbonos = () => {
   useEffect(() => {
     const loadData = async () => {
       try {
-        const { data } = await client.get(endpoints.rifaVendedores());
-        setRifaVendedores(data);
+        const [relationsRes, usuariosRes] = await Promise.all([
+          client.get(endpoints.rifaVendedores()),
+          client.get(endpoints.usuarios()),
+        ]);
+        setRifaVendedores(relationsRes.data);
+        setUsuarios(usuariosRes.data);
       } catch (requestError) {
         setError((requestError as Error).message);
       } finally {
@@ -49,7 +55,11 @@ const HistorialAbonos = () => {
       try {
         setLoadingHistory(true);
         setSearchTerm('');
-        const { data } = await client.get(endpoints.abonosByRifaVendedor(selected));
+        const { data } = await client.get(endpoints.abonosByRifaVendedor(selected), {
+          params: {
+            ...(selectedUsuarioId ? { usuarioId: selectedUsuarioId } : {}),
+          },
+        });
         setAbonos(data);
       } catch (requestError) {
         setError((requestError as Error).message);
@@ -59,7 +69,7 @@ const HistorialAbonos = () => {
     };
 
     void loadHistory();
-  }, [selected]);
+  }, [selected, selectedUsuarioId]);
 
   const options = useMemo(
     () =>
@@ -73,6 +83,15 @@ const HistorialAbonos = () => {
   const selectedRelation = useMemo(
     () => rifaVendedores.find((item) => item.id === selected) || null,
     [rifaVendedores, selected]
+  );
+
+  const userOptions = useMemo(
+    () =>
+      usuarios.map((item) => ({
+        value: item.id,
+        label: `${item.nombre} - ${item.rol}`,
+      })),
+    [usuarios]
   );
 
   const filteredAbonos = useMemo(() => {
@@ -99,6 +118,11 @@ const HistorialAbonos = () => {
       key: 'fecha',
       header: 'FECHA',
       render: (row: any) => formatDateTime(row.fecha),
+    },
+    {
+      key: 'usuario',
+      header: 'USUARIO',
+      render: (row: any) => row.usuario?.nombre || 'SISTEMA',
     },
     {
       key: 'valor',
@@ -196,8 +220,8 @@ const HistorialAbonos = () => {
             Selecciona la relacion rifa-vendedor para revisar deuda, boletas actuales y abonos registrados.
           </p>
 
-          <div className="mt-6 flex flex-col gap-3 lg:flex-row lg:items-start">
-            <div className="w-full max-w-3xl">
+          <div className="mt-6 grid gap-3 lg:grid-cols-[minmax(0,1fr)_minmax(0,320px)_auto] lg:items-start">
+            <div className="w-full">
               <SearchableSelect
                 options={options}
                 value={selected}
@@ -205,6 +229,16 @@ const HistorialAbonos = () => {
                 placeholder="Buscar por rifa o vendedor..."
                 clearable
                 clearLabel="Quitar seleccion"
+              />
+            </div>
+            <div className="w-full">
+              <SearchableSelect
+                options={userOptions}
+                value={selectedUsuarioId}
+                onChange={setSelectedUsuarioId}
+                placeholder="Filtrar por trabajador..."
+                clearable
+                clearLabel="Quitar filtro de trabajador"
               />
             </div>
             <Link
@@ -255,7 +289,7 @@ const HistorialAbonos = () => {
 
           {selected ? (
             <div className="mt-6 flex flex-col gap-3 lg:flex-row lg:items-end lg:justify-between">
-              <div className="w-full max-w-xl">
+                <div className="w-full max-w-xl">
                 <label className="block text-sm">
                   <span className="text-slate-600">Buscar por codigo unico o consecutivo</span>
                   <input
@@ -266,7 +300,22 @@ const HistorialAbonos = () => {
                     onChange={(event) => setSearchTerm(event.target.value)}
                   />
                 </label>
-              </div>
+                </div>
+                <div className="w-full max-w-sm">
+                  <label className="block text-sm">
+                    <span className="text-slate-600">Trabajador</span>
+                    <div className="mt-1">
+                      <SearchableSelect
+                        options={userOptions}
+                        value={selectedUsuarioId}
+                        onChange={setSelectedUsuarioId}
+                        placeholder="Todos los trabajadores"
+                        clearable
+                        clearLabel="Quitar filtro de trabajador"
+                      />
+                    </div>
+                  </label>
+                </div>
               <button
                 type="button"
                 disabled={!activeFilteredAbonos.length}

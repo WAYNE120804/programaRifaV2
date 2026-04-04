@@ -597,3 +597,137 @@ Cada fase debe cerrar con:
   - descripcion del premio;
   - fecha y hora de juego del premio.
 - `Rifa` ahora guarda `loteriaNombre`.
+
+## Avance 2026-03-31 - Usuarios y autenticacion
+
+- backend:
+  - se agrego `auth` con login y perfil actual;
+  - se agrego administracion basica de usuarios;
+  - todas las rutas administrativas quedaron protegidas por token;
+  - se usa hash de contrasena con `scrypt` y firma de token con `crypto` nativo;
+  - el sistema crea un admin inicial automaticamente si la base esta vacia.
+- frontend:
+  - se agrego pantalla `Login`;
+  - se implemento sesion persistente;
+  - el panel ahora usa guardia de rutas;
+  - se agrego pagina `Usuarios`;
+  - el sidebar muestra usuario actual y `Cerrar sesion`.
+- rutas publicas conservadas:
+  - `GET /api/configuracion`
+  - `GET /api/recibos/codigo/:codigo`
+  - `GET /api/health`
+- credenciales bootstrap por defecto en desarrollo:
+  - email: `admin@rifas.local`
+  - contrasena: `Admin123*`
+  - se recomienda cambiarlas por variables de entorno en cuanto se prepare un entorno mas serio.
+
+## Avance 2026-03-31 - Roles y trazabilidad operativa
+
+- `ADMIN` conserva acceso total al panel.
+- `CAJERO` ahora solo tiene acceso a modulos operativos:
+  - `Abonos`
+  - `Asignaciones`
+  - `Devoluciones`
+  - `Juego`
+  - gestion operativa de `Boletas`
+- `CAJERO` ya no puede ver:
+  - `Dashboard`
+  - `Gastos`
+  - `Caja`
+  - `Configuracion`
+  - `Usuarios`
+- el modulo de `clientes` aun no existe; cuando se construya, el permiso de `registrar clientes` debera quedar dentro del rol `CAJERO`.
+- las siguientes operaciones ya guardan el usuario autenticado que las realizo:
+  - abonos
+  - gastos
+  - asignaciones
+  - devoluciones
+  - juego
+- esa trazabilidad ya se muestra en:
+  - tablas de historial
+  - recibos
+  - filtros por trabajador en modulos operativos relevantes
+
+## Avance 2026-03-31 - Configuracion pagina web
+
+- se agrego una nueva pantalla administrativa:
+  - `Configuracion pagina web`
+- esta pantalla reutiliza el mismo endpoint de configuracion del sistema y permite dejar preparado el futuro panel publico.
+- ya soporta:
+  - titulo y subtitulo de portada
+  - CTA principal y secundario
+  - imagen principal del hero
+  - texto `quienes somos`
+  - telefonos, WhatsApp, email y direccion publica
+  - redes sociales
+  - texto de soporte
+  - texto de terminos y condiciones
+  - fondo de la ficha publica de boleta
+  - galeria de imagenes para carrusel del premio
+- la ruta queda protegida para `ADMIN`.
+- backend y frontend compilan correctamente despues del ajuste.
+
+## Ajuste 2026-03-31 - Fotos del premio vs galeria institucional
+
+- la galeria del carrusel del premio ya no se maneja desde `Configuracion pagina web`.
+- ahora cada `Premio` dentro de la rifa puede cargar sus propias fotos con:
+  - titulo corto;
+  - descripcion;
+  - imagen.
+- `Configuracion pagina web` queda enfocada en fotos institucionales de la casa rifera:
+  - entrega de premios;
+  - ubicacion;
+  - imagenes de confianza o respaldo;
+  - fondo de ficha publica de boleta.
+
+## Avance 2026-03-31 - Base operativa del canal web
+
+- ya existe preparacion administrativa por rifa para el futuro modulo publico.
+- desde `Caja`, el admin puede ejecutar `Preparar canal web`, lo que asegura:
+  - vendedor especial `PAGINA WEB`;
+  - relacion `RifaVendedor` para la rifa seleccionada con comision `0`;
+  - subcaja `WOMPI WEB` en la caja principal de la rifa.
+- el resumen de `Caja` ahora muestra:
+  - estado del vendedor web;
+  - estado de la subcaja web;
+  - boletas actualmente asignadas al canal;
+  - total abonado del canal web.
+- esto deja lista la base operativa para:
+  - home publico;
+  - detalle de rifa;
+  - seleccion publica de boletas;
+  - flujo posterior con Wompi.
+
+## Avance 2026-03-31 - Home publico y detalle publico de rifa
+
+- se agregaron rutas publicas iniciales:
+  - `/publico`
+  - `/publico/rifas/:id`
+- el panel publico reutiliza:
+  - logo de configuracion;
+  - nombre de la casa rifera;
+  - colores principales del sistema;
+  - textos y contenidos de `Configuracion pagina web`.
+- el home publico ahora muestra:
+  - hero institucional;
+  - rifa activa destacada;
+  - navegacion basica;
+  - galeria institucional;
+  - reglamento;
+  - contacto publico.
+- el detalle publico de rifa ahora muestra:
+  - datos de la rifa;
+  - loteria;
+  - precio;
+  - fecha de cierre;
+  - carrusel de fotos del premio;
+  - cronograma de premios;
+  - bloque de soporte;
+  - CTA listo para conectar el futuro selector de boletas.
+- backend ajustado:
+  - `GET /api/rifas/:id` ahora incluye en cada premio:
+    - `imagenesJson`
+    - `mostrarValor`
+    - `valor`
+- esto deja listo el siguiente punto del plan:
+  - seleccion publica de boletas desde el vendedor especial `PAGINA WEB`.

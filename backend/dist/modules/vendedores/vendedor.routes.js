@@ -2,10 +2,12 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.vendedorRouter = void 0;
 const express_1 = require("express");
+const prisma_client_1 = require("../../lib/prisma-client");
+const auth_1 = require("../../middlewares/auth");
 const vendedor_controller_1 = require("./vendedor.controller");
 exports.vendedorRouter = (0, express_1.Router)();
 exports.vendedorRouter.get('/', vendedor_controller_1.getAllVendedores);
 exports.vendedorRouter.get('/:id', vendedor_controller_1.getVendedor);
-exports.vendedorRouter.post('/', vendedor_controller_1.postVendedor);
-exports.vendedorRouter.put('/:id', vendedor_controller_1.putVendedor);
-exports.vendedorRouter.delete('/:id', vendedor_controller_1.removeVendedor);
+exports.vendedorRouter.post('/', (0, auth_1.requireRole)(prisma_client_1.RolUsuario.ADMIN), vendedor_controller_1.postVendedor);
+exports.vendedorRouter.put('/:id', (0, auth_1.requireRole)(prisma_client_1.RolUsuario.ADMIN), vendedor_controller_1.putVendedor);
+exports.vendedorRouter.delete('/:id', (0, auth_1.requireRole)(prisma_client_1.RolUsuario.ADMIN), vendedor_controller_1.removeVendedor);

@@ -30,7 +30,13 @@ export async function putJuegoRifaVendedor(
 ) {
   try {
     const payload = parseActualizarJuegoPayload(req.body);
-    res.json(await actualizarJuegoRifaVendedor(getStringParam(req.params.id), payload));
+    res.json(
+      await actualizarJuegoRifaVendedor(
+        getStringParam(req.params.id),
+        payload,
+        req.authUser?.id
+      )
+    );
   } catch (error) {
     next(error);
   }

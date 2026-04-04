@@ -43,6 +43,13 @@ type JuegoResumen = {
     precioCasa?: number | string;
     totalBoletas: number;
     boletas: Array<{ id: string; numero: string; estado: string }>;
+    registro?: {
+      fecha: string;
+      totalBoletas: number;
+      usuario?: {
+        nombre?: string | null;
+      } | null;
+    } | null;
   }>;
 };
 
@@ -651,6 +658,15 @@ const JuegoPage = () => {
                                 </div>
                                 <div className="mt-1 text-sm text-slate-500">
                                   Total que juegan: {group.totalBoletas.toLocaleString('es-CO')}
+                                </div>
+                                <div className="mt-1 text-xs text-slate-500">
+                                  Actualizado por: {group.registro?.usuario?.nombre || 'SISTEMA'}
+                                </div>
+                                <div className="mt-1 text-xs text-slate-500">
+                                  Ultima actualizacion:{' '}
+                                  {group.registro?.fecha
+                                    ? formatDateTime(group.registro.fecha)
+                                    : 'Sin registro'}
                                 </div>
                               </div>
                             </div>

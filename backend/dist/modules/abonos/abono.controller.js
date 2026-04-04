@@ -10,7 +10,9 @@ function getStringParam(value) {
 }
 async function getAbonosRifaVendedor(req, res, next) {
     try {
-        const data = await (0, abono_service_1.listAbonosByRifaVendedor)(getStringParam(req.params.id));
+        const data = await (0, abono_service_1.listAbonosByRifaVendedor)(getStringParam(req.params.id), {
+            usuarioId: getStringParam(req.query.usuarioId),
+        });
         res.json(data);
     }
     catch (error) {
@@ -20,7 +22,7 @@ async function getAbonosRifaVendedor(req, res, next) {
 async function postAbonoRifaVendedor(req, res, next) {
     try {
         const payload = (0, abono_schemas_1.parseCreateAbonoPayload)(req.body);
-        const data = await (0, abono_service_1.createAbono)(getStringParam(req.params.id), payload);
+        const data = await (0, abono_service_1.createAbono)(getStringParam(req.params.id), payload, req.authUser?.id);
         res.status(201).json(data);
     }
     catch (error) {
@@ -30,7 +32,7 @@ async function postAbonoRifaVendedor(req, res, next) {
 async function postAnularAbono(req, res, next) {
     try {
         const payload = (0, abono_schemas_1.parseAnularAbonoPayload)(req.body);
-        await (0, abono_service_1.anularAbono)(getStringParam(req.params.abonoId), payload);
+        await (0, abono_service_1.anularAbono)(getStringParam(req.params.abonoId), payload, req.authUser?.id);
         res.status(204).send();
     }
     catch (error) {

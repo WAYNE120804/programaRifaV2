@@ -119,6 +119,11 @@ export type MovimientoCaja = $Result.DefaultSelection<Prisma.$MovimientoCajaPayl
  */
 export type Gasto = $Result.DefaultSelection<Prisma.$GastoPayload>
 /**
+ * Model JuegoRegistro
+ * 
+ */
+export type JuegoRegistro = $Result.DefaultSelection<Prisma.$JuegoRegistroPayload>
+/**
  * Model GastoRecibo
  * 
  */
@@ -183,7 +188,8 @@ export const MetodoPago: {
   EFECTIVO: 'EFECTIVO',
   NEQUI: 'NEQUI',
   DAVIPLATA: 'DAVIPLATA',
-  TRANSFERENCIA: 'TRANSFERENCIA'
+  TRANSFERENCIA: 'TRANSFERENCIA',
+  WOMPI: 'WOMPI'
 };
 
 export type MetodoPago = (typeof MetodoPago)[keyof typeof MetodoPago]
@@ -605,6 +611,16 @@ export class PrismaClient<
     * ```
     */
   get gasto(): Prisma.GastoDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.juegoRegistro`: Exposes CRUD operations for the **JuegoRegistro** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more JuegoRegistros
+    * const juegoRegistros = await prisma.juegoRegistro.findMany()
+    * ```
+    */
+  get juegoRegistro(): Prisma.JuegoRegistroDelegate<ExtArgs, ClientOptions>;
 
   /**
    * `prisma.gastoRecibo`: Exposes CRUD operations for the **GastoRecibo** model.
@@ -1076,6 +1092,7 @@ export namespace Prisma {
     SubCaja: 'SubCaja',
     MovimientoCaja: 'MovimientoCaja',
     Gasto: 'Gasto',
+    JuegoRegistro: 'JuegoRegistro',
     GastoRecibo: 'GastoRecibo'
   };
 
@@ -1095,7 +1112,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "configuracionSistema" | "usuario" | "rifa" | "premio" | "boletaPremio" | "boleta" | "vendedor" | "rifaVendedor" | "asignacionBoletas" | "asignacionDetalle" | "devolucionBoletas" | "devolucionDetalle" | "cliente" | "venta" | "pagoCliente" | "abonoVendedor" | "recibo" | "caja" | "subCaja" | "movimientoCaja" | "gasto" | "gastoRecibo"
+      modelProps: "configuracionSistema" | "usuario" | "rifa" | "premio" | "boletaPremio" | "boleta" | "vendedor" | "rifaVendedor" | "asignacionBoletas" | "asignacionDetalle" | "devolucionBoletas" | "devolucionDetalle" | "cliente" | "venta" | "pagoCliente" | "abonoVendedor" | "recibo" | "caja" | "subCaja" | "movimientoCaja" | "gasto" | "juegoRegistro" | "gastoRecibo"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -2653,6 +2670,80 @@ export namespace Prisma {
           }
         }
       }
+      JuegoRegistro: {
+        payload: Prisma.$JuegoRegistroPayload<ExtArgs>
+        fields: Prisma.JuegoRegistroFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.JuegoRegistroFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$JuegoRegistroPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.JuegoRegistroFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$JuegoRegistroPayload>
+          }
+          findFirst: {
+            args: Prisma.JuegoRegistroFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$JuegoRegistroPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.JuegoRegistroFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$JuegoRegistroPayload>
+          }
+          findMany: {
+            args: Prisma.JuegoRegistroFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$JuegoRegistroPayload>[]
+          }
+          create: {
+            args: Prisma.JuegoRegistroCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$JuegoRegistroPayload>
+          }
+          createMany: {
+            args: Prisma.JuegoRegistroCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.JuegoRegistroCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$JuegoRegistroPayload>[]
+          }
+          delete: {
+            args: Prisma.JuegoRegistroDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$JuegoRegistroPayload>
+          }
+          update: {
+            args: Prisma.JuegoRegistroUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$JuegoRegistroPayload>
+          }
+          deleteMany: {
+            args: Prisma.JuegoRegistroDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.JuegoRegistroUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.JuegoRegistroUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$JuegoRegistroPayload>[]
+          }
+          upsert: {
+            args: Prisma.JuegoRegistroUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$JuegoRegistroPayload>
+          }
+          aggregate: {
+            args: Prisma.JuegoRegistroAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateJuegoRegistro>
+          }
+          groupBy: {
+            args: Prisma.JuegoRegistroGroupByArgs<ExtArgs>
+            result: $Utils.Optional<JuegoRegistroGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.JuegoRegistroCountArgs<ExtArgs>
+            result: $Utils.Optional<JuegoRegistroCountAggregateOutputType> | number
+          }
+        }
+      }
       GastoRecibo: {
         payload: Prisma.$GastoReciboPayload<ExtArgs>
         fields: Prisma.GastoReciboFieldRefs
@@ -2832,6 +2923,7 @@ export namespace Prisma {
     subCaja?: SubCajaOmit
     movimientoCaja?: MovimientoCajaOmit
     gasto?: GastoOmit
+    juegoRegistro?: JuegoRegistroOmit
     gastoRecibo?: GastoReciboOmit
   }
 
@@ -2930,6 +3022,10 @@ export namespace Prisma {
     rifasCreadas: number
     rifasEditadas: number
     asignaciones: number
+    devoluciones: number
+    abonosRegistrados: number
+    gastosRegistrados: number
+    juegosRegistrados: number
     movimientos: number
   }
 
@@ -2937,6 +3033,10 @@ export namespace Prisma {
     rifasCreadas?: boolean | UsuarioCountOutputTypeCountRifasCreadasArgs
     rifasEditadas?: boolean | UsuarioCountOutputTypeCountRifasEditadasArgs
     asignaciones?: boolean | UsuarioCountOutputTypeCountAsignacionesArgs
+    devoluciones?: boolean | UsuarioCountOutputTypeCountDevolucionesArgs
+    abonosRegistrados?: boolean | UsuarioCountOutputTypeCountAbonosRegistradosArgs
+    gastosRegistrados?: boolean | UsuarioCountOutputTypeCountGastosRegistradosArgs
+    juegosRegistrados?: boolean | UsuarioCountOutputTypeCountJuegosRegistradosArgs
     movimientos?: boolean | UsuarioCountOutputTypeCountMovimientosArgs
   }
 
@@ -2970,6 +3070,34 @@ export namespace Prisma {
    */
   export type UsuarioCountOutputTypeCountAsignacionesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: AsignacionBoletasWhereInput
+  }
+
+  /**
+   * UsuarioCountOutputType without action
+   */
+  export type UsuarioCountOutputTypeCountDevolucionesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: DevolucionBoletasWhereInput
+  }
+
+  /**
+   * UsuarioCountOutputType without action
+   */
+  export type UsuarioCountOutputTypeCountAbonosRegistradosArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: AbonoVendedorWhereInput
+  }
+
+  /**
+   * UsuarioCountOutputType without action
+   */
+  export type UsuarioCountOutputTypeCountGastosRegistradosArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: GastoWhereInput
+  }
+
+  /**
+   * UsuarioCountOutputType without action
+   */
+  export type UsuarioCountOutputTypeCountJuegosRegistradosArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: JuegoRegistroWhereInput
   }
 
   /**
@@ -3071,10 +3199,12 @@ export namespace Prisma {
 
   export type PremioCountOutputType = {
     boletas: number
+    juegos: number
   }
 
   export type PremioCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     boletas?: boolean | PremioCountOutputTypeCountBoletasArgs
+    juegos?: boolean | PremioCountOutputTypeCountJuegosArgs
   }
 
   // Custom InputTypes
@@ -3093,6 +3223,13 @@ export namespace Prisma {
    */
   export type PremioCountOutputTypeCountBoletasArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: BoletaPremioWhereInput
+  }
+
+  /**
+   * PremioCountOutputType without action
+   */
+  export type PremioCountOutputTypeCountJuegosArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: JuegoRegistroWhereInput
   }
 
 
@@ -3194,6 +3331,7 @@ export namespace Prisma {
     devoluciones: number
     abonos: number
     boletas: number
+    juegos: number
   }
 
   export type RifaVendedorCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -3201,6 +3339,7 @@ export namespace Prisma {
     devoluciones?: boolean | RifaVendedorCountOutputTypeCountDevolucionesArgs
     abonos?: boolean | RifaVendedorCountOutputTypeCountAbonosArgs
     boletas?: boolean | RifaVendedorCountOutputTypeCountBoletasArgs
+    juegos?: boolean | RifaVendedorCountOutputTypeCountJuegosArgs
   }
 
   // Custom InputTypes
@@ -3240,6 +3379,13 @@ export namespace Prisma {
    */
   export type RifaVendedorCountOutputTypeCountBoletasArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: BoletaWhereInput
+  }
+
+  /**
+   * RifaVendedorCountOutputType without action
+   */
+  export type RifaVendedorCountOutputTypeCountJuegosArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: JuegoRegistroWhereInput
   }
 
 
@@ -4879,6 +5025,10 @@ export namespace Prisma {
     rifasCreadas?: boolean | Usuario$rifasCreadasArgs<ExtArgs>
     rifasEditadas?: boolean | Usuario$rifasEditadasArgs<ExtArgs>
     asignaciones?: boolean | Usuario$asignacionesArgs<ExtArgs>
+    devoluciones?: boolean | Usuario$devolucionesArgs<ExtArgs>
+    abonosRegistrados?: boolean | Usuario$abonosRegistradosArgs<ExtArgs>
+    gastosRegistrados?: boolean | Usuario$gastosRegistradosArgs<ExtArgs>
+    juegosRegistrados?: boolean | Usuario$juegosRegistradosArgs<ExtArgs>
     movimientos?: boolean | Usuario$movimientosArgs<ExtArgs>
     _count?: boolean | UsuarioCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["usuario"]>
@@ -4921,6 +5071,10 @@ export namespace Prisma {
     rifasCreadas?: boolean | Usuario$rifasCreadasArgs<ExtArgs>
     rifasEditadas?: boolean | Usuario$rifasEditadasArgs<ExtArgs>
     asignaciones?: boolean | Usuario$asignacionesArgs<ExtArgs>
+    devoluciones?: boolean | Usuario$devolucionesArgs<ExtArgs>
+    abonosRegistrados?: boolean | Usuario$abonosRegistradosArgs<ExtArgs>
+    gastosRegistrados?: boolean | Usuario$gastosRegistradosArgs<ExtArgs>
+    juegosRegistrados?: boolean | Usuario$juegosRegistradosArgs<ExtArgs>
     movimientos?: boolean | Usuario$movimientosArgs<ExtArgs>
     _count?: boolean | UsuarioCountOutputTypeDefaultArgs<ExtArgs>
   }
@@ -4933,6 +5087,10 @@ export namespace Prisma {
       rifasCreadas: Prisma.$RifaPayload<ExtArgs>[]
       rifasEditadas: Prisma.$RifaPayload<ExtArgs>[]
       asignaciones: Prisma.$AsignacionBoletasPayload<ExtArgs>[]
+      devoluciones: Prisma.$DevolucionBoletasPayload<ExtArgs>[]
+      abonosRegistrados: Prisma.$AbonoVendedorPayload<ExtArgs>[]
+      gastosRegistrados: Prisma.$GastoPayload<ExtArgs>[]
+      juegosRegistrados: Prisma.$JuegoRegistroPayload<ExtArgs>[]
       movimientos: Prisma.$MovimientoCajaPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
@@ -5341,6 +5499,10 @@ export namespace Prisma {
     rifasCreadas<T extends Usuario$rifasCreadasArgs<ExtArgs> = {}>(args?: Subset<T, Usuario$rifasCreadasArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$RifaPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     rifasEditadas<T extends Usuario$rifasEditadasArgs<ExtArgs> = {}>(args?: Subset<T, Usuario$rifasEditadasArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$RifaPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     asignaciones<T extends Usuario$asignacionesArgs<ExtArgs> = {}>(args?: Subset<T, Usuario$asignacionesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AsignacionBoletasPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    devoluciones<T extends Usuario$devolucionesArgs<ExtArgs> = {}>(args?: Subset<T, Usuario$devolucionesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DevolucionBoletasPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    abonosRegistrados<T extends Usuario$abonosRegistradosArgs<ExtArgs> = {}>(args?: Subset<T, Usuario$abonosRegistradosArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AbonoVendedorPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    gastosRegistrados<T extends Usuario$gastosRegistradosArgs<ExtArgs> = {}>(args?: Subset<T, Usuario$gastosRegistradosArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$GastoPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    juegosRegistrados<T extends Usuario$juegosRegistradosArgs<ExtArgs> = {}>(args?: Subset<T, Usuario$juegosRegistradosArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$JuegoRegistroPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     movimientos<T extends Usuario$movimientosArgs<ExtArgs> = {}>(args?: Subset<T, Usuario$movimientosArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$MovimientoCajaPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
@@ -5836,6 +5998,102 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: AsignacionBoletasScalarFieldEnum | AsignacionBoletasScalarFieldEnum[]
+  }
+
+  /**
+   * Usuario.devoluciones
+   */
+  export type Usuario$devolucionesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DevolucionBoletas
+     */
+    select?: DevolucionBoletasSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DevolucionBoletas
+     */
+    omit?: DevolucionBoletasOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DevolucionBoletasInclude<ExtArgs> | null
+    where?: DevolucionBoletasWhereInput
+    orderBy?: DevolucionBoletasOrderByWithRelationInput | DevolucionBoletasOrderByWithRelationInput[]
+    cursor?: DevolucionBoletasWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: DevolucionBoletasScalarFieldEnum | DevolucionBoletasScalarFieldEnum[]
+  }
+
+  /**
+   * Usuario.abonosRegistrados
+   */
+  export type Usuario$abonosRegistradosArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AbonoVendedor
+     */
+    select?: AbonoVendedorSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AbonoVendedor
+     */
+    omit?: AbonoVendedorOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AbonoVendedorInclude<ExtArgs> | null
+    where?: AbonoVendedorWhereInput
+    orderBy?: AbonoVendedorOrderByWithRelationInput | AbonoVendedorOrderByWithRelationInput[]
+    cursor?: AbonoVendedorWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: AbonoVendedorScalarFieldEnum | AbonoVendedorScalarFieldEnum[]
+  }
+
+  /**
+   * Usuario.gastosRegistrados
+   */
+  export type Usuario$gastosRegistradosArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Gasto
+     */
+    select?: GastoSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Gasto
+     */
+    omit?: GastoOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: GastoInclude<ExtArgs> | null
+    where?: GastoWhereInput
+    orderBy?: GastoOrderByWithRelationInput | GastoOrderByWithRelationInput[]
+    cursor?: GastoWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: GastoScalarFieldEnum | GastoScalarFieldEnum[]
+  }
+
+  /**
+   * Usuario.juegosRegistrados
+   */
+  export type Usuario$juegosRegistradosArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the JuegoRegistro
+     */
+    select?: JuegoRegistroSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the JuegoRegistro
+     */
+    omit?: JuegoRegistroOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: JuegoRegistroInclude<ExtArgs> | null
+    where?: JuegoRegistroWhereInput
+    orderBy?: JuegoRegistroOrderByWithRelationInput | JuegoRegistroOrderByWithRelationInput[]
+    cursor?: JuegoRegistroWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: JuegoRegistroScalarFieldEnum | JuegoRegistroScalarFieldEnum[]
   }
 
   /**
@@ -7361,6 +7619,7 @@ export namespace Prisma {
     rifaId: number
     nombre: number
     descripcion: number
+    imagenesJson: number
     tipo: number
     mostrarValor: number
     valor: number
@@ -7407,6 +7666,7 @@ export namespace Prisma {
     rifaId?: true
     nombre?: true
     descripcion?: true
+    imagenesJson?: true
     tipo?: true
     mostrarValor?: true
     valor?: true
@@ -7506,6 +7766,7 @@ export namespace Prisma {
     rifaId: string
     nombre: string
     descripcion: string | null
+    imagenesJson: JsonValue | null
     tipo: $Enums.TipoPremio
     mostrarValor: boolean
     valor: Decimal | null
@@ -7537,6 +7798,7 @@ export namespace Prisma {
     rifaId?: boolean
     nombre?: boolean
     descripcion?: boolean
+    imagenesJson?: boolean
     tipo?: boolean
     mostrarValor?: boolean
     valor?: boolean
@@ -7544,6 +7806,7 @@ export namespace Prisma {
     createdAt?: boolean
     rifa?: boolean | RifaDefaultArgs<ExtArgs>
     boletas?: boolean | Premio$boletasArgs<ExtArgs>
+    juegos?: boolean | Premio$juegosArgs<ExtArgs>
     _count?: boolean | PremioCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["premio"]>
 
@@ -7552,6 +7815,7 @@ export namespace Prisma {
     rifaId?: boolean
     nombre?: boolean
     descripcion?: boolean
+    imagenesJson?: boolean
     tipo?: boolean
     mostrarValor?: boolean
     valor?: boolean
@@ -7565,6 +7829,7 @@ export namespace Prisma {
     rifaId?: boolean
     nombre?: boolean
     descripcion?: boolean
+    imagenesJson?: boolean
     tipo?: boolean
     mostrarValor?: boolean
     valor?: boolean
@@ -7578,6 +7843,7 @@ export namespace Prisma {
     rifaId?: boolean
     nombre?: boolean
     descripcion?: boolean
+    imagenesJson?: boolean
     tipo?: boolean
     mostrarValor?: boolean
     valor?: boolean
@@ -7585,10 +7851,11 @@ export namespace Prisma {
     createdAt?: boolean
   }
 
-  export type PremioOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "rifaId" | "nombre" | "descripcion" | "tipo" | "mostrarValor" | "valor" | "fecha" | "createdAt", ExtArgs["result"]["premio"]>
+  export type PremioOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "rifaId" | "nombre" | "descripcion" | "imagenesJson" | "tipo" | "mostrarValor" | "valor" | "fecha" | "createdAt", ExtArgs["result"]["premio"]>
   export type PremioInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     rifa?: boolean | RifaDefaultArgs<ExtArgs>
     boletas?: boolean | Premio$boletasArgs<ExtArgs>
+    juegos?: boolean | Premio$juegosArgs<ExtArgs>
     _count?: boolean | PremioCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type PremioIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -7603,12 +7870,14 @@ export namespace Prisma {
     objects: {
       rifa: Prisma.$RifaPayload<ExtArgs>
       boletas: Prisma.$BoletaPremioPayload<ExtArgs>[]
+      juegos: Prisma.$JuegoRegistroPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
       rifaId: string
       nombre: string
       descripcion: string | null
+      imagenesJson: Prisma.JsonValue | null
       tipo: $Enums.TipoPremio
       mostrarValor: boolean
       valor: Prisma.Decimal | null
@@ -8010,6 +8279,7 @@ export namespace Prisma {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     rifa<T extends RifaDefaultArgs<ExtArgs> = {}>(args?: Subset<T, RifaDefaultArgs<ExtArgs>>): Prisma__RifaClient<$Result.GetResult<Prisma.$RifaPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     boletas<T extends Premio$boletasArgs<ExtArgs> = {}>(args?: Subset<T, Premio$boletasArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$BoletaPremioPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    juegos<T extends Premio$juegosArgs<ExtArgs> = {}>(args?: Subset<T, Premio$juegosArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$JuegoRegistroPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -8043,6 +8313,7 @@ export namespace Prisma {
     readonly rifaId: FieldRef<"Premio", 'String'>
     readonly nombre: FieldRef<"Premio", 'String'>
     readonly descripcion: FieldRef<"Premio", 'String'>
+    readonly imagenesJson: FieldRef<"Premio", 'Json'>
     readonly tipo: FieldRef<"Premio", 'TipoPremio'>
     readonly mostrarValor: FieldRef<"Premio", 'Boolean'>
     readonly valor: FieldRef<"Premio", 'Decimal'>
@@ -8465,6 +8736,30 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: BoletaPremioScalarFieldEnum | BoletaPremioScalarFieldEnum[]
+  }
+
+  /**
+   * Premio.juegos
+   */
+  export type Premio$juegosArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the JuegoRegistro
+     */
+    select?: JuegoRegistroSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the JuegoRegistro
+     */
+    omit?: JuegoRegistroOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: JuegoRegistroInclude<ExtArgs> | null
+    where?: JuegoRegistroWhereInput
+    orderBy?: JuegoRegistroOrderByWithRelationInput | JuegoRegistroOrderByWithRelationInput[]
+    cursor?: JuegoRegistroWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: JuegoRegistroScalarFieldEnum | JuegoRegistroScalarFieldEnum[]
   }
 
   /**
@@ -12259,6 +12554,7 @@ export namespace Prisma {
     devoluciones?: boolean | RifaVendedor$devolucionesArgs<ExtArgs>
     abonos?: boolean | RifaVendedor$abonosArgs<ExtArgs>
     boletas?: boolean | RifaVendedor$boletasArgs<ExtArgs>
+    juegos?: boolean | RifaVendedor$juegosArgs<ExtArgs>
     _count?: boolean | RifaVendedorCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["rifaVendedor"]>
 
@@ -12301,6 +12597,7 @@ export namespace Prisma {
     devoluciones?: boolean | RifaVendedor$devolucionesArgs<ExtArgs>
     abonos?: boolean | RifaVendedor$abonosArgs<ExtArgs>
     boletas?: boolean | RifaVendedor$boletasArgs<ExtArgs>
+    juegos?: boolean | RifaVendedor$juegosArgs<ExtArgs>
     _count?: boolean | RifaVendedorCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type RifaVendedorIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -12321,6 +12618,7 @@ export namespace Prisma {
       devoluciones: Prisma.$DevolucionBoletasPayload<ExtArgs>[]
       abonos: Prisma.$AbonoVendedorPayload<ExtArgs>[]
       boletas: Prisma.$BoletaPayload<ExtArgs>[]
+      juegos: Prisma.$JuegoRegistroPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -12729,6 +13027,7 @@ export namespace Prisma {
     devoluciones<T extends RifaVendedor$devolucionesArgs<ExtArgs> = {}>(args?: Subset<T, RifaVendedor$devolucionesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DevolucionBoletasPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     abonos<T extends RifaVendedor$abonosArgs<ExtArgs> = {}>(args?: Subset<T, RifaVendedor$abonosArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AbonoVendedorPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     boletas<T extends RifaVendedor$boletasArgs<ExtArgs> = {}>(args?: Subset<T, RifaVendedor$boletasArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$BoletaPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    juegos<T extends RifaVendedor$juegosArgs<ExtArgs> = {}>(args?: Subset<T, RifaVendedor$juegosArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$JuegoRegistroPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -13253,6 +13552,30 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: BoletaScalarFieldEnum | BoletaScalarFieldEnum[]
+  }
+
+  /**
+   * RifaVendedor.juegos
+   */
+  export type RifaVendedor$juegosArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the JuegoRegistro
+     */
+    select?: JuegoRegistroSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the JuegoRegistro
+     */
+    omit?: JuegoRegistroOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: JuegoRegistroInclude<ExtArgs> | null
+    where?: JuegoRegistroWhereInput
+    orderBy?: JuegoRegistroOrderByWithRelationInput | JuegoRegistroOrderByWithRelationInput[]
+    cursor?: JuegoRegistroWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: JuegoRegistroScalarFieldEnum | JuegoRegistroScalarFieldEnum[]
   }
 
   /**
@@ -15478,6 +15801,7 @@ export namespace Prisma {
     rifaVendedorId: string | null
     destino: $Enums.DestinoDevolucion | null
     fecha: Date | null
+    usuarioId: string | null
   }
 
   export type DevolucionBoletasMaxAggregateOutputType = {
@@ -15485,6 +15809,7 @@ export namespace Prisma {
     rifaVendedorId: string | null
     destino: $Enums.DestinoDevolucion | null
     fecha: Date | null
+    usuarioId: string | null
   }
 
   export type DevolucionBoletasCountAggregateOutputType = {
@@ -15492,6 +15817,7 @@ export namespace Prisma {
     rifaVendedorId: number
     destino: number
     fecha: number
+    usuarioId: number
     _all: number
   }
 
@@ -15501,6 +15827,7 @@ export namespace Prisma {
     rifaVendedorId?: true
     destino?: true
     fecha?: true
+    usuarioId?: true
   }
 
   export type DevolucionBoletasMaxAggregateInputType = {
@@ -15508,6 +15835,7 @@ export namespace Prisma {
     rifaVendedorId?: true
     destino?: true
     fecha?: true
+    usuarioId?: true
   }
 
   export type DevolucionBoletasCountAggregateInputType = {
@@ -15515,6 +15843,7 @@ export namespace Prisma {
     rifaVendedorId?: true
     destino?: true
     fecha?: true
+    usuarioId?: true
     _all?: true
   }
 
@@ -15595,6 +15924,7 @@ export namespace Prisma {
     rifaVendedorId: string
     destino: $Enums.DestinoDevolucion
     fecha: Date
+    usuarioId: string | null
     _count: DevolucionBoletasCountAggregateOutputType | null
     _min: DevolucionBoletasMinAggregateOutputType | null
     _max: DevolucionBoletasMaxAggregateOutputType | null
@@ -15619,7 +15949,9 @@ export namespace Prisma {
     rifaVendedorId?: boolean
     destino?: boolean
     fecha?: boolean
+    usuarioId?: boolean
     rifaVendedor?: boolean | RifaVendedorDefaultArgs<ExtArgs>
+    usuario?: boolean | DevolucionBoletas$usuarioArgs<ExtArgs>
     detalle?: boolean | DevolucionBoletas$detalleArgs<ExtArgs>
     _count?: boolean | DevolucionBoletasCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["devolucionBoletas"]>
@@ -15629,7 +15961,9 @@ export namespace Prisma {
     rifaVendedorId?: boolean
     destino?: boolean
     fecha?: boolean
+    usuarioId?: boolean
     rifaVendedor?: boolean | RifaVendedorDefaultArgs<ExtArgs>
+    usuario?: boolean | DevolucionBoletas$usuarioArgs<ExtArgs>
   }, ExtArgs["result"]["devolucionBoletas"]>
 
   export type DevolucionBoletasSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -15637,7 +15971,9 @@ export namespace Prisma {
     rifaVendedorId?: boolean
     destino?: boolean
     fecha?: boolean
+    usuarioId?: boolean
     rifaVendedor?: boolean | RifaVendedorDefaultArgs<ExtArgs>
+    usuario?: boolean | DevolucionBoletas$usuarioArgs<ExtArgs>
   }, ExtArgs["result"]["devolucionBoletas"]>
 
   export type DevolucionBoletasSelectScalar = {
@@ -15645,25 +15981,30 @@ export namespace Prisma {
     rifaVendedorId?: boolean
     destino?: boolean
     fecha?: boolean
+    usuarioId?: boolean
   }
 
-  export type DevolucionBoletasOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "rifaVendedorId" | "destino" | "fecha", ExtArgs["result"]["devolucionBoletas"]>
+  export type DevolucionBoletasOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "rifaVendedorId" | "destino" | "fecha" | "usuarioId", ExtArgs["result"]["devolucionBoletas"]>
   export type DevolucionBoletasInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     rifaVendedor?: boolean | RifaVendedorDefaultArgs<ExtArgs>
+    usuario?: boolean | DevolucionBoletas$usuarioArgs<ExtArgs>
     detalle?: boolean | DevolucionBoletas$detalleArgs<ExtArgs>
     _count?: boolean | DevolucionBoletasCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type DevolucionBoletasIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     rifaVendedor?: boolean | RifaVendedorDefaultArgs<ExtArgs>
+    usuario?: boolean | DevolucionBoletas$usuarioArgs<ExtArgs>
   }
   export type DevolucionBoletasIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     rifaVendedor?: boolean | RifaVendedorDefaultArgs<ExtArgs>
+    usuario?: boolean | DevolucionBoletas$usuarioArgs<ExtArgs>
   }
 
   export type $DevolucionBoletasPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "DevolucionBoletas"
     objects: {
       rifaVendedor: Prisma.$RifaVendedorPayload<ExtArgs>
+      usuario: Prisma.$UsuarioPayload<ExtArgs> | null
       detalle: Prisma.$DevolucionDetallePayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
@@ -15671,6 +16012,7 @@ export namespace Prisma {
       rifaVendedorId: string
       destino: $Enums.DestinoDevolucion
       fecha: Date
+      usuarioId: string | null
     }, ExtArgs["result"]["devolucionBoletas"]>
     composites: {}
   }
@@ -16066,6 +16408,7 @@ export namespace Prisma {
   export interface Prisma__DevolucionBoletasClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     rifaVendedor<T extends RifaVendedorDefaultArgs<ExtArgs> = {}>(args?: Subset<T, RifaVendedorDefaultArgs<ExtArgs>>): Prisma__RifaVendedorClient<$Result.GetResult<Prisma.$RifaVendedorPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    usuario<T extends DevolucionBoletas$usuarioArgs<ExtArgs> = {}>(args?: Subset<T, DevolucionBoletas$usuarioArgs<ExtArgs>>): Prisma__UsuarioClient<$Result.GetResult<Prisma.$UsuarioPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     detalle<T extends DevolucionBoletas$detalleArgs<ExtArgs> = {}>(args?: Subset<T, DevolucionBoletas$detalleArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DevolucionDetallePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
@@ -16100,6 +16443,7 @@ export namespace Prisma {
     readonly rifaVendedorId: FieldRef<"DevolucionBoletas", 'String'>
     readonly destino: FieldRef<"DevolucionBoletas", 'DestinoDevolucion'>
     readonly fecha: FieldRef<"DevolucionBoletas", 'DateTime'>
+    readonly usuarioId: FieldRef<"DevolucionBoletas", 'String'>
   }
     
 
@@ -16493,6 +16837,25 @@ export namespace Prisma {
      * Limit how many DevolucionBoletas to delete.
      */
     limit?: number
+  }
+
+  /**
+   * DevolucionBoletas.usuario
+   */
+  export type DevolucionBoletas$usuarioArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Usuario
+     */
+    select?: UsuarioSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Usuario
+     */
+    omit?: UsuarioOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UsuarioInclude<ExtArgs> | null
+    where?: UsuarioWhereInput
   }
 
   /**
@@ -17593,6 +17956,7 @@ export namespace Prisma {
     nombre: string | null
     email: string | null
     telefono: string | null
+    documento: string | null
   }
 
   export type ClienteMaxAggregateOutputType = {
@@ -17600,6 +17964,7 @@ export namespace Prisma {
     nombre: string | null
     email: string | null
     telefono: string | null
+    documento: string | null
   }
 
   export type ClienteCountAggregateOutputType = {
@@ -17607,6 +17972,7 @@ export namespace Prisma {
     nombre: number
     email: number
     telefono: number
+    documento: number
     _all: number
   }
 
@@ -17616,6 +17982,7 @@ export namespace Prisma {
     nombre?: true
     email?: true
     telefono?: true
+    documento?: true
   }
 
   export type ClienteMaxAggregateInputType = {
@@ -17623,6 +17990,7 @@ export namespace Prisma {
     nombre?: true
     email?: true
     telefono?: true
+    documento?: true
   }
 
   export type ClienteCountAggregateInputType = {
@@ -17630,6 +17998,7 @@ export namespace Prisma {
     nombre?: true
     email?: true
     telefono?: true
+    documento?: true
     _all?: true
   }
 
@@ -17710,6 +18079,7 @@ export namespace Prisma {
     nombre: string
     email: string | null
     telefono: string | null
+    documento: string | null
     _count: ClienteCountAggregateOutputType | null
     _min: ClienteMinAggregateOutputType | null
     _max: ClienteMaxAggregateOutputType | null
@@ -17734,6 +18104,7 @@ export namespace Prisma {
     nombre?: boolean
     email?: boolean
     telefono?: boolean
+    documento?: boolean
     ventas?: boolean | Cliente$ventasArgs<ExtArgs>
     boletas?: boolean | Cliente$boletasArgs<ExtArgs>
     movimientos?: boolean | Cliente$movimientosArgs<ExtArgs>
@@ -17745,6 +18116,7 @@ export namespace Prisma {
     nombre?: boolean
     email?: boolean
     telefono?: boolean
+    documento?: boolean
   }, ExtArgs["result"]["cliente"]>
 
   export type ClienteSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -17752,6 +18124,7 @@ export namespace Prisma {
     nombre?: boolean
     email?: boolean
     telefono?: boolean
+    documento?: boolean
   }, ExtArgs["result"]["cliente"]>
 
   export type ClienteSelectScalar = {
@@ -17759,9 +18132,10 @@ export namespace Prisma {
     nombre?: boolean
     email?: boolean
     telefono?: boolean
+    documento?: boolean
   }
 
-  export type ClienteOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "nombre" | "email" | "telefono", ExtArgs["result"]["cliente"]>
+  export type ClienteOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "nombre" | "email" | "telefono" | "documento", ExtArgs["result"]["cliente"]>
   export type ClienteInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     ventas?: boolean | Cliente$ventasArgs<ExtArgs>
     boletas?: boolean | Cliente$boletasArgs<ExtArgs>
@@ -17783,6 +18157,7 @@ export namespace Prisma {
       nombre: string
       email: string | null
       telefono: string | null
+      documento: string | null
     }, ExtArgs["result"]["cliente"]>
     composites: {}
   }
@@ -18213,6 +18588,7 @@ export namespace Prisma {
     readonly nombre: FieldRef<"Cliente", 'String'>
     readonly email: FieldRef<"Cliente", 'String'>
     readonly telefono: FieldRef<"Cliente", 'String'>
+    readonly documento: FieldRef<"Cliente", 'String'>
   }
     
 
@@ -18720,6 +19096,12 @@ export namespace Prisma {
     estado: $Enums.EstadoVenta | null
     total: Decimal | null
     saldoPendiente: Decimal | null
+    referenciaPago: string | null
+    pasarelaPago: string | null
+    pasarelaEstado: string | null
+    pasarelaTransaccionId: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
   }
 
   export type VentaMaxAggregateOutputType = {
@@ -18729,6 +19111,12 @@ export namespace Prisma {
     estado: $Enums.EstadoVenta | null
     total: Decimal | null
     saldoPendiente: Decimal | null
+    referenciaPago: string | null
+    pasarelaPago: string | null
+    pasarelaEstado: string | null
+    pasarelaTransaccionId: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
   }
 
   export type VentaCountAggregateOutputType = {
@@ -18738,6 +19126,12 @@ export namespace Prisma {
     estado: number
     total: number
     saldoPendiente: number
+    referenciaPago: number
+    pasarelaPago: number
+    pasarelaEstado: number
+    pasarelaTransaccionId: number
+    createdAt: number
+    updatedAt: number
     _all: number
   }
 
@@ -18759,6 +19153,12 @@ export namespace Prisma {
     estado?: true
     total?: true
     saldoPendiente?: true
+    referenciaPago?: true
+    pasarelaPago?: true
+    pasarelaEstado?: true
+    pasarelaTransaccionId?: true
+    createdAt?: true
+    updatedAt?: true
   }
 
   export type VentaMaxAggregateInputType = {
@@ -18768,6 +19168,12 @@ export namespace Prisma {
     estado?: true
     total?: true
     saldoPendiente?: true
+    referenciaPago?: true
+    pasarelaPago?: true
+    pasarelaEstado?: true
+    pasarelaTransaccionId?: true
+    createdAt?: true
+    updatedAt?: true
   }
 
   export type VentaCountAggregateInputType = {
@@ -18777,6 +19183,12 @@ export namespace Prisma {
     estado?: true
     total?: true
     saldoPendiente?: true
+    referenciaPago?: true
+    pasarelaPago?: true
+    pasarelaEstado?: true
+    pasarelaTransaccionId?: true
+    createdAt?: true
+    updatedAt?: true
     _all?: true
   }
 
@@ -18873,6 +19285,12 @@ export namespace Prisma {
     estado: $Enums.EstadoVenta
     total: Decimal
     saldoPendiente: Decimal
+    referenciaPago: string | null
+    pasarelaPago: string | null
+    pasarelaEstado: string | null
+    pasarelaTransaccionId: string | null
+    createdAt: Date
+    updatedAt: Date
     _count: VentaCountAggregateOutputType | null
     _avg: VentaAvgAggregateOutputType | null
     _sum: VentaSumAggregateOutputType | null
@@ -18901,6 +19319,12 @@ export namespace Prisma {
     estado?: boolean
     total?: boolean
     saldoPendiente?: boolean
+    referenciaPago?: boolean
+    pasarelaPago?: boolean
+    pasarelaEstado?: boolean
+    pasarelaTransaccionId?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
     cliente?: boolean | ClienteDefaultArgs<ExtArgs>
     rifa?: boolean | RifaDefaultArgs<ExtArgs>
     boletas?: boolean | Venta$boletasArgs<ExtArgs>
@@ -18916,6 +19340,12 @@ export namespace Prisma {
     estado?: boolean
     total?: boolean
     saldoPendiente?: boolean
+    referenciaPago?: boolean
+    pasarelaPago?: boolean
+    pasarelaEstado?: boolean
+    pasarelaTransaccionId?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
     cliente?: boolean | ClienteDefaultArgs<ExtArgs>
     rifa?: boolean | RifaDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["venta"]>
@@ -18927,6 +19357,12 @@ export namespace Prisma {
     estado?: boolean
     total?: boolean
     saldoPendiente?: boolean
+    referenciaPago?: boolean
+    pasarelaPago?: boolean
+    pasarelaEstado?: boolean
+    pasarelaTransaccionId?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
     cliente?: boolean | ClienteDefaultArgs<ExtArgs>
     rifa?: boolean | RifaDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["venta"]>
@@ -18938,9 +19374,15 @@ export namespace Prisma {
     estado?: boolean
     total?: boolean
     saldoPendiente?: boolean
+    referenciaPago?: boolean
+    pasarelaPago?: boolean
+    pasarelaEstado?: boolean
+    pasarelaTransaccionId?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
   }
 
-  export type VentaOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "clienteId" | "rifaId" | "estado" | "total" | "saldoPendiente", ExtArgs["result"]["venta"]>
+  export type VentaOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "clienteId" | "rifaId" | "estado" | "total" | "saldoPendiente" | "referenciaPago" | "pasarelaPago" | "pasarelaEstado" | "pasarelaTransaccionId" | "createdAt" | "updatedAt", ExtArgs["result"]["venta"]>
   export type VentaInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     cliente?: boolean | ClienteDefaultArgs<ExtArgs>
     rifa?: boolean | RifaDefaultArgs<ExtArgs>
@@ -18974,6 +19416,12 @@ export namespace Prisma {
       estado: $Enums.EstadoVenta
       total: Prisma.Decimal
       saldoPendiente: Prisma.Decimal
+      referenciaPago: string | null
+      pasarelaPago: string | null
+      pasarelaEstado: string | null
+      pasarelaTransaccionId: string | null
+      createdAt: Date
+      updatedAt: Date
     }, ExtArgs["result"]["venta"]>
     composites: {}
   }
@@ -19408,6 +19856,12 @@ export namespace Prisma {
     readonly estado: FieldRef<"Venta", 'EstadoVenta'>
     readonly total: FieldRef<"Venta", 'Decimal'>
     readonly saldoPendiente: FieldRef<"Venta", 'Decimal'>
+    readonly referenciaPago: FieldRef<"Venta", 'String'>
+    readonly pasarelaPago: FieldRef<"Venta", 'String'>
+    readonly pasarelaEstado: FieldRef<"Venta", 'String'>
+    readonly pasarelaTransaccionId: FieldRef<"Venta", 'String'>
+    readonly createdAt: FieldRef<"Venta", 'DateTime'>
+    readonly updatedAt: FieldRef<"Venta", 'DateTime'>
   }
     
 
@@ -21059,6 +21513,7 @@ export namespace Prisma {
     id: string | null
     rifaVendedorId: string | null
     subCajaId: string | null
+    usuarioId: string | null
     valor: Decimal | null
     fecha: Date | null
     descripcion: string | null
@@ -21075,6 +21530,7 @@ export namespace Prisma {
     id: string | null
     rifaVendedorId: string | null
     subCajaId: string | null
+    usuarioId: string | null
     valor: Decimal | null
     fecha: Date | null
     descripcion: string | null
@@ -21091,6 +21547,7 @@ export namespace Prisma {
     id: number
     rifaVendedorId: number
     subCajaId: number
+    usuarioId: number
     valor: number
     fecha: number
     descripcion: number
@@ -21123,6 +21580,7 @@ export namespace Prisma {
     id?: true
     rifaVendedorId?: true
     subCajaId?: true
+    usuarioId?: true
     valor?: true
     fecha?: true
     descripcion?: true
@@ -21139,6 +21597,7 @@ export namespace Prisma {
     id?: true
     rifaVendedorId?: true
     subCajaId?: true
+    usuarioId?: true
     valor?: true
     fecha?: true
     descripcion?: true
@@ -21155,6 +21614,7 @@ export namespace Prisma {
     id?: true
     rifaVendedorId?: true
     subCajaId?: true
+    usuarioId?: true
     valor?: true
     fecha?: true
     descripcion?: true
@@ -21258,6 +21718,7 @@ export namespace Prisma {
     id: string
     rifaVendedorId: string
     subCajaId: string | null
+    usuarioId: string | null
     valor: Decimal
     fecha: Date
     descripcion: string | null
@@ -21293,6 +21754,7 @@ export namespace Prisma {
     id?: boolean
     rifaVendedorId?: boolean
     subCajaId?: boolean
+    usuarioId?: boolean
     valor?: boolean
     fecha?: boolean
     descripcion?: boolean
@@ -21305,6 +21767,7 @@ export namespace Prisma {
     boletasActuales?: boolean
     rifaVendedor?: boolean | RifaVendedorDefaultArgs<ExtArgs>
     subCaja?: boolean | AbonoVendedor$subCajaArgs<ExtArgs>
+    usuario?: boolean | AbonoVendedor$usuarioArgs<ExtArgs>
     recibo?: boolean | AbonoVendedor$reciboArgs<ExtArgs>
     movimientos?: boolean | AbonoVendedor$movimientosArgs<ExtArgs>
     _count?: boolean | AbonoVendedorCountOutputTypeDefaultArgs<ExtArgs>
@@ -21314,6 +21777,7 @@ export namespace Prisma {
     id?: boolean
     rifaVendedorId?: boolean
     subCajaId?: boolean
+    usuarioId?: boolean
     valor?: boolean
     fecha?: boolean
     descripcion?: boolean
@@ -21326,12 +21790,14 @@ export namespace Prisma {
     boletasActuales?: boolean
     rifaVendedor?: boolean | RifaVendedorDefaultArgs<ExtArgs>
     subCaja?: boolean | AbonoVendedor$subCajaArgs<ExtArgs>
+    usuario?: boolean | AbonoVendedor$usuarioArgs<ExtArgs>
   }, ExtArgs["result"]["abonoVendedor"]>
 
   export type AbonoVendedorSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     rifaVendedorId?: boolean
     subCajaId?: boolean
+    usuarioId?: boolean
     valor?: boolean
     fecha?: boolean
     descripcion?: boolean
@@ -21344,12 +21810,14 @@ export namespace Prisma {
     boletasActuales?: boolean
     rifaVendedor?: boolean | RifaVendedorDefaultArgs<ExtArgs>
     subCaja?: boolean | AbonoVendedor$subCajaArgs<ExtArgs>
+    usuario?: boolean | AbonoVendedor$usuarioArgs<ExtArgs>
   }, ExtArgs["result"]["abonoVendedor"]>
 
   export type AbonoVendedorSelectScalar = {
     id?: boolean
     rifaVendedorId?: boolean
     subCajaId?: boolean
+    usuarioId?: boolean
     valor?: boolean
     fecha?: boolean
     descripcion?: boolean
@@ -21362,10 +21830,11 @@ export namespace Prisma {
     boletasActuales?: boolean
   }
 
-  export type AbonoVendedorOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "rifaVendedorId" | "subCajaId" | "valor" | "fecha" | "descripcion" | "metodoPago" | "estado" | "anuladoAt" | "anuladoMotivo" | "saldoAnterior" | "saldoDespues" | "boletasActuales", ExtArgs["result"]["abonoVendedor"]>
+  export type AbonoVendedorOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "rifaVendedorId" | "subCajaId" | "usuarioId" | "valor" | "fecha" | "descripcion" | "metodoPago" | "estado" | "anuladoAt" | "anuladoMotivo" | "saldoAnterior" | "saldoDespues" | "boletasActuales", ExtArgs["result"]["abonoVendedor"]>
   export type AbonoVendedorInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     rifaVendedor?: boolean | RifaVendedorDefaultArgs<ExtArgs>
     subCaja?: boolean | AbonoVendedor$subCajaArgs<ExtArgs>
+    usuario?: boolean | AbonoVendedor$usuarioArgs<ExtArgs>
     recibo?: boolean | AbonoVendedor$reciboArgs<ExtArgs>
     movimientos?: boolean | AbonoVendedor$movimientosArgs<ExtArgs>
     _count?: boolean | AbonoVendedorCountOutputTypeDefaultArgs<ExtArgs>
@@ -21373,10 +21842,12 @@ export namespace Prisma {
   export type AbonoVendedorIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     rifaVendedor?: boolean | RifaVendedorDefaultArgs<ExtArgs>
     subCaja?: boolean | AbonoVendedor$subCajaArgs<ExtArgs>
+    usuario?: boolean | AbonoVendedor$usuarioArgs<ExtArgs>
   }
   export type AbonoVendedorIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     rifaVendedor?: boolean | RifaVendedorDefaultArgs<ExtArgs>
     subCaja?: boolean | AbonoVendedor$subCajaArgs<ExtArgs>
+    usuario?: boolean | AbonoVendedor$usuarioArgs<ExtArgs>
   }
 
   export type $AbonoVendedorPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -21384,6 +21855,7 @@ export namespace Prisma {
     objects: {
       rifaVendedor: Prisma.$RifaVendedorPayload<ExtArgs>
       subCaja: Prisma.$SubCajaPayload<ExtArgs> | null
+      usuario: Prisma.$UsuarioPayload<ExtArgs> | null
       recibo: Prisma.$ReciboPayload<ExtArgs> | null
       movimientos: Prisma.$MovimientoCajaPayload<ExtArgs>[]
     }
@@ -21391,6 +21863,7 @@ export namespace Prisma {
       id: string
       rifaVendedorId: string
       subCajaId: string | null
+      usuarioId: string | null
       valor: Prisma.Decimal
       fecha: Date
       descripcion: string | null
@@ -21797,6 +22270,7 @@ export namespace Prisma {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     rifaVendedor<T extends RifaVendedorDefaultArgs<ExtArgs> = {}>(args?: Subset<T, RifaVendedorDefaultArgs<ExtArgs>>): Prisma__RifaVendedorClient<$Result.GetResult<Prisma.$RifaVendedorPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     subCaja<T extends AbonoVendedor$subCajaArgs<ExtArgs> = {}>(args?: Subset<T, AbonoVendedor$subCajaArgs<ExtArgs>>): Prisma__SubCajaClient<$Result.GetResult<Prisma.$SubCajaPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    usuario<T extends AbonoVendedor$usuarioArgs<ExtArgs> = {}>(args?: Subset<T, AbonoVendedor$usuarioArgs<ExtArgs>>): Prisma__UsuarioClient<$Result.GetResult<Prisma.$UsuarioPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     recibo<T extends AbonoVendedor$reciboArgs<ExtArgs> = {}>(args?: Subset<T, AbonoVendedor$reciboArgs<ExtArgs>>): Prisma__ReciboClient<$Result.GetResult<Prisma.$ReciboPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     movimientos<T extends AbonoVendedor$movimientosArgs<ExtArgs> = {}>(args?: Subset<T, AbonoVendedor$movimientosArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$MovimientoCajaPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
@@ -21831,6 +22305,7 @@ export namespace Prisma {
     readonly id: FieldRef<"AbonoVendedor", 'String'>
     readonly rifaVendedorId: FieldRef<"AbonoVendedor", 'String'>
     readonly subCajaId: FieldRef<"AbonoVendedor", 'String'>
+    readonly usuarioId: FieldRef<"AbonoVendedor", 'String'>
     readonly valor: FieldRef<"AbonoVendedor", 'Decimal'>
     readonly fecha: FieldRef<"AbonoVendedor", 'DateTime'>
     readonly descripcion: FieldRef<"AbonoVendedor", 'String'>
@@ -22253,6 +22728,25 @@ export namespace Prisma {
      */
     include?: SubCajaInclude<ExtArgs> | null
     where?: SubCajaWhereInput
+  }
+
+  /**
+   * AbonoVendedor.usuario
+   */
+  export type AbonoVendedor$usuarioArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Usuario
+     */
+    select?: UsuarioSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Usuario
+     */
+    omit?: UsuarioOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UsuarioInclude<ExtArgs> | null
+    where?: UsuarioWhereInput
   }
 
   /**
@@ -27200,6 +27694,7 @@ export namespace Prisma {
     id: string | null
     rifaId: string | null
     subCajaId: string | null
+    usuarioId: string | null
     categoria: $Enums.CategoriaGasto | null
     descripcion: string | null
     valor: Decimal | null
@@ -27212,6 +27707,7 @@ export namespace Prisma {
     id: string | null
     rifaId: string | null
     subCajaId: string | null
+    usuarioId: string | null
     categoria: $Enums.CategoriaGasto | null
     descripcion: string | null
     valor: Decimal | null
@@ -27224,6 +27720,7 @@ export namespace Prisma {
     id: number
     rifaId: number
     subCajaId: number
+    usuarioId: number
     categoria: number
     descripcion: number
     valor: number
@@ -27246,6 +27743,7 @@ export namespace Prisma {
     id?: true
     rifaId?: true
     subCajaId?: true
+    usuarioId?: true
     categoria?: true
     descripcion?: true
     valor?: true
@@ -27258,6 +27756,7 @@ export namespace Prisma {
     id?: true
     rifaId?: true
     subCajaId?: true
+    usuarioId?: true
     categoria?: true
     descripcion?: true
     valor?: true
@@ -27270,6 +27769,7 @@ export namespace Prisma {
     id?: true
     rifaId?: true
     subCajaId?: true
+    usuarioId?: true
     categoria?: true
     descripcion?: true
     valor?: true
@@ -27369,6 +27869,7 @@ export namespace Prisma {
     id: string
     rifaId: string
     subCajaId: string | null
+    usuarioId: string | null
     categoria: $Enums.CategoriaGasto
     descripcion: string
     valor: Decimal
@@ -27400,6 +27901,7 @@ export namespace Prisma {
     id?: boolean
     rifaId?: boolean
     subCajaId?: boolean
+    usuarioId?: boolean
     categoria?: boolean
     descripcion?: boolean
     valor?: boolean
@@ -27408,6 +27910,7 @@ export namespace Prisma {
     anuladoMotivo?: boolean
     rifa?: boolean | RifaDefaultArgs<ExtArgs>
     subCaja?: boolean | Gasto$subCajaArgs<ExtArgs>
+    usuario?: boolean | Gasto$usuarioArgs<ExtArgs>
     movimientos?: boolean | Gasto$movimientosArgs<ExtArgs>
     recibo?: boolean | Gasto$reciboArgs<ExtArgs>
     _count?: boolean | GastoCountOutputTypeDefaultArgs<ExtArgs>
@@ -27417,6 +27920,7 @@ export namespace Prisma {
     id?: boolean
     rifaId?: boolean
     subCajaId?: boolean
+    usuarioId?: boolean
     categoria?: boolean
     descripcion?: boolean
     valor?: boolean
@@ -27425,12 +27929,14 @@ export namespace Prisma {
     anuladoMotivo?: boolean
     rifa?: boolean | RifaDefaultArgs<ExtArgs>
     subCaja?: boolean | Gasto$subCajaArgs<ExtArgs>
+    usuario?: boolean | Gasto$usuarioArgs<ExtArgs>
   }, ExtArgs["result"]["gasto"]>
 
   export type GastoSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     rifaId?: boolean
     subCajaId?: boolean
+    usuarioId?: boolean
     categoria?: boolean
     descripcion?: boolean
     valor?: boolean
@@ -27439,12 +27945,14 @@ export namespace Prisma {
     anuladoMotivo?: boolean
     rifa?: boolean | RifaDefaultArgs<ExtArgs>
     subCaja?: boolean | Gasto$subCajaArgs<ExtArgs>
+    usuario?: boolean | Gasto$usuarioArgs<ExtArgs>
   }, ExtArgs["result"]["gasto"]>
 
   export type GastoSelectScalar = {
     id?: boolean
     rifaId?: boolean
     subCajaId?: boolean
+    usuarioId?: boolean
     categoria?: boolean
     descripcion?: boolean
     valor?: boolean
@@ -27453,10 +27961,11 @@ export namespace Prisma {
     anuladoMotivo?: boolean
   }
 
-  export type GastoOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "rifaId" | "subCajaId" | "categoria" | "descripcion" | "valor" | "fecha" | "anuladoAt" | "anuladoMotivo", ExtArgs["result"]["gasto"]>
+  export type GastoOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "rifaId" | "subCajaId" | "usuarioId" | "categoria" | "descripcion" | "valor" | "fecha" | "anuladoAt" | "anuladoMotivo", ExtArgs["result"]["gasto"]>
   export type GastoInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     rifa?: boolean | RifaDefaultArgs<ExtArgs>
     subCaja?: boolean | Gasto$subCajaArgs<ExtArgs>
+    usuario?: boolean | Gasto$usuarioArgs<ExtArgs>
     movimientos?: boolean | Gasto$movimientosArgs<ExtArgs>
     recibo?: boolean | Gasto$reciboArgs<ExtArgs>
     _count?: boolean | GastoCountOutputTypeDefaultArgs<ExtArgs>
@@ -27464,10 +27973,12 @@ export namespace Prisma {
   export type GastoIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     rifa?: boolean | RifaDefaultArgs<ExtArgs>
     subCaja?: boolean | Gasto$subCajaArgs<ExtArgs>
+    usuario?: boolean | Gasto$usuarioArgs<ExtArgs>
   }
   export type GastoIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     rifa?: boolean | RifaDefaultArgs<ExtArgs>
     subCaja?: boolean | Gasto$subCajaArgs<ExtArgs>
+    usuario?: boolean | Gasto$usuarioArgs<ExtArgs>
   }
 
   export type $GastoPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -27475,6 +27986,7 @@ export namespace Prisma {
     objects: {
       rifa: Prisma.$RifaPayload<ExtArgs>
       subCaja: Prisma.$SubCajaPayload<ExtArgs> | null
+      usuario: Prisma.$UsuarioPayload<ExtArgs> | null
       movimientos: Prisma.$MovimientoCajaPayload<ExtArgs>[]
       recibo: Prisma.$GastoReciboPayload<ExtArgs> | null
     }
@@ -27482,6 +27994,7 @@ export namespace Prisma {
       id: string
       rifaId: string
       subCajaId: string | null
+      usuarioId: string | null
       categoria: $Enums.CategoriaGasto
       descripcion: string
       valor: Prisma.Decimal
@@ -27884,6 +28397,7 @@ export namespace Prisma {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     rifa<T extends RifaDefaultArgs<ExtArgs> = {}>(args?: Subset<T, RifaDefaultArgs<ExtArgs>>): Prisma__RifaClient<$Result.GetResult<Prisma.$RifaPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     subCaja<T extends Gasto$subCajaArgs<ExtArgs> = {}>(args?: Subset<T, Gasto$subCajaArgs<ExtArgs>>): Prisma__SubCajaClient<$Result.GetResult<Prisma.$SubCajaPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    usuario<T extends Gasto$usuarioArgs<ExtArgs> = {}>(args?: Subset<T, Gasto$usuarioArgs<ExtArgs>>): Prisma__UsuarioClient<$Result.GetResult<Prisma.$UsuarioPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     movimientos<T extends Gasto$movimientosArgs<ExtArgs> = {}>(args?: Subset<T, Gasto$movimientosArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$MovimientoCajaPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     recibo<T extends Gasto$reciboArgs<ExtArgs> = {}>(args?: Subset<T, Gasto$reciboArgs<ExtArgs>>): Prisma__GastoReciboClient<$Result.GetResult<Prisma.$GastoReciboPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     /**
@@ -27918,6 +28432,7 @@ export namespace Prisma {
     readonly id: FieldRef<"Gasto", 'String'>
     readonly rifaId: FieldRef<"Gasto", 'String'>
     readonly subCajaId: FieldRef<"Gasto", 'String'>
+    readonly usuarioId: FieldRef<"Gasto", 'String'>
     readonly categoria: FieldRef<"Gasto", 'CategoriaGasto'>
     readonly descripcion: FieldRef<"Gasto", 'String'>
     readonly valor: FieldRef<"Gasto", 'Decimal'>
@@ -28339,6 +28854,25 @@ export namespace Prisma {
   }
 
   /**
+   * Gasto.usuario
+   */
+  export type Gasto$usuarioArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Usuario
+     */
+    select?: UsuarioSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Usuario
+     */
+    omit?: UsuarioOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UsuarioInclude<ExtArgs> | null
+    where?: UsuarioWhereInput
+  }
+
+  /**
    * Gasto.movimientos
    */
   export type Gasto$movimientosArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -28397,6 +28931,1146 @@ export namespace Prisma {
      * Choose, which related nodes to fetch as well
      */
     include?: GastoInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model JuegoRegistro
+   */
+
+  export type AggregateJuegoRegistro = {
+    _count: JuegoRegistroCountAggregateOutputType | null
+    _avg: JuegoRegistroAvgAggregateOutputType | null
+    _sum: JuegoRegistroSumAggregateOutputType | null
+    _min: JuegoRegistroMinAggregateOutputType | null
+    _max: JuegoRegistroMaxAggregateOutputType | null
+  }
+
+  export type JuegoRegistroAvgAggregateOutputType = {
+    totalBoletas: number | null
+  }
+
+  export type JuegoRegistroSumAggregateOutputType = {
+    totalBoletas: number | null
+  }
+
+  export type JuegoRegistroMinAggregateOutputType = {
+    id: string | null
+    rifaVendedorId: string | null
+    premioId: string | null
+    usuarioId: string | null
+    fecha: Date | null
+    totalBoletas: number | null
+  }
+
+  export type JuegoRegistroMaxAggregateOutputType = {
+    id: string | null
+    rifaVendedorId: string | null
+    premioId: string | null
+    usuarioId: string | null
+    fecha: Date | null
+    totalBoletas: number | null
+  }
+
+  export type JuegoRegistroCountAggregateOutputType = {
+    id: number
+    rifaVendedorId: number
+    premioId: number
+    usuarioId: number
+    fecha: number
+    totalBoletas: number
+    _all: number
+  }
+
+
+  export type JuegoRegistroAvgAggregateInputType = {
+    totalBoletas?: true
+  }
+
+  export type JuegoRegistroSumAggregateInputType = {
+    totalBoletas?: true
+  }
+
+  export type JuegoRegistroMinAggregateInputType = {
+    id?: true
+    rifaVendedorId?: true
+    premioId?: true
+    usuarioId?: true
+    fecha?: true
+    totalBoletas?: true
+  }
+
+  export type JuegoRegistroMaxAggregateInputType = {
+    id?: true
+    rifaVendedorId?: true
+    premioId?: true
+    usuarioId?: true
+    fecha?: true
+    totalBoletas?: true
+  }
+
+  export type JuegoRegistroCountAggregateInputType = {
+    id?: true
+    rifaVendedorId?: true
+    premioId?: true
+    usuarioId?: true
+    fecha?: true
+    totalBoletas?: true
+    _all?: true
+  }
+
+  export type JuegoRegistroAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which JuegoRegistro to aggregate.
+     */
+    where?: JuegoRegistroWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of JuegoRegistros to fetch.
+     */
+    orderBy?: JuegoRegistroOrderByWithRelationInput | JuegoRegistroOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: JuegoRegistroWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` JuegoRegistros from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` JuegoRegistros.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned JuegoRegistros
+    **/
+    _count?: true | JuegoRegistroCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: JuegoRegistroAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: JuegoRegistroSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: JuegoRegistroMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: JuegoRegistroMaxAggregateInputType
+  }
+
+  export type GetJuegoRegistroAggregateType<T extends JuegoRegistroAggregateArgs> = {
+        [P in keyof T & keyof AggregateJuegoRegistro]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateJuegoRegistro[P]>
+      : GetScalarType<T[P], AggregateJuegoRegistro[P]>
+  }
+
+
+
+
+  export type JuegoRegistroGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: JuegoRegistroWhereInput
+    orderBy?: JuegoRegistroOrderByWithAggregationInput | JuegoRegistroOrderByWithAggregationInput[]
+    by: JuegoRegistroScalarFieldEnum[] | JuegoRegistroScalarFieldEnum
+    having?: JuegoRegistroScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: JuegoRegistroCountAggregateInputType | true
+    _avg?: JuegoRegistroAvgAggregateInputType
+    _sum?: JuegoRegistroSumAggregateInputType
+    _min?: JuegoRegistroMinAggregateInputType
+    _max?: JuegoRegistroMaxAggregateInputType
+  }
+
+  export type JuegoRegistroGroupByOutputType = {
+    id: string
+    rifaVendedorId: string
+    premioId: string
+    usuarioId: string | null
+    fecha: Date
+    totalBoletas: number
+    _count: JuegoRegistroCountAggregateOutputType | null
+    _avg: JuegoRegistroAvgAggregateOutputType | null
+    _sum: JuegoRegistroSumAggregateOutputType | null
+    _min: JuegoRegistroMinAggregateOutputType | null
+    _max: JuegoRegistroMaxAggregateOutputType | null
+  }
+
+  type GetJuegoRegistroGroupByPayload<T extends JuegoRegistroGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<JuegoRegistroGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof JuegoRegistroGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], JuegoRegistroGroupByOutputType[P]>
+            : GetScalarType<T[P], JuegoRegistroGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type JuegoRegistroSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    rifaVendedorId?: boolean
+    premioId?: boolean
+    usuarioId?: boolean
+    fecha?: boolean
+    totalBoletas?: boolean
+    rifaVendedor?: boolean | RifaVendedorDefaultArgs<ExtArgs>
+    premio?: boolean | PremioDefaultArgs<ExtArgs>
+    usuario?: boolean | JuegoRegistro$usuarioArgs<ExtArgs>
+  }, ExtArgs["result"]["juegoRegistro"]>
+
+  export type JuegoRegistroSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    rifaVendedorId?: boolean
+    premioId?: boolean
+    usuarioId?: boolean
+    fecha?: boolean
+    totalBoletas?: boolean
+    rifaVendedor?: boolean | RifaVendedorDefaultArgs<ExtArgs>
+    premio?: boolean | PremioDefaultArgs<ExtArgs>
+    usuario?: boolean | JuegoRegistro$usuarioArgs<ExtArgs>
+  }, ExtArgs["result"]["juegoRegistro"]>
+
+  export type JuegoRegistroSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    rifaVendedorId?: boolean
+    premioId?: boolean
+    usuarioId?: boolean
+    fecha?: boolean
+    totalBoletas?: boolean
+    rifaVendedor?: boolean | RifaVendedorDefaultArgs<ExtArgs>
+    premio?: boolean | PremioDefaultArgs<ExtArgs>
+    usuario?: boolean | JuegoRegistro$usuarioArgs<ExtArgs>
+  }, ExtArgs["result"]["juegoRegistro"]>
+
+  export type JuegoRegistroSelectScalar = {
+    id?: boolean
+    rifaVendedorId?: boolean
+    premioId?: boolean
+    usuarioId?: boolean
+    fecha?: boolean
+    totalBoletas?: boolean
+  }
+
+  export type JuegoRegistroOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "rifaVendedorId" | "premioId" | "usuarioId" | "fecha" | "totalBoletas", ExtArgs["result"]["juegoRegistro"]>
+  export type JuegoRegistroInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    rifaVendedor?: boolean | RifaVendedorDefaultArgs<ExtArgs>
+    premio?: boolean | PremioDefaultArgs<ExtArgs>
+    usuario?: boolean | JuegoRegistro$usuarioArgs<ExtArgs>
+  }
+  export type JuegoRegistroIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    rifaVendedor?: boolean | RifaVendedorDefaultArgs<ExtArgs>
+    premio?: boolean | PremioDefaultArgs<ExtArgs>
+    usuario?: boolean | JuegoRegistro$usuarioArgs<ExtArgs>
+  }
+  export type JuegoRegistroIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    rifaVendedor?: boolean | RifaVendedorDefaultArgs<ExtArgs>
+    premio?: boolean | PremioDefaultArgs<ExtArgs>
+    usuario?: boolean | JuegoRegistro$usuarioArgs<ExtArgs>
+  }
+
+  export type $JuegoRegistroPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "JuegoRegistro"
+    objects: {
+      rifaVendedor: Prisma.$RifaVendedorPayload<ExtArgs>
+      premio: Prisma.$PremioPayload<ExtArgs>
+      usuario: Prisma.$UsuarioPayload<ExtArgs> | null
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      rifaVendedorId: string
+      premioId: string
+      usuarioId: string | null
+      fecha: Date
+      totalBoletas: number
+    }, ExtArgs["result"]["juegoRegistro"]>
+    composites: {}
+  }
+
+  type JuegoRegistroGetPayload<S extends boolean | null | undefined | JuegoRegistroDefaultArgs> = $Result.GetResult<Prisma.$JuegoRegistroPayload, S>
+
+  type JuegoRegistroCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<JuegoRegistroFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: JuegoRegistroCountAggregateInputType | true
+    }
+
+  export interface JuegoRegistroDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['JuegoRegistro'], meta: { name: 'JuegoRegistro' } }
+    /**
+     * Find zero or one JuegoRegistro that matches the filter.
+     * @param {JuegoRegistroFindUniqueArgs} args - Arguments to find a JuegoRegistro
+     * @example
+     * // Get one JuegoRegistro
+     * const juegoRegistro = await prisma.juegoRegistro.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends JuegoRegistroFindUniqueArgs>(args: SelectSubset<T, JuegoRegistroFindUniqueArgs<ExtArgs>>): Prisma__JuegoRegistroClient<$Result.GetResult<Prisma.$JuegoRegistroPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one JuegoRegistro that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {JuegoRegistroFindUniqueOrThrowArgs} args - Arguments to find a JuegoRegistro
+     * @example
+     * // Get one JuegoRegistro
+     * const juegoRegistro = await prisma.juegoRegistro.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends JuegoRegistroFindUniqueOrThrowArgs>(args: SelectSubset<T, JuegoRegistroFindUniqueOrThrowArgs<ExtArgs>>): Prisma__JuegoRegistroClient<$Result.GetResult<Prisma.$JuegoRegistroPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first JuegoRegistro that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {JuegoRegistroFindFirstArgs} args - Arguments to find a JuegoRegistro
+     * @example
+     * // Get one JuegoRegistro
+     * const juegoRegistro = await prisma.juegoRegistro.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends JuegoRegistroFindFirstArgs>(args?: SelectSubset<T, JuegoRegistroFindFirstArgs<ExtArgs>>): Prisma__JuegoRegistroClient<$Result.GetResult<Prisma.$JuegoRegistroPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first JuegoRegistro that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {JuegoRegistroFindFirstOrThrowArgs} args - Arguments to find a JuegoRegistro
+     * @example
+     * // Get one JuegoRegistro
+     * const juegoRegistro = await prisma.juegoRegistro.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends JuegoRegistroFindFirstOrThrowArgs>(args?: SelectSubset<T, JuegoRegistroFindFirstOrThrowArgs<ExtArgs>>): Prisma__JuegoRegistroClient<$Result.GetResult<Prisma.$JuegoRegistroPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more JuegoRegistros that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {JuegoRegistroFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all JuegoRegistros
+     * const juegoRegistros = await prisma.juegoRegistro.findMany()
+     * 
+     * // Get first 10 JuegoRegistros
+     * const juegoRegistros = await prisma.juegoRegistro.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const juegoRegistroWithIdOnly = await prisma.juegoRegistro.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends JuegoRegistroFindManyArgs>(args?: SelectSubset<T, JuegoRegistroFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$JuegoRegistroPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a JuegoRegistro.
+     * @param {JuegoRegistroCreateArgs} args - Arguments to create a JuegoRegistro.
+     * @example
+     * // Create one JuegoRegistro
+     * const JuegoRegistro = await prisma.juegoRegistro.create({
+     *   data: {
+     *     // ... data to create a JuegoRegistro
+     *   }
+     * })
+     * 
+     */
+    create<T extends JuegoRegistroCreateArgs>(args: SelectSubset<T, JuegoRegistroCreateArgs<ExtArgs>>): Prisma__JuegoRegistroClient<$Result.GetResult<Prisma.$JuegoRegistroPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many JuegoRegistros.
+     * @param {JuegoRegistroCreateManyArgs} args - Arguments to create many JuegoRegistros.
+     * @example
+     * // Create many JuegoRegistros
+     * const juegoRegistro = await prisma.juegoRegistro.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends JuegoRegistroCreateManyArgs>(args?: SelectSubset<T, JuegoRegistroCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many JuegoRegistros and returns the data saved in the database.
+     * @param {JuegoRegistroCreateManyAndReturnArgs} args - Arguments to create many JuegoRegistros.
+     * @example
+     * // Create many JuegoRegistros
+     * const juegoRegistro = await prisma.juegoRegistro.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many JuegoRegistros and only return the `id`
+     * const juegoRegistroWithIdOnly = await prisma.juegoRegistro.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends JuegoRegistroCreateManyAndReturnArgs>(args?: SelectSubset<T, JuegoRegistroCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$JuegoRegistroPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a JuegoRegistro.
+     * @param {JuegoRegistroDeleteArgs} args - Arguments to delete one JuegoRegistro.
+     * @example
+     * // Delete one JuegoRegistro
+     * const JuegoRegistro = await prisma.juegoRegistro.delete({
+     *   where: {
+     *     // ... filter to delete one JuegoRegistro
+     *   }
+     * })
+     * 
+     */
+    delete<T extends JuegoRegistroDeleteArgs>(args: SelectSubset<T, JuegoRegistroDeleteArgs<ExtArgs>>): Prisma__JuegoRegistroClient<$Result.GetResult<Prisma.$JuegoRegistroPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one JuegoRegistro.
+     * @param {JuegoRegistroUpdateArgs} args - Arguments to update one JuegoRegistro.
+     * @example
+     * // Update one JuegoRegistro
+     * const juegoRegistro = await prisma.juegoRegistro.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends JuegoRegistroUpdateArgs>(args: SelectSubset<T, JuegoRegistroUpdateArgs<ExtArgs>>): Prisma__JuegoRegistroClient<$Result.GetResult<Prisma.$JuegoRegistroPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more JuegoRegistros.
+     * @param {JuegoRegistroDeleteManyArgs} args - Arguments to filter JuegoRegistros to delete.
+     * @example
+     * // Delete a few JuegoRegistros
+     * const { count } = await prisma.juegoRegistro.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends JuegoRegistroDeleteManyArgs>(args?: SelectSubset<T, JuegoRegistroDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more JuegoRegistros.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {JuegoRegistroUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many JuegoRegistros
+     * const juegoRegistro = await prisma.juegoRegistro.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends JuegoRegistroUpdateManyArgs>(args: SelectSubset<T, JuegoRegistroUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more JuegoRegistros and returns the data updated in the database.
+     * @param {JuegoRegistroUpdateManyAndReturnArgs} args - Arguments to update many JuegoRegistros.
+     * @example
+     * // Update many JuegoRegistros
+     * const juegoRegistro = await prisma.juegoRegistro.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more JuegoRegistros and only return the `id`
+     * const juegoRegistroWithIdOnly = await prisma.juegoRegistro.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends JuegoRegistroUpdateManyAndReturnArgs>(args: SelectSubset<T, JuegoRegistroUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$JuegoRegistroPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one JuegoRegistro.
+     * @param {JuegoRegistroUpsertArgs} args - Arguments to update or create a JuegoRegistro.
+     * @example
+     * // Update or create a JuegoRegistro
+     * const juegoRegistro = await prisma.juegoRegistro.upsert({
+     *   create: {
+     *     // ... data to create a JuegoRegistro
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the JuegoRegistro we want to update
+     *   }
+     * })
+     */
+    upsert<T extends JuegoRegistroUpsertArgs>(args: SelectSubset<T, JuegoRegistroUpsertArgs<ExtArgs>>): Prisma__JuegoRegistroClient<$Result.GetResult<Prisma.$JuegoRegistroPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of JuegoRegistros.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {JuegoRegistroCountArgs} args - Arguments to filter JuegoRegistros to count.
+     * @example
+     * // Count the number of JuegoRegistros
+     * const count = await prisma.juegoRegistro.count({
+     *   where: {
+     *     // ... the filter for the JuegoRegistros we want to count
+     *   }
+     * })
+    **/
+    count<T extends JuegoRegistroCountArgs>(
+      args?: Subset<T, JuegoRegistroCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], JuegoRegistroCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a JuegoRegistro.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {JuegoRegistroAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends JuegoRegistroAggregateArgs>(args: Subset<T, JuegoRegistroAggregateArgs>): Prisma.PrismaPromise<GetJuegoRegistroAggregateType<T>>
+
+    /**
+     * Group by JuegoRegistro.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {JuegoRegistroGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends JuegoRegistroGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: JuegoRegistroGroupByArgs['orderBy'] }
+        : { orderBy?: JuegoRegistroGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, JuegoRegistroGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetJuegoRegistroGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the JuegoRegistro model
+   */
+  readonly fields: JuegoRegistroFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for JuegoRegistro.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__JuegoRegistroClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    rifaVendedor<T extends RifaVendedorDefaultArgs<ExtArgs> = {}>(args?: Subset<T, RifaVendedorDefaultArgs<ExtArgs>>): Prisma__RifaVendedorClient<$Result.GetResult<Prisma.$RifaVendedorPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    premio<T extends PremioDefaultArgs<ExtArgs> = {}>(args?: Subset<T, PremioDefaultArgs<ExtArgs>>): Prisma__PremioClient<$Result.GetResult<Prisma.$PremioPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    usuario<T extends JuegoRegistro$usuarioArgs<ExtArgs> = {}>(args?: Subset<T, JuegoRegistro$usuarioArgs<ExtArgs>>): Prisma__UsuarioClient<$Result.GetResult<Prisma.$UsuarioPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the JuegoRegistro model
+   */
+  interface JuegoRegistroFieldRefs {
+    readonly id: FieldRef<"JuegoRegistro", 'String'>
+    readonly rifaVendedorId: FieldRef<"JuegoRegistro", 'String'>
+    readonly premioId: FieldRef<"JuegoRegistro", 'String'>
+    readonly usuarioId: FieldRef<"JuegoRegistro", 'String'>
+    readonly fecha: FieldRef<"JuegoRegistro", 'DateTime'>
+    readonly totalBoletas: FieldRef<"JuegoRegistro", 'Int'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * JuegoRegistro findUnique
+   */
+  export type JuegoRegistroFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the JuegoRegistro
+     */
+    select?: JuegoRegistroSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the JuegoRegistro
+     */
+    omit?: JuegoRegistroOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: JuegoRegistroInclude<ExtArgs> | null
+    /**
+     * Filter, which JuegoRegistro to fetch.
+     */
+    where: JuegoRegistroWhereUniqueInput
+  }
+
+  /**
+   * JuegoRegistro findUniqueOrThrow
+   */
+  export type JuegoRegistroFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the JuegoRegistro
+     */
+    select?: JuegoRegistroSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the JuegoRegistro
+     */
+    omit?: JuegoRegistroOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: JuegoRegistroInclude<ExtArgs> | null
+    /**
+     * Filter, which JuegoRegistro to fetch.
+     */
+    where: JuegoRegistroWhereUniqueInput
+  }
+
+  /**
+   * JuegoRegistro findFirst
+   */
+  export type JuegoRegistroFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the JuegoRegistro
+     */
+    select?: JuegoRegistroSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the JuegoRegistro
+     */
+    omit?: JuegoRegistroOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: JuegoRegistroInclude<ExtArgs> | null
+    /**
+     * Filter, which JuegoRegistro to fetch.
+     */
+    where?: JuegoRegistroWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of JuegoRegistros to fetch.
+     */
+    orderBy?: JuegoRegistroOrderByWithRelationInput | JuegoRegistroOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for JuegoRegistros.
+     */
+    cursor?: JuegoRegistroWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` JuegoRegistros from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` JuegoRegistros.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of JuegoRegistros.
+     */
+    distinct?: JuegoRegistroScalarFieldEnum | JuegoRegistroScalarFieldEnum[]
+  }
+
+  /**
+   * JuegoRegistro findFirstOrThrow
+   */
+  export type JuegoRegistroFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the JuegoRegistro
+     */
+    select?: JuegoRegistroSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the JuegoRegistro
+     */
+    omit?: JuegoRegistroOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: JuegoRegistroInclude<ExtArgs> | null
+    /**
+     * Filter, which JuegoRegistro to fetch.
+     */
+    where?: JuegoRegistroWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of JuegoRegistros to fetch.
+     */
+    orderBy?: JuegoRegistroOrderByWithRelationInput | JuegoRegistroOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for JuegoRegistros.
+     */
+    cursor?: JuegoRegistroWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` JuegoRegistros from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` JuegoRegistros.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of JuegoRegistros.
+     */
+    distinct?: JuegoRegistroScalarFieldEnum | JuegoRegistroScalarFieldEnum[]
+  }
+
+  /**
+   * JuegoRegistro findMany
+   */
+  export type JuegoRegistroFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the JuegoRegistro
+     */
+    select?: JuegoRegistroSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the JuegoRegistro
+     */
+    omit?: JuegoRegistroOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: JuegoRegistroInclude<ExtArgs> | null
+    /**
+     * Filter, which JuegoRegistros to fetch.
+     */
+    where?: JuegoRegistroWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of JuegoRegistros to fetch.
+     */
+    orderBy?: JuegoRegistroOrderByWithRelationInput | JuegoRegistroOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing JuegoRegistros.
+     */
+    cursor?: JuegoRegistroWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` JuegoRegistros from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` JuegoRegistros.
+     */
+    skip?: number
+    distinct?: JuegoRegistroScalarFieldEnum | JuegoRegistroScalarFieldEnum[]
+  }
+
+  /**
+   * JuegoRegistro create
+   */
+  export type JuegoRegistroCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the JuegoRegistro
+     */
+    select?: JuegoRegistroSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the JuegoRegistro
+     */
+    omit?: JuegoRegistroOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: JuegoRegistroInclude<ExtArgs> | null
+    /**
+     * The data needed to create a JuegoRegistro.
+     */
+    data: XOR<JuegoRegistroCreateInput, JuegoRegistroUncheckedCreateInput>
+  }
+
+  /**
+   * JuegoRegistro createMany
+   */
+  export type JuegoRegistroCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many JuegoRegistros.
+     */
+    data: JuegoRegistroCreateManyInput | JuegoRegistroCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * JuegoRegistro createManyAndReturn
+   */
+  export type JuegoRegistroCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the JuegoRegistro
+     */
+    select?: JuegoRegistroSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the JuegoRegistro
+     */
+    omit?: JuegoRegistroOmit<ExtArgs> | null
+    /**
+     * The data used to create many JuegoRegistros.
+     */
+    data: JuegoRegistroCreateManyInput | JuegoRegistroCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: JuegoRegistroIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * JuegoRegistro update
+   */
+  export type JuegoRegistroUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the JuegoRegistro
+     */
+    select?: JuegoRegistroSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the JuegoRegistro
+     */
+    omit?: JuegoRegistroOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: JuegoRegistroInclude<ExtArgs> | null
+    /**
+     * The data needed to update a JuegoRegistro.
+     */
+    data: XOR<JuegoRegistroUpdateInput, JuegoRegistroUncheckedUpdateInput>
+    /**
+     * Choose, which JuegoRegistro to update.
+     */
+    where: JuegoRegistroWhereUniqueInput
+  }
+
+  /**
+   * JuegoRegistro updateMany
+   */
+  export type JuegoRegistroUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update JuegoRegistros.
+     */
+    data: XOR<JuegoRegistroUpdateManyMutationInput, JuegoRegistroUncheckedUpdateManyInput>
+    /**
+     * Filter which JuegoRegistros to update
+     */
+    where?: JuegoRegistroWhereInput
+    /**
+     * Limit how many JuegoRegistros to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * JuegoRegistro updateManyAndReturn
+   */
+  export type JuegoRegistroUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the JuegoRegistro
+     */
+    select?: JuegoRegistroSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the JuegoRegistro
+     */
+    omit?: JuegoRegistroOmit<ExtArgs> | null
+    /**
+     * The data used to update JuegoRegistros.
+     */
+    data: XOR<JuegoRegistroUpdateManyMutationInput, JuegoRegistroUncheckedUpdateManyInput>
+    /**
+     * Filter which JuegoRegistros to update
+     */
+    where?: JuegoRegistroWhereInput
+    /**
+     * Limit how many JuegoRegistros to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: JuegoRegistroIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * JuegoRegistro upsert
+   */
+  export type JuegoRegistroUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the JuegoRegistro
+     */
+    select?: JuegoRegistroSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the JuegoRegistro
+     */
+    omit?: JuegoRegistroOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: JuegoRegistroInclude<ExtArgs> | null
+    /**
+     * The filter to search for the JuegoRegistro to update in case it exists.
+     */
+    where: JuegoRegistroWhereUniqueInput
+    /**
+     * In case the JuegoRegistro found by the `where` argument doesn't exist, create a new JuegoRegistro with this data.
+     */
+    create: XOR<JuegoRegistroCreateInput, JuegoRegistroUncheckedCreateInput>
+    /**
+     * In case the JuegoRegistro was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<JuegoRegistroUpdateInput, JuegoRegistroUncheckedUpdateInput>
+  }
+
+  /**
+   * JuegoRegistro delete
+   */
+  export type JuegoRegistroDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the JuegoRegistro
+     */
+    select?: JuegoRegistroSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the JuegoRegistro
+     */
+    omit?: JuegoRegistroOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: JuegoRegistroInclude<ExtArgs> | null
+    /**
+     * Filter which JuegoRegistro to delete.
+     */
+    where: JuegoRegistroWhereUniqueInput
+  }
+
+  /**
+   * JuegoRegistro deleteMany
+   */
+  export type JuegoRegistroDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which JuegoRegistros to delete
+     */
+    where?: JuegoRegistroWhereInput
+    /**
+     * Limit how many JuegoRegistros to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * JuegoRegistro.usuario
+   */
+  export type JuegoRegistro$usuarioArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Usuario
+     */
+    select?: UsuarioSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Usuario
+     */
+    omit?: UsuarioOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UsuarioInclude<ExtArgs> | null
+    where?: UsuarioWhereInput
+  }
+
+  /**
+   * JuegoRegistro without action
+   */
+  export type JuegoRegistroDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the JuegoRegistro
+     */
+    select?: JuegoRegistroSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the JuegoRegistro
+     */
+    omit?: JuegoRegistroOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: JuegoRegistroInclude<ExtArgs> | null
   }
 
 
@@ -29562,6 +31236,7 @@ export namespace Prisma {
     rifaId: 'rifaId',
     nombre: 'nombre',
     descripcion: 'descripcion',
+    imagenesJson: 'imagenesJson',
     tipo: 'tipo',
     mostrarValor: 'mostrarValor',
     valor: 'valor',
@@ -29651,7 +31326,8 @@ export namespace Prisma {
     id: 'id',
     rifaVendedorId: 'rifaVendedorId',
     destino: 'destino',
-    fecha: 'fecha'
+    fecha: 'fecha',
+    usuarioId: 'usuarioId'
   };
 
   export type DevolucionBoletasScalarFieldEnum = (typeof DevolucionBoletasScalarFieldEnum)[keyof typeof DevolucionBoletasScalarFieldEnum]
@@ -29670,7 +31346,8 @@ export namespace Prisma {
     id: 'id',
     nombre: 'nombre',
     email: 'email',
-    telefono: 'telefono'
+    telefono: 'telefono',
+    documento: 'documento'
   };
 
   export type ClienteScalarFieldEnum = (typeof ClienteScalarFieldEnum)[keyof typeof ClienteScalarFieldEnum]
@@ -29682,7 +31359,13 @@ export namespace Prisma {
     rifaId: 'rifaId',
     estado: 'estado',
     total: 'total',
-    saldoPendiente: 'saldoPendiente'
+    saldoPendiente: 'saldoPendiente',
+    referenciaPago: 'referenciaPago',
+    pasarelaPago: 'pasarelaPago',
+    pasarelaEstado: 'pasarelaEstado',
+    pasarelaTransaccionId: 'pasarelaTransaccionId',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
   };
 
   export type VentaScalarFieldEnum = (typeof VentaScalarFieldEnum)[keyof typeof VentaScalarFieldEnum]
@@ -29704,6 +31387,7 @@ export namespace Prisma {
     id: 'id',
     rifaVendedorId: 'rifaVendedorId',
     subCajaId: 'subCajaId',
+    usuarioId: 'usuarioId',
     valor: 'valor',
     fecha: 'fecha',
     descripcion: 'descripcion',
@@ -29775,6 +31459,7 @@ export namespace Prisma {
     id: 'id',
     rifaId: 'rifaId',
     subCajaId: 'subCajaId',
+    usuarioId: 'usuarioId',
     categoria: 'categoria',
     descripcion: 'descripcion',
     valor: 'valor',
@@ -29784,6 +31469,18 @@ export namespace Prisma {
   };
 
   export type GastoScalarFieldEnum = (typeof GastoScalarFieldEnum)[keyof typeof GastoScalarFieldEnum]
+
+
+  export const JuegoRegistroScalarFieldEnum: {
+    id: 'id',
+    rifaVendedorId: 'rifaVendedorId',
+    premioId: 'premioId',
+    usuarioId: 'usuarioId',
+    fecha: 'fecha',
+    totalBoletas: 'totalBoletas'
+  };
+
+  export type JuegoRegistroScalarFieldEnum = (typeof JuegoRegistroScalarFieldEnum)[keyof typeof JuegoRegistroScalarFieldEnum]
 
 
   export const GastoReciboScalarFieldEnum: {
@@ -29805,6 +31502,14 @@ export namespace Prisma {
   export type SortOrder = (typeof SortOrder)[keyof typeof SortOrder]
 
 
+  export const NullableJsonNullValueInput: {
+    DbNull: typeof DbNull,
+    JsonNull: typeof JsonNull
+  };
+
+  export type NullableJsonNullValueInput = (typeof NullableJsonNullValueInput)[keyof typeof NullableJsonNullValueInput]
+
+
   export const QueryMode: {
     default: 'default',
     insensitive: 'insensitive'
@@ -29819,6 +31524,15 @@ export namespace Prisma {
   };
 
   export type NullsOrder = (typeof NullsOrder)[keyof typeof NullsOrder]
+
+
+  export const JsonNullValueFilter: {
+    DbNull: typeof DbNull,
+    JsonNull: typeof JsonNull,
+    AnyNull: typeof AnyNull
+  };
+
+  export type JsonNullValueFilter = (typeof JsonNullValueFilter)[keyof typeof JsonNullValueFilter]
 
 
   /**
@@ -29914,6 +31628,20 @@ export namespace Prisma {
    * Reference to a field of type 'EstadoRifa[]'
    */
   export type ListEnumEstadoRifaFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'EstadoRifa[]'>
+    
+
+
+  /**
+   * Reference to a field of type 'Json'
+   */
+  export type JsonFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Json'>
+    
+
+
+  /**
+   * Reference to a field of type 'QueryMode'
+   */
+  export type EnumQueryModeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'QueryMode'>
     
 
 
@@ -30153,6 +31881,10 @@ export namespace Prisma {
     rifasCreadas?: RifaListRelationFilter
     rifasEditadas?: RifaListRelationFilter
     asignaciones?: AsignacionBoletasListRelationFilter
+    devoluciones?: DevolucionBoletasListRelationFilter
+    abonosRegistrados?: AbonoVendedorListRelationFilter
+    gastosRegistrados?: GastoListRelationFilter
+    juegosRegistrados?: JuegoRegistroListRelationFilter
     movimientos?: MovimientoCajaListRelationFilter
   }
 
@@ -30168,6 +31900,10 @@ export namespace Prisma {
     rifasCreadas?: RifaOrderByRelationAggregateInput
     rifasEditadas?: RifaOrderByRelationAggregateInput
     asignaciones?: AsignacionBoletasOrderByRelationAggregateInput
+    devoluciones?: DevolucionBoletasOrderByRelationAggregateInput
+    abonosRegistrados?: AbonoVendedorOrderByRelationAggregateInput
+    gastosRegistrados?: GastoOrderByRelationAggregateInput
+    juegosRegistrados?: JuegoRegistroOrderByRelationAggregateInput
     movimientos?: MovimientoCajaOrderByRelationAggregateInput
   }
 
@@ -30186,6 +31922,10 @@ export namespace Prisma {
     rifasCreadas?: RifaListRelationFilter
     rifasEditadas?: RifaListRelationFilter
     asignaciones?: AsignacionBoletasListRelationFilter
+    devoluciones?: DevolucionBoletasListRelationFilter
+    abonosRegistrados?: AbonoVendedorListRelationFilter
+    gastosRegistrados?: GastoListRelationFilter
+    juegosRegistrados?: JuegoRegistroListRelationFilter
     movimientos?: MovimientoCajaListRelationFilter
   }, "id" | "email">
 
@@ -30341,6 +32081,7 @@ export namespace Prisma {
     rifaId?: StringFilter<"Premio"> | string
     nombre?: StringFilter<"Premio"> | string
     descripcion?: StringNullableFilter<"Premio"> | string | null
+    imagenesJson?: JsonNullableFilter<"Premio">
     tipo?: EnumTipoPremioFilter<"Premio"> | $Enums.TipoPremio
     mostrarValor?: BoolFilter<"Premio"> | boolean
     valor?: DecimalNullableFilter<"Premio"> | Decimal | DecimalJsLike | number | string | null
@@ -30348,6 +32089,7 @@ export namespace Prisma {
     createdAt?: DateTimeFilter<"Premio"> | Date | string
     rifa?: XOR<RifaScalarRelationFilter, RifaWhereInput>
     boletas?: BoletaPremioListRelationFilter
+    juegos?: JuegoRegistroListRelationFilter
   }
 
   export type PremioOrderByWithRelationInput = {
@@ -30355,6 +32097,7 @@ export namespace Prisma {
     rifaId?: SortOrder
     nombre?: SortOrder
     descripcion?: SortOrderInput | SortOrder
+    imagenesJson?: SortOrderInput | SortOrder
     tipo?: SortOrder
     mostrarValor?: SortOrder
     valor?: SortOrderInput | SortOrder
@@ -30362,6 +32105,7 @@ export namespace Prisma {
     createdAt?: SortOrder
     rifa?: RifaOrderByWithRelationInput
     boletas?: BoletaPremioOrderByRelationAggregateInput
+    juegos?: JuegoRegistroOrderByRelationAggregateInput
   }
 
   export type PremioWhereUniqueInput = Prisma.AtLeast<{
@@ -30372,6 +32116,7 @@ export namespace Prisma {
     rifaId?: StringFilter<"Premio"> | string
     nombre?: StringFilter<"Premio"> | string
     descripcion?: StringNullableFilter<"Premio"> | string | null
+    imagenesJson?: JsonNullableFilter<"Premio">
     tipo?: EnumTipoPremioFilter<"Premio"> | $Enums.TipoPremio
     mostrarValor?: BoolFilter<"Premio"> | boolean
     valor?: DecimalNullableFilter<"Premio"> | Decimal | DecimalJsLike | number | string | null
@@ -30379,6 +32124,7 @@ export namespace Prisma {
     createdAt?: DateTimeFilter<"Premio"> | Date | string
     rifa?: XOR<RifaScalarRelationFilter, RifaWhereInput>
     boletas?: BoletaPremioListRelationFilter
+    juegos?: JuegoRegistroListRelationFilter
   }, "id">
 
   export type PremioOrderByWithAggregationInput = {
@@ -30386,6 +32132,7 @@ export namespace Prisma {
     rifaId?: SortOrder
     nombre?: SortOrder
     descripcion?: SortOrderInput | SortOrder
+    imagenesJson?: SortOrderInput | SortOrder
     tipo?: SortOrder
     mostrarValor?: SortOrder
     valor?: SortOrderInput | SortOrder
@@ -30406,6 +32153,7 @@ export namespace Prisma {
     rifaId?: StringWithAggregatesFilter<"Premio"> | string
     nombre?: StringWithAggregatesFilter<"Premio"> | string
     descripcion?: StringNullableWithAggregatesFilter<"Premio"> | string | null
+    imagenesJson?: JsonNullableWithAggregatesFilter<"Premio">
     tipo?: EnumTipoPremioWithAggregatesFilter<"Premio"> | $Enums.TipoPremio
     mostrarValor?: BoolWithAggregatesFilter<"Premio"> | boolean
     valor?: DecimalNullableWithAggregatesFilter<"Premio"> | Decimal | DecimalJsLike | number | string | null
@@ -30672,6 +32420,7 @@ export namespace Prisma {
     devoluciones?: DevolucionBoletasListRelationFilter
     abonos?: AbonoVendedorListRelationFilter
     boletas?: BoletaListRelationFilter
+    juegos?: JuegoRegistroListRelationFilter
   }
 
   export type RifaVendedorOrderByWithRelationInput = {
@@ -30687,6 +32436,7 @@ export namespace Prisma {
     devoluciones?: DevolucionBoletasOrderByRelationAggregateInput
     abonos?: AbonoVendedorOrderByRelationAggregateInput
     boletas?: BoletaOrderByRelationAggregateInput
+    juegos?: JuegoRegistroOrderByRelationAggregateInput
   }
 
   export type RifaVendedorWhereUniqueInput = Prisma.AtLeast<{
@@ -30706,6 +32456,7 @@ export namespace Prisma {
     devoluciones?: DevolucionBoletasListRelationFilter
     abonos?: AbonoVendedorListRelationFilter
     boletas?: BoletaListRelationFilter
+    juegos?: JuegoRegistroListRelationFilter
   }, "id" | "rifaId_vendedorId">
 
   export type RifaVendedorOrderByWithAggregationInput = {
@@ -30853,7 +32604,9 @@ export namespace Prisma {
     rifaVendedorId?: StringFilter<"DevolucionBoletas"> | string
     destino?: EnumDestinoDevolucionFilter<"DevolucionBoletas"> | $Enums.DestinoDevolucion
     fecha?: DateTimeFilter<"DevolucionBoletas"> | Date | string
+    usuarioId?: StringNullableFilter<"DevolucionBoletas"> | string | null
     rifaVendedor?: XOR<RifaVendedorScalarRelationFilter, RifaVendedorWhereInput>
+    usuario?: XOR<UsuarioNullableScalarRelationFilter, UsuarioWhereInput> | null
     detalle?: DevolucionDetalleListRelationFilter
   }
 
@@ -30862,7 +32615,9 @@ export namespace Prisma {
     rifaVendedorId?: SortOrder
     destino?: SortOrder
     fecha?: SortOrder
+    usuarioId?: SortOrderInput | SortOrder
     rifaVendedor?: RifaVendedorOrderByWithRelationInput
+    usuario?: UsuarioOrderByWithRelationInput
     detalle?: DevolucionDetalleOrderByRelationAggregateInput
   }
 
@@ -30874,7 +32629,9 @@ export namespace Prisma {
     rifaVendedorId?: StringFilter<"DevolucionBoletas"> | string
     destino?: EnumDestinoDevolucionFilter<"DevolucionBoletas"> | $Enums.DestinoDevolucion
     fecha?: DateTimeFilter<"DevolucionBoletas"> | Date | string
+    usuarioId?: StringNullableFilter<"DevolucionBoletas"> | string | null
     rifaVendedor?: XOR<RifaVendedorScalarRelationFilter, RifaVendedorWhereInput>
+    usuario?: XOR<UsuarioNullableScalarRelationFilter, UsuarioWhereInput> | null
     detalle?: DevolucionDetalleListRelationFilter
   }, "id">
 
@@ -30883,6 +32640,7 @@ export namespace Prisma {
     rifaVendedorId?: SortOrder
     destino?: SortOrder
     fecha?: SortOrder
+    usuarioId?: SortOrderInput | SortOrder
     _count?: DevolucionBoletasCountOrderByAggregateInput
     _max?: DevolucionBoletasMaxOrderByAggregateInput
     _min?: DevolucionBoletasMinOrderByAggregateInput
@@ -30896,6 +32654,7 @@ export namespace Prisma {
     rifaVendedorId?: StringWithAggregatesFilter<"DevolucionBoletas"> | string
     destino?: EnumDestinoDevolucionWithAggregatesFilter<"DevolucionBoletas"> | $Enums.DestinoDevolucion
     fecha?: DateTimeWithAggregatesFilter<"DevolucionBoletas"> | Date | string
+    usuarioId?: StringNullableWithAggregatesFilter<"DevolucionBoletas"> | string | null
   }
 
   export type DevolucionDetalleWhereInput = {
@@ -30954,6 +32713,7 @@ export namespace Prisma {
     nombre?: StringFilter<"Cliente"> | string
     email?: StringNullableFilter<"Cliente"> | string | null
     telefono?: StringNullableFilter<"Cliente"> | string | null
+    documento?: StringNullableFilter<"Cliente"> | string | null
     ventas?: VentaListRelationFilter
     boletas?: BoletaListRelationFilter
     movimientos?: MovimientoCajaListRelationFilter
@@ -30964,6 +32724,7 @@ export namespace Prisma {
     nombre?: SortOrder
     email?: SortOrderInput | SortOrder
     telefono?: SortOrderInput | SortOrder
+    documento?: SortOrderInput | SortOrder
     ventas?: VentaOrderByRelationAggregateInput
     boletas?: BoletaOrderByRelationAggregateInput
     movimientos?: MovimientoCajaOrderByRelationAggregateInput
@@ -30977,6 +32738,7 @@ export namespace Prisma {
     nombre?: StringFilter<"Cliente"> | string
     email?: StringNullableFilter<"Cliente"> | string | null
     telefono?: StringNullableFilter<"Cliente"> | string | null
+    documento?: StringNullableFilter<"Cliente"> | string | null
     ventas?: VentaListRelationFilter
     boletas?: BoletaListRelationFilter
     movimientos?: MovimientoCajaListRelationFilter
@@ -30987,6 +32749,7 @@ export namespace Prisma {
     nombre?: SortOrder
     email?: SortOrderInput | SortOrder
     telefono?: SortOrderInput | SortOrder
+    documento?: SortOrderInput | SortOrder
     _count?: ClienteCountOrderByAggregateInput
     _max?: ClienteMaxOrderByAggregateInput
     _min?: ClienteMinOrderByAggregateInput
@@ -31000,6 +32763,7 @@ export namespace Prisma {
     nombre?: StringWithAggregatesFilter<"Cliente"> | string
     email?: StringNullableWithAggregatesFilter<"Cliente"> | string | null
     telefono?: StringNullableWithAggregatesFilter<"Cliente"> | string | null
+    documento?: StringNullableWithAggregatesFilter<"Cliente"> | string | null
   }
 
   export type VentaWhereInput = {
@@ -31012,6 +32776,12 @@ export namespace Prisma {
     estado?: EnumEstadoVentaFilter<"Venta"> | $Enums.EstadoVenta
     total?: DecimalFilter<"Venta"> | Decimal | DecimalJsLike | number | string
     saldoPendiente?: DecimalFilter<"Venta"> | Decimal | DecimalJsLike | number | string
+    referenciaPago?: StringNullableFilter<"Venta"> | string | null
+    pasarelaPago?: StringNullableFilter<"Venta"> | string | null
+    pasarelaEstado?: StringNullableFilter<"Venta"> | string | null
+    pasarelaTransaccionId?: StringNullableFilter<"Venta"> | string | null
+    createdAt?: DateTimeFilter<"Venta"> | Date | string
+    updatedAt?: DateTimeFilter<"Venta"> | Date | string
     cliente?: XOR<ClienteScalarRelationFilter, ClienteWhereInput>
     rifa?: XOR<RifaScalarRelationFilter, RifaWhereInput>
     boletas?: BoletaListRelationFilter
@@ -31026,6 +32796,12 @@ export namespace Prisma {
     estado?: SortOrder
     total?: SortOrder
     saldoPendiente?: SortOrder
+    referenciaPago?: SortOrderInput | SortOrder
+    pasarelaPago?: SortOrderInput | SortOrder
+    pasarelaEstado?: SortOrderInput | SortOrder
+    pasarelaTransaccionId?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
     cliente?: ClienteOrderByWithRelationInput
     rifa?: RifaOrderByWithRelationInput
     boletas?: BoletaOrderByRelationAggregateInput
@@ -31035,6 +32811,7 @@ export namespace Prisma {
 
   export type VentaWhereUniqueInput = Prisma.AtLeast<{
     id?: string
+    referenciaPago?: string
     AND?: VentaWhereInput | VentaWhereInput[]
     OR?: VentaWhereInput[]
     NOT?: VentaWhereInput | VentaWhereInput[]
@@ -31043,12 +32820,17 @@ export namespace Prisma {
     estado?: EnumEstadoVentaFilter<"Venta"> | $Enums.EstadoVenta
     total?: DecimalFilter<"Venta"> | Decimal | DecimalJsLike | number | string
     saldoPendiente?: DecimalFilter<"Venta"> | Decimal | DecimalJsLike | number | string
+    pasarelaPago?: StringNullableFilter<"Venta"> | string | null
+    pasarelaEstado?: StringNullableFilter<"Venta"> | string | null
+    pasarelaTransaccionId?: StringNullableFilter<"Venta"> | string | null
+    createdAt?: DateTimeFilter<"Venta"> | Date | string
+    updatedAt?: DateTimeFilter<"Venta"> | Date | string
     cliente?: XOR<ClienteScalarRelationFilter, ClienteWhereInput>
     rifa?: XOR<RifaScalarRelationFilter, RifaWhereInput>
     boletas?: BoletaListRelationFilter
     pagos?: PagoClienteListRelationFilter
     movimientos?: MovimientoCajaListRelationFilter
-  }, "id">
+  }, "id" | "referenciaPago">
 
   export type VentaOrderByWithAggregationInput = {
     id?: SortOrder
@@ -31057,6 +32839,12 @@ export namespace Prisma {
     estado?: SortOrder
     total?: SortOrder
     saldoPendiente?: SortOrder
+    referenciaPago?: SortOrderInput | SortOrder
+    pasarelaPago?: SortOrderInput | SortOrder
+    pasarelaEstado?: SortOrderInput | SortOrder
+    pasarelaTransaccionId?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
     _count?: VentaCountOrderByAggregateInput
     _avg?: VentaAvgOrderByAggregateInput
     _max?: VentaMaxOrderByAggregateInput
@@ -31074,6 +32862,12 @@ export namespace Prisma {
     estado?: EnumEstadoVentaWithAggregatesFilter<"Venta"> | $Enums.EstadoVenta
     total?: DecimalWithAggregatesFilter<"Venta"> | Decimal | DecimalJsLike | number | string
     saldoPendiente?: DecimalWithAggregatesFilter<"Venta"> | Decimal | DecimalJsLike | number | string
+    referenciaPago?: StringNullableWithAggregatesFilter<"Venta"> | string | null
+    pasarelaPago?: StringNullableWithAggregatesFilter<"Venta"> | string | null
+    pasarelaEstado?: StringNullableWithAggregatesFilter<"Venta"> | string | null
+    pasarelaTransaccionId?: StringNullableWithAggregatesFilter<"Venta"> | string | null
+    createdAt?: DateTimeWithAggregatesFilter<"Venta"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"Venta"> | Date | string
   }
 
   export type PagoClienteWhereInput = {
@@ -31148,6 +32942,7 @@ export namespace Prisma {
     id?: StringFilter<"AbonoVendedor"> | string
     rifaVendedorId?: StringFilter<"AbonoVendedor"> | string
     subCajaId?: StringNullableFilter<"AbonoVendedor"> | string | null
+    usuarioId?: StringNullableFilter<"AbonoVendedor"> | string | null
     valor?: DecimalFilter<"AbonoVendedor"> | Decimal | DecimalJsLike | number | string
     fecha?: DateTimeFilter<"AbonoVendedor"> | Date | string
     descripcion?: StringNullableFilter<"AbonoVendedor"> | string | null
@@ -31160,6 +32955,7 @@ export namespace Prisma {
     boletasActuales?: IntFilter<"AbonoVendedor"> | number
     rifaVendedor?: XOR<RifaVendedorScalarRelationFilter, RifaVendedorWhereInput>
     subCaja?: XOR<SubCajaNullableScalarRelationFilter, SubCajaWhereInput> | null
+    usuario?: XOR<UsuarioNullableScalarRelationFilter, UsuarioWhereInput> | null
     recibo?: XOR<ReciboNullableScalarRelationFilter, ReciboWhereInput> | null
     movimientos?: MovimientoCajaListRelationFilter
   }
@@ -31168,6 +32964,7 @@ export namespace Prisma {
     id?: SortOrder
     rifaVendedorId?: SortOrder
     subCajaId?: SortOrderInput | SortOrder
+    usuarioId?: SortOrderInput | SortOrder
     valor?: SortOrder
     fecha?: SortOrder
     descripcion?: SortOrderInput | SortOrder
@@ -31180,6 +32977,7 @@ export namespace Prisma {
     boletasActuales?: SortOrder
     rifaVendedor?: RifaVendedorOrderByWithRelationInput
     subCaja?: SubCajaOrderByWithRelationInput
+    usuario?: UsuarioOrderByWithRelationInput
     recibo?: ReciboOrderByWithRelationInput
     movimientos?: MovimientoCajaOrderByRelationAggregateInput
   }
@@ -31191,6 +32989,7 @@ export namespace Prisma {
     NOT?: AbonoVendedorWhereInput | AbonoVendedorWhereInput[]
     rifaVendedorId?: StringFilter<"AbonoVendedor"> | string
     subCajaId?: StringNullableFilter<"AbonoVendedor"> | string | null
+    usuarioId?: StringNullableFilter<"AbonoVendedor"> | string | null
     valor?: DecimalFilter<"AbonoVendedor"> | Decimal | DecimalJsLike | number | string
     fecha?: DateTimeFilter<"AbonoVendedor"> | Date | string
     descripcion?: StringNullableFilter<"AbonoVendedor"> | string | null
@@ -31203,6 +33002,7 @@ export namespace Prisma {
     boletasActuales?: IntFilter<"AbonoVendedor"> | number
     rifaVendedor?: XOR<RifaVendedorScalarRelationFilter, RifaVendedorWhereInput>
     subCaja?: XOR<SubCajaNullableScalarRelationFilter, SubCajaWhereInput> | null
+    usuario?: XOR<UsuarioNullableScalarRelationFilter, UsuarioWhereInput> | null
     recibo?: XOR<ReciboNullableScalarRelationFilter, ReciboWhereInput> | null
     movimientos?: MovimientoCajaListRelationFilter
   }, "id">
@@ -31211,6 +33011,7 @@ export namespace Prisma {
     id?: SortOrder
     rifaVendedorId?: SortOrder
     subCajaId?: SortOrderInput | SortOrder
+    usuarioId?: SortOrderInput | SortOrder
     valor?: SortOrder
     fecha?: SortOrder
     descripcion?: SortOrderInput | SortOrder
@@ -31235,6 +33036,7 @@ export namespace Prisma {
     id?: StringWithAggregatesFilter<"AbonoVendedor"> | string
     rifaVendedorId?: StringWithAggregatesFilter<"AbonoVendedor"> | string
     subCajaId?: StringNullableWithAggregatesFilter<"AbonoVendedor"> | string | null
+    usuarioId?: StringNullableWithAggregatesFilter<"AbonoVendedor"> | string | null
     valor?: DecimalWithAggregatesFilter<"AbonoVendedor"> | Decimal | DecimalJsLike | number | string
     fecha?: DateTimeWithAggregatesFilter<"AbonoVendedor"> | Date | string
     descripcion?: StringNullableWithAggregatesFilter<"AbonoVendedor"> | string | null
@@ -31566,6 +33368,7 @@ export namespace Prisma {
     id?: StringFilter<"Gasto"> | string
     rifaId?: StringFilter<"Gasto"> | string
     subCajaId?: StringNullableFilter<"Gasto"> | string | null
+    usuarioId?: StringNullableFilter<"Gasto"> | string | null
     categoria?: EnumCategoriaGastoFilter<"Gasto"> | $Enums.CategoriaGasto
     descripcion?: StringFilter<"Gasto"> | string
     valor?: DecimalFilter<"Gasto"> | Decimal | DecimalJsLike | number | string
@@ -31574,6 +33377,7 @@ export namespace Prisma {
     anuladoMotivo?: StringNullableFilter<"Gasto"> | string | null
     rifa?: XOR<RifaScalarRelationFilter, RifaWhereInput>
     subCaja?: XOR<SubCajaNullableScalarRelationFilter, SubCajaWhereInput> | null
+    usuario?: XOR<UsuarioNullableScalarRelationFilter, UsuarioWhereInput> | null
     movimientos?: MovimientoCajaListRelationFilter
     recibo?: XOR<GastoReciboNullableScalarRelationFilter, GastoReciboWhereInput> | null
   }
@@ -31582,6 +33386,7 @@ export namespace Prisma {
     id?: SortOrder
     rifaId?: SortOrder
     subCajaId?: SortOrderInput | SortOrder
+    usuarioId?: SortOrderInput | SortOrder
     categoria?: SortOrder
     descripcion?: SortOrder
     valor?: SortOrder
@@ -31590,6 +33395,7 @@ export namespace Prisma {
     anuladoMotivo?: SortOrderInput | SortOrder
     rifa?: RifaOrderByWithRelationInput
     subCaja?: SubCajaOrderByWithRelationInput
+    usuario?: UsuarioOrderByWithRelationInput
     movimientos?: MovimientoCajaOrderByRelationAggregateInput
     recibo?: GastoReciboOrderByWithRelationInput
   }
@@ -31601,6 +33407,7 @@ export namespace Prisma {
     NOT?: GastoWhereInput | GastoWhereInput[]
     rifaId?: StringFilter<"Gasto"> | string
     subCajaId?: StringNullableFilter<"Gasto"> | string | null
+    usuarioId?: StringNullableFilter<"Gasto"> | string | null
     categoria?: EnumCategoriaGastoFilter<"Gasto"> | $Enums.CategoriaGasto
     descripcion?: StringFilter<"Gasto"> | string
     valor?: DecimalFilter<"Gasto"> | Decimal | DecimalJsLike | number | string
@@ -31609,6 +33416,7 @@ export namespace Prisma {
     anuladoMotivo?: StringNullableFilter<"Gasto"> | string | null
     rifa?: XOR<RifaScalarRelationFilter, RifaWhereInput>
     subCaja?: XOR<SubCajaNullableScalarRelationFilter, SubCajaWhereInput> | null
+    usuario?: XOR<UsuarioNullableScalarRelationFilter, UsuarioWhereInput> | null
     movimientos?: MovimientoCajaListRelationFilter
     recibo?: XOR<GastoReciboNullableScalarRelationFilter, GastoReciboWhereInput> | null
   }, "id">
@@ -31617,6 +33425,7 @@ export namespace Prisma {
     id?: SortOrder
     rifaId?: SortOrder
     subCajaId?: SortOrderInput | SortOrder
+    usuarioId?: SortOrderInput | SortOrder
     categoria?: SortOrder
     descripcion?: SortOrder
     valor?: SortOrder
@@ -31637,12 +33446,82 @@ export namespace Prisma {
     id?: StringWithAggregatesFilter<"Gasto"> | string
     rifaId?: StringWithAggregatesFilter<"Gasto"> | string
     subCajaId?: StringNullableWithAggregatesFilter<"Gasto"> | string | null
+    usuarioId?: StringNullableWithAggregatesFilter<"Gasto"> | string | null
     categoria?: EnumCategoriaGastoWithAggregatesFilter<"Gasto"> | $Enums.CategoriaGasto
     descripcion?: StringWithAggregatesFilter<"Gasto"> | string
     valor?: DecimalWithAggregatesFilter<"Gasto"> | Decimal | DecimalJsLike | number | string
     fecha?: DateTimeWithAggregatesFilter<"Gasto"> | Date | string
     anuladoAt?: DateTimeNullableWithAggregatesFilter<"Gasto"> | Date | string | null
     anuladoMotivo?: StringNullableWithAggregatesFilter<"Gasto"> | string | null
+  }
+
+  export type JuegoRegistroWhereInput = {
+    AND?: JuegoRegistroWhereInput | JuegoRegistroWhereInput[]
+    OR?: JuegoRegistroWhereInput[]
+    NOT?: JuegoRegistroWhereInput | JuegoRegistroWhereInput[]
+    id?: StringFilter<"JuegoRegistro"> | string
+    rifaVendedorId?: StringFilter<"JuegoRegistro"> | string
+    premioId?: StringFilter<"JuegoRegistro"> | string
+    usuarioId?: StringNullableFilter<"JuegoRegistro"> | string | null
+    fecha?: DateTimeFilter<"JuegoRegistro"> | Date | string
+    totalBoletas?: IntFilter<"JuegoRegistro"> | number
+    rifaVendedor?: XOR<RifaVendedorScalarRelationFilter, RifaVendedorWhereInput>
+    premio?: XOR<PremioScalarRelationFilter, PremioWhereInput>
+    usuario?: XOR<UsuarioNullableScalarRelationFilter, UsuarioWhereInput> | null
+  }
+
+  export type JuegoRegistroOrderByWithRelationInput = {
+    id?: SortOrder
+    rifaVendedorId?: SortOrder
+    premioId?: SortOrder
+    usuarioId?: SortOrderInput | SortOrder
+    fecha?: SortOrder
+    totalBoletas?: SortOrder
+    rifaVendedor?: RifaVendedorOrderByWithRelationInput
+    premio?: PremioOrderByWithRelationInput
+    usuario?: UsuarioOrderByWithRelationInput
+  }
+
+  export type JuegoRegistroWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    rifaVendedorId_premioId?: JuegoRegistroRifaVendedorIdPremioIdCompoundUniqueInput
+    AND?: JuegoRegistroWhereInput | JuegoRegistroWhereInput[]
+    OR?: JuegoRegistroWhereInput[]
+    NOT?: JuegoRegistroWhereInput | JuegoRegistroWhereInput[]
+    rifaVendedorId?: StringFilter<"JuegoRegistro"> | string
+    premioId?: StringFilter<"JuegoRegistro"> | string
+    usuarioId?: StringNullableFilter<"JuegoRegistro"> | string | null
+    fecha?: DateTimeFilter<"JuegoRegistro"> | Date | string
+    totalBoletas?: IntFilter<"JuegoRegistro"> | number
+    rifaVendedor?: XOR<RifaVendedorScalarRelationFilter, RifaVendedorWhereInput>
+    premio?: XOR<PremioScalarRelationFilter, PremioWhereInput>
+    usuario?: XOR<UsuarioNullableScalarRelationFilter, UsuarioWhereInput> | null
+  }, "id" | "rifaVendedorId_premioId">
+
+  export type JuegoRegistroOrderByWithAggregationInput = {
+    id?: SortOrder
+    rifaVendedorId?: SortOrder
+    premioId?: SortOrder
+    usuarioId?: SortOrderInput | SortOrder
+    fecha?: SortOrder
+    totalBoletas?: SortOrder
+    _count?: JuegoRegistroCountOrderByAggregateInput
+    _avg?: JuegoRegistroAvgOrderByAggregateInput
+    _max?: JuegoRegistroMaxOrderByAggregateInput
+    _min?: JuegoRegistroMinOrderByAggregateInput
+    _sum?: JuegoRegistroSumOrderByAggregateInput
+  }
+
+  export type JuegoRegistroScalarWhereWithAggregatesInput = {
+    AND?: JuegoRegistroScalarWhereWithAggregatesInput | JuegoRegistroScalarWhereWithAggregatesInput[]
+    OR?: JuegoRegistroScalarWhereWithAggregatesInput[]
+    NOT?: JuegoRegistroScalarWhereWithAggregatesInput | JuegoRegistroScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"JuegoRegistro"> | string
+    rifaVendedorId?: StringWithAggregatesFilter<"JuegoRegistro"> | string
+    premioId?: StringWithAggregatesFilter<"JuegoRegistro"> | string
+    usuarioId?: StringNullableWithAggregatesFilter<"JuegoRegistro"> | string | null
+    fecha?: DateTimeWithAggregatesFilter<"JuegoRegistro"> | Date | string
+    totalBoletas?: IntWithAggregatesFilter<"JuegoRegistro"> | number
   }
 
   export type GastoReciboWhereInput = {
@@ -31826,6 +33705,10 @@ export namespace Prisma {
     rifasCreadas?: RifaCreateNestedManyWithoutCreatedByInput
     rifasEditadas?: RifaCreateNestedManyWithoutUpdatedByInput
     asignaciones?: AsignacionBoletasCreateNestedManyWithoutUsuarioInput
+    devoluciones?: DevolucionBoletasCreateNestedManyWithoutUsuarioInput
+    abonosRegistrados?: AbonoVendedorCreateNestedManyWithoutUsuarioInput
+    gastosRegistrados?: GastoCreateNestedManyWithoutUsuarioInput
+    juegosRegistrados?: JuegoRegistroCreateNestedManyWithoutUsuarioInput
     movimientos?: MovimientoCajaCreateNestedManyWithoutUsuarioInput
   }
 
@@ -31841,6 +33724,10 @@ export namespace Prisma {
     rifasCreadas?: RifaUncheckedCreateNestedManyWithoutCreatedByInput
     rifasEditadas?: RifaUncheckedCreateNestedManyWithoutUpdatedByInput
     asignaciones?: AsignacionBoletasUncheckedCreateNestedManyWithoutUsuarioInput
+    devoluciones?: DevolucionBoletasUncheckedCreateNestedManyWithoutUsuarioInput
+    abonosRegistrados?: AbonoVendedorUncheckedCreateNestedManyWithoutUsuarioInput
+    gastosRegistrados?: GastoUncheckedCreateNestedManyWithoutUsuarioInput
+    juegosRegistrados?: JuegoRegistroUncheckedCreateNestedManyWithoutUsuarioInput
     movimientos?: MovimientoCajaUncheckedCreateNestedManyWithoutUsuarioInput
   }
 
@@ -31856,6 +33743,10 @@ export namespace Prisma {
     rifasCreadas?: RifaUpdateManyWithoutCreatedByNestedInput
     rifasEditadas?: RifaUpdateManyWithoutUpdatedByNestedInput
     asignaciones?: AsignacionBoletasUpdateManyWithoutUsuarioNestedInput
+    devoluciones?: DevolucionBoletasUpdateManyWithoutUsuarioNestedInput
+    abonosRegistrados?: AbonoVendedorUpdateManyWithoutUsuarioNestedInput
+    gastosRegistrados?: GastoUpdateManyWithoutUsuarioNestedInput
+    juegosRegistrados?: JuegoRegistroUpdateManyWithoutUsuarioNestedInput
     movimientos?: MovimientoCajaUpdateManyWithoutUsuarioNestedInput
   }
 
@@ -31871,6 +33762,10 @@ export namespace Prisma {
     rifasCreadas?: RifaUncheckedUpdateManyWithoutCreatedByNestedInput
     rifasEditadas?: RifaUncheckedUpdateManyWithoutUpdatedByNestedInput
     asignaciones?: AsignacionBoletasUncheckedUpdateManyWithoutUsuarioNestedInput
+    devoluciones?: DevolucionBoletasUncheckedUpdateManyWithoutUsuarioNestedInput
+    abonosRegistrados?: AbonoVendedorUncheckedUpdateManyWithoutUsuarioNestedInput
+    gastosRegistrados?: GastoUncheckedUpdateManyWithoutUsuarioNestedInput
+    juegosRegistrados?: JuegoRegistroUncheckedUpdateManyWithoutUsuarioNestedInput
     movimientos?: MovimientoCajaUncheckedUpdateManyWithoutUsuarioNestedInput
   }
 
@@ -32042,6 +33937,7 @@ export namespace Prisma {
     id?: string
     nombre: string
     descripcion?: string | null
+    imagenesJson?: NullableJsonNullValueInput | InputJsonValue
     tipo: $Enums.TipoPremio
     mostrarValor?: boolean
     valor?: Decimal | DecimalJsLike | number | string | null
@@ -32049,6 +33945,7 @@ export namespace Prisma {
     createdAt?: Date | string
     rifa: RifaCreateNestedOneWithoutPremiosInput
     boletas?: BoletaPremioCreateNestedManyWithoutPremioInput
+    juegos?: JuegoRegistroCreateNestedManyWithoutPremioInput
   }
 
   export type PremioUncheckedCreateInput = {
@@ -32056,18 +33953,21 @@ export namespace Prisma {
     rifaId: string
     nombre: string
     descripcion?: string | null
+    imagenesJson?: NullableJsonNullValueInput | InputJsonValue
     tipo: $Enums.TipoPremio
     mostrarValor?: boolean
     valor?: Decimal | DecimalJsLike | number | string | null
     fecha: Date | string
     createdAt?: Date | string
     boletas?: BoletaPremioUncheckedCreateNestedManyWithoutPremioInput
+    juegos?: JuegoRegistroUncheckedCreateNestedManyWithoutPremioInput
   }
 
   export type PremioUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
     nombre?: StringFieldUpdateOperationsInput | string
     descripcion?: NullableStringFieldUpdateOperationsInput | string | null
+    imagenesJson?: NullableJsonNullValueInput | InputJsonValue
     tipo?: EnumTipoPremioFieldUpdateOperationsInput | $Enums.TipoPremio
     mostrarValor?: BoolFieldUpdateOperationsInput | boolean
     valor?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
@@ -32075,6 +33975,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     rifa?: RifaUpdateOneRequiredWithoutPremiosNestedInput
     boletas?: BoletaPremioUpdateManyWithoutPremioNestedInput
+    juegos?: JuegoRegistroUpdateManyWithoutPremioNestedInput
   }
 
   export type PremioUncheckedUpdateInput = {
@@ -32082,12 +33983,14 @@ export namespace Prisma {
     rifaId?: StringFieldUpdateOperationsInput | string
     nombre?: StringFieldUpdateOperationsInput | string
     descripcion?: NullableStringFieldUpdateOperationsInput | string | null
+    imagenesJson?: NullableJsonNullValueInput | InputJsonValue
     tipo?: EnumTipoPremioFieldUpdateOperationsInput | $Enums.TipoPremio
     mostrarValor?: BoolFieldUpdateOperationsInput | boolean
     valor?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     fecha?: DateTimeFieldUpdateOperationsInput | Date | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     boletas?: BoletaPremioUncheckedUpdateManyWithoutPremioNestedInput
+    juegos?: JuegoRegistroUncheckedUpdateManyWithoutPremioNestedInput
   }
 
   export type PremioCreateManyInput = {
@@ -32095,6 +33998,7 @@ export namespace Prisma {
     rifaId: string
     nombre: string
     descripcion?: string | null
+    imagenesJson?: NullableJsonNullValueInput | InputJsonValue
     tipo: $Enums.TipoPremio
     mostrarValor?: boolean
     valor?: Decimal | DecimalJsLike | number | string | null
@@ -32106,6 +34010,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     nombre?: StringFieldUpdateOperationsInput | string
     descripcion?: NullableStringFieldUpdateOperationsInput | string | null
+    imagenesJson?: NullableJsonNullValueInput | InputJsonValue
     tipo?: EnumTipoPremioFieldUpdateOperationsInput | $Enums.TipoPremio
     mostrarValor?: BoolFieldUpdateOperationsInput | boolean
     valor?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
@@ -32118,6 +34023,7 @@ export namespace Prisma {
     rifaId?: StringFieldUpdateOperationsInput | string
     nombre?: StringFieldUpdateOperationsInput | string
     descripcion?: NullableStringFieldUpdateOperationsInput | string | null
+    imagenesJson?: NullableJsonNullValueInput | InputJsonValue
     tipo?: EnumTipoPremioFieldUpdateOperationsInput | $Enums.TipoPremio
     mostrarValor?: BoolFieldUpdateOperationsInput | boolean
     valor?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
@@ -32388,6 +34294,7 @@ export namespace Prisma {
     devoluciones?: DevolucionBoletasCreateNestedManyWithoutRifaVendedorInput
     abonos?: AbonoVendedorCreateNestedManyWithoutRifaVendedorInput
     boletas?: BoletaCreateNestedManyWithoutRifaVendedorInput
+    juegos?: JuegoRegistroCreateNestedManyWithoutRifaVendedorInput
   }
 
   export type RifaVendedorUncheckedCreateInput = {
@@ -32401,6 +34308,7 @@ export namespace Prisma {
     devoluciones?: DevolucionBoletasUncheckedCreateNestedManyWithoutRifaVendedorInput
     abonos?: AbonoVendedorUncheckedCreateNestedManyWithoutRifaVendedorInput
     boletas?: BoletaUncheckedCreateNestedManyWithoutRifaVendedorInput
+    juegos?: JuegoRegistroUncheckedCreateNestedManyWithoutRifaVendedorInput
   }
 
   export type RifaVendedorUpdateInput = {
@@ -32414,6 +34322,7 @@ export namespace Prisma {
     devoluciones?: DevolucionBoletasUpdateManyWithoutRifaVendedorNestedInput
     abonos?: AbonoVendedorUpdateManyWithoutRifaVendedorNestedInput
     boletas?: BoletaUpdateManyWithoutRifaVendedorNestedInput
+    juegos?: JuegoRegistroUpdateManyWithoutRifaVendedorNestedInput
   }
 
   export type RifaVendedorUncheckedUpdateInput = {
@@ -32427,6 +34336,7 @@ export namespace Prisma {
     devoluciones?: DevolucionBoletasUncheckedUpdateManyWithoutRifaVendedorNestedInput
     abonos?: AbonoVendedorUncheckedUpdateManyWithoutRifaVendedorNestedInput
     boletas?: BoletaUncheckedUpdateManyWithoutRifaVendedorNestedInput
+    juegos?: JuegoRegistroUncheckedUpdateManyWithoutRifaVendedorNestedInput
   }
 
   export type RifaVendedorCreateManyInput = {
@@ -32557,6 +34467,7 @@ export namespace Prisma {
     destino?: $Enums.DestinoDevolucion
     fecha?: Date | string
     rifaVendedor: RifaVendedorCreateNestedOneWithoutDevolucionesInput
+    usuario?: UsuarioCreateNestedOneWithoutDevolucionesInput
     detalle?: DevolucionDetalleCreateNestedManyWithoutDevolucionInput
   }
 
@@ -32565,6 +34476,7 @@ export namespace Prisma {
     rifaVendedorId: string
     destino?: $Enums.DestinoDevolucion
     fecha?: Date | string
+    usuarioId?: string | null
     detalle?: DevolucionDetalleUncheckedCreateNestedManyWithoutDevolucionInput
   }
 
@@ -32573,6 +34485,7 @@ export namespace Prisma {
     destino?: EnumDestinoDevolucionFieldUpdateOperationsInput | $Enums.DestinoDevolucion
     fecha?: DateTimeFieldUpdateOperationsInput | Date | string
     rifaVendedor?: RifaVendedorUpdateOneRequiredWithoutDevolucionesNestedInput
+    usuario?: UsuarioUpdateOneWithoutDevolucionesNestedInput
     detalle?: DevolucionDetalleUpdateManyWithoutDevolucionNestedInput
   }
 
@@ -32581,6 +34494,7 @@ export namespace Prisma {
     rifaVendedorId?: StringFieldUpdateOperationsInput | string
     destino?: EnumDestinoDevolucionFieldUpdateOperationsInput | $Enums.DestinoDevolucion
     fecha?: DateTimeFieldUpdateOperationsInput | Date | string
+    usuarioId?: NullableStringFieldUpdateOperationsInput | string | null
     detalle?: DevolucionDetalleUncheckedUpdateManyWithoutDevolucionNestedInput
   }
 
@@ -32589,6 +34503,7 @@ export namespace Prisma {
     rifaVendedorId: string
     destino?: $Enums.DestinoDevolucion
     fecha?: Date | string
+    usuarioId?: string | null
   }
 
   export type DevolucionBoletasUpdateManyMutationInput = {
@@ -32602,6 +34517,7 @@ export namespace Prisma {
     rifaVendedorId?: StringFieldUpdateOperationsInput | string
     destino?: EnumDestinoDevolucionFieldUpdateOperationsInput | $Enums.DestinoDevolucion
     fecha?: DateTimeFieldUpdateOperationsInput | Date | string
+    usuarioId?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type DevolucionDetalleCreateInput = {
@@ -32649,6 +34565,7 @@ export namespace Prisma {
     nombre: string
     email?: string | null
     telefono?: string | null
+    documento?: string | null
     ventas?: VentaCreateNestedManyWithoutClienteInput
     boletas?: BoletaCreateNestedManyWithoutClienteInput
     movimientos?: MovimientoCajaCreateNestedManyWithoutClienteInput
@@ -32659,6 +34576,7 @@ export namespace Prisma {
     nombre: string
     email?: string | null
     telefono?: string | null
+    documento?: string | null
     ventas?: VentaUncheckedCreateNestedManyWithoutClienteInput
     boletas?: BoletaUncheckedCreateNestedManyWithoutClienteInput
     movimientos?: MovimientoCajaUncheckedCreateNestedManyWithoutClienteInput
@@ -32669,6 +34587,7 @@ export namespace Prisma {
     nombre?: StringFieldUpdateOperationsInput | string
     email?: NullableStringFieldUpdateOperationsInput | string | null
     telefono?: NullableStringFieldUpdateOperationsInput | string | null
+    documento?: NullableStringFieldUpdateOperationsInput | string | null
     ventas?: VentaUpdateManyWithoutClienteNestedInput
     boletas?: BoletaUpdateManyWithoutClienteNestedInput
     movimientos?: MovimientoCajaUpdateManyWithoutClienteNestedInput
@@ -32679,6 +34598,7 @@ export namespace Prisma {
     nombre?: StringFieldUpdateOperationsInput | string
     email?: NullableStringFieldUpdateOperationsInput | string | null
     telefono?: NullableStringFieldUpdateOperationsInput | string | null
+    documento?: NullableStringFieldUpdateOperationsInput | string | null
     ventas?: VentaUncheckedUpdateManyWithoutClienteNestedInput
     boletas?: BoletaUncheckedUpdateManyWithoutClienteNestedInput
     movimientos?: MovimientoCajaUncheckedUpdateManyWithoutClienteNestedInput
@@ -32689,6 +34609,7 @@ export namespace Prisma {
     nombre: string
     email?: string | null
     telefono?: string | null
+    documento?: string | null
   }
 
   export type ClienteUpdateManyMutationInput = {
@@ -32696,6 +34617,7 @@ export namespace Prisma {
     nombre?: StringFieldUpdateOperationsInput | string
     email?: NullableStringFieldUpdateOperationsInput | string | null
     telefono?: NullableStringFieldUpdateOperationsInput | string | null
+    documento?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type ClienteUncheckedUpdateManyInput = {
@@ -32703,6 +34625,7 @@ export namespace Prisma {
     nombre?: StringFieldUpdateOperationsInput | string
     email?: NullableStringFieldUpdateOperationsInput | string | null
     telefono?: NullableStringFieldUpdateOperationsInput | string | null
+    documento?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type VentaCreateInput = {
@@ -32710,6 +34633,12 @@ export namespace Prisma {
     estado?: $Enums.EstadoVenta
     total: Decimal | DecimalJsLike | number | string
     saldoPendiente: Decimal | DecimalJsLike | number | string
+    referenciaPago?: string | null
+    pasarelaPago?: string | null
+    pasarelaEstado?: string | null
+    pasarelaTransaccionId?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
     cliente: ClienteCreateNestedOneWithoutVentasInput
     rifa: RifaCreateNestedOneWithoutVentasInput
     boletas?: BoletaCreateNestedManyWithoutVentaInput
@@ -32724,6 +34653,12 @@ export namespace Prisma {
     estado?: $Enums.EstadoVenta
     total: Decimal | DecimalJsLike | number | string
     saldoPendiente: Decimal | DecimalJsLike | number | string
+    referenciaPago?: string | null
+    pasarelaPago?: string | null
+    pasarelaEstado?: string | null
+    pasarelaTransaccionId?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
     boletas?: BoletaUncheckedCreateNestedManyWithoutVentaInput
     pagos?: PagoClienteUncheckedCreateNestedManyWithoutVentaInput
     movimientos?: MovimientoCajaUncheckedCreateNestedManyWithoutVentaInput
@@ -32734,6 +34669,12 @@ export namespace Prisma {
     estado?: EnumEstadoVentaFieldUpdateOperationsInput | $Enums.EstadoVenta
     total?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     saldoPendiente?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    referenciaPago?: NullableStringFieldUpdateOperationsInput | string | null
+    pasarelaPago?: NullableStringFieldUpdateOperationsInput | string | null
+    pasarelaEstado?: NullableStringFieldUpdateOperationsInput | string | null
+    pasarelaTransaccionId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     cliente?: ClienteUpdateOneRequiredWithoutVentasNestedInput
     rifa?: RifaUpdateOneRequiredWithoutVentasNestedInput
     boletas?: BoletaUpdateManyWithoutVentaNestedInput
@@ -32748,6 +34689,12 @@ export namespace Prisma {
     estado?: EnumEstadoVentaFieldUpdateOperationsInput | $Enums.EstadoVenta
     total?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     saldoPendiente?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    referenciaPago?: NullableStringFieldUpdateOperationsInput | string | null
+    pasarelaPago?: NullableStringFieldUpdateOperationsInput | string | null
+    pasarelaEstado?: NullableStringFieldUpdateOperationsInput | string | null
+    pasarelaTransaccionId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     boletas?: BoletaUncheckedUpdateManyWithoutVentaNestedInput
     pagos?: PagoClienteUncheckedUpdateManyWithoutVentaNestedInput
     movimientos?: MovimientoCajaUncheckedUpdateManyWithoutVentaNestedInput
@@ -32760,6 +34707,12 @@ export namespace Prisma {
     estado?: $Enums.EstadoVenta
     total: Decimal | DecimalJsLike | number | string
     saldoPendiente: Decimal | DecimalJsLike | number | string
+    referenciaPago?: string | null
+    pasarelaPago?: string | null
+    pasarelaEstado?: string | null
+    pasarelaTransaccionId?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
   }
 
   export type VentaUpdateManyMutationInput = {
@@ -32767,6 +34720,12 @@ export namespace Prisma {
     estado?: EnumEstadoVentaFieldUpdateOperationsInput | $Enums.EstadoVenta
     total?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     saldoPendiente?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    referenciaPago?: NullableStringFieldUpdateOperationsInput | string | null
+    pasarelaPago?: NullableStringFieldUpdateOperationsInput | string | null
+    pasarelaEstado?: NullableStringFieldUpdateOperationsInput | string | null
+    pasarelaTransaccionId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type VentaUncheckedUpdateManyInput = {
@@ -32776,6 +34735,12 @@ export namespace Prisma {
     estado?: EnumEstadoVentaFieldUpdateOperationsInput | $Enums.EstadoVenta
     total?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     saldoPendiente?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    referenciaPago?: NullableStringFieldUpdateOperationsInput | string | null
+    pasarelaPago?: NullableStringFieldUpdateOperationsInput | string | null
+    pasarelaEstado?: NullableStringFieldUpdateOperationsInput | string | null
+    pasarelaTransaccionId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type PagoClienteCreateInput = {
@@ -32858,6 +34823,7 @@ export namespace Prisma {
     boletasActuales?: number
     rifaVendedor: RifaVendedorCreateNestedOneWithoutAbonosInput
     subCaja?: SubCajaCreateNestedOneWithoutAbonosInput
+    usuario?: UsuarioCreateNestedOneWithoutAbonosRegistradosInput
     recibo?: ReciboCreateNestedOneWithoutAbonoInput
     movimientos?: MovimientoCajaCreateNestedManyWithoutAbonoVendedorInput
   }
@@ -32866,6 +34832,7 @@ export namespace Prisma {
     id?: string
     rifaVendedorId: string
     subCajaId?: string | null
+    usuarioId?: string | null
     valor: Decimal | DecimalJsLike | number | string
     fecha?: Date | string
     descripcion?: string | null
@@ -32894,6 +34861,7 @@ export namespace Prisma {
     boletasActuales?: IntFieldUpdateOperationsInput | number
     rifaVendedor?: RifaVendedorUpdateOneRequiredWithoutAbonosNestedInput
     subCaja?: SubCajaUpdateOneWithoutAbonosNestedInput
+    usuario?: UsuarioUpdateOneWithoutAbonosRegistradosNestedInput
     recibo?: ReciboUpdateOneWithoutAbonoNestedInput
     movimientos?: MovimientoCajaUpdateManyWithoutAbonoVendedorNestedInput
   }
@@ -32902,6 +34870,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     rifaVendedorId?: StringFieldUpdateOperationsInput | string
     subCajaId?: NullableStringFieldUpdateOperationsInput | string | null
+    usuarioId?: NullableStringFieldUpdateOperationsInput | string | null
     valor?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     fecha?: DateTimeFieldUpdateOperationsInput | Date | string
     descripcion?: NullableStringFieldUpdateOperationsInput | string | null
@@ -32920,6 +34889,7 @@ export namespace Prisma {
     id?: string
     rifaVendedorId: string
     subCajaId?: string | null
+    usuarioId?: string | null
     valor: Decimal | DecimalJsLike | number | string
     fecha?: Date | string
     descripcion?: string | null
@@ -32950,6 +34920,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     rifaVendedorId?: StringFieldUpdateOperationsInput | string
     subCajaId?: NullableStringFieldUpdateOperationsInput | string | null
+    usuarioId?: NullableStringFieldUpdateOperationsInput | string | null
     valor?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     fecha?: DateTimeFieldUpdateOperationsInput | Date | string
     descripcion?: NullableStringFieldUpdateOperationsInput | string | null
@@ -33259,6 +35230,7 @@ export namespace Prisma {
     anuladoMotivo?: string | null
     rifa: RifaCreateNestedOneWithoutGastosInput
     subCaja?: SubCajaCreateNestedOneWithoutGastosInput
+    usuario?: UsuarioCreateNestedOneWithoutGastosRegistradosInput
     movimientos?: MovimientoCajaCreateNestedManyWithoutGastoInput
     recibo?: GastoReciboCreateNestedOneWithoutGastoInput
   }
@@ -33267,6 +35239,7 @@ export namespace Prisma {
     id?: string
     rifaId: string
     subCajaId?: string | null
+    usuarioId?: string | null
     categoria?: $Enums.CategoriaGasto
     descripcion: string
     valor: Decimal | DecimalJsLike | number | string
@@ -33287,6 +35260,7 @@ export namespace Prisma {
     anuladoMotivo?: NullableStringFieldUpdateOperationsInput | string | null
     rifa?: RifaUpdateOneRequiredWithoutGastosNestedInput
     subCaja?: SubCajaUpdateOneWithoutGastosNestedInput
+    usuario?: UsuarioUpdateOneWithoutGastosRegistradosNestedInput
     movimientos?: MovimientoCajaUpdateManyWithoutGastoNestedInput
     recibo?: GastoReciboUpdateOneWithoutGastoNestedInput
   }
@@ -33295,6 +35269,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     rifaId?: StringFieldUpdateOperationsInput | string
     subCajaId?: NullableStringFieldUpdateOperationsInput | string | null
+    usuarioId?: NullableStringFieldUpdateOperationsInput | string | null
     categoria?: EnumCategoriaGastoFieldUpdateOperationsInput | $Enums.CategoriaGasto
     descripcion?: StringFieldUpdateOperationsInput | string
     valor?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
@@ -33309,6 +35284,7 @@ export namespace Prisma {
     id?: string
     rifaId: string
     subCajaId?: string | null
+    usuarioId?: string | null
     categoria?: $Enums.CategoriaGasto
     descripcion: string
     valor: Decimal | DecimalJsLike | number | string
@@ -33331,12 +35307,73 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     rifaId?: StringFieldUpdateOperationsInput | string
     subCajaId?: NullableStringFieldUpdateOperationsInput | string | null
+    usuarioId?: NullableStringFieldUpdateOperationsInput | string | null
     categoria?: EnumCategoriaGastoFieldUpdateOperationsInput | $Enums.CategoriaGasto
     descripcion?: StringFieldUpdateOperationsInput | string
     valor?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     fecha?: DateTimeFieldUpdateOperationsInput | Date | string
     anuladoAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     anuladoMotivo?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type JuegoRegistroCreateInput = {
+    id?: string
+    fecha?: Date | string
+    totalBoletas?: number
+    rifaVendedor: RifaVendedorCreateNestedOneWithoutJuegosInput
+    premio: PremioCreateNestedOneWithoutJuegosInput
+    usuario?: UsuarioCreateNestedOneWithoutJuegosRegistradosInput
+  }
+
+  export type JuegoRegistroUncheckedCreateInput = {
+    id?: string
+    rifaVendedorId: string
+    premioId: string
+    usuarioId?: string | null
+    fecha?: Date | string
+    totalBoletas?: number
+  }
+
+  export type JuegoRegistroUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    fecha?: DateTimeFieldUpdateOperationsInput | Date | string
+    totalBoletas?: IntFieldUpdateOperationsInput | number
+    rifaVendedor?: RifaVendedorUpdateOneRequiredWithoutJuegosNestedInput
+    premio?: PremioUpdateOneRequiredWithoutJuegosNestedInput
+    usuario?: UsuarioUpdateOneWithoutJuegosRegistradosNestedInput
+  }
+
+  export type JuegoRegistroUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    rifaVendedorId?: StringFieldUpdateOperationsInput | string
+    premioId?: StringFieldUpdateOperationsInput | string
+    usuarioId?: NullableStringFieldUpdateOperationsInput | string | null
+    fecha?: DateTimeFieldUpdateOperationsInput | Date | string
+    totalBoletas?: IntFieldUpdateOperationsInput | number
+  }
+
+  export type JuegoRegistroCreateManyInput = {
+    id?: string
+    rifaVendedorId: string
+    premioId: string
+    usuarioId?: string | null
+    fecha?: Date | string
+    totalBoletas?: number
+  }
+
+  export type JuegoRegistroUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    fecha?: DateTimeFieldUpdateOperationsInput | Date | string
+    totalBoletas?: IntFieldUpdateOperationsInput | number
+  }
+
+  export type JuegoRegistroUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    rifaVendedorId?: StringFieldUpdateOperationsInput | string
+    premioId?: StringFieldUpdateOperationsInput | string
+    usuarioId?: NullableStringFieldUpdateOperationsInput | string | null
+    fecha?: DateTimeFieldUpdateOperationsInput | Date | string
+    totalBoletas?: IntFieldUpdateOperationsInput | number
   }
 
   export type GastoReciboCreateInput = {
@@ -33562,6 +35599,30 @@ export namespace Prisma {
     none?: AsignacionBoletasWhereInput
   }
 
+  export type DevolucionBoletasListRelationFilter = {
+    every?: DevolucionBoletasWhereInput
+    some?: DevolucionBoletasWhereInput
+    none?: DevolucionBoletasWhereInput
+  }
+
+  export type AbonoVendedorListRelationFilter = {
+    every?: AbonoVendedorWhereInput
+    some?: AbonoVendedorWhereInput
+    none?: AbonoVendedorWhereInput
+  }
+
+  export type GastoListRelationFilter = {
+    every?: GastoWhereInput
+    some?: GastoWhereInput
+    none?: GastoWhereInput
+  }
+
+  export type JuegoRegistroListRelationFilter = {
+    every?: JuegoRegistroWhereInput
+    some?: JuegoRegistroWhereInput
+    none?: JuegoRegistroWhereInput
+  }
+
   export type MovimientoCajaListRelationFilter = {
     every?: MovimientoCajaWhereInput
     some?: MovimientoCajaWhereInput
@@ -33573,6 +35634,22 @@ export namespace Prisma {
   }
 
   export type AsignacionBoletasOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type DevolucionBoletasOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type AbonoVendedorOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type GastoOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type JuegoRegistroOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -33683,12 +35760,6 @@ export namespace Prisma {
     none?: VentaWhereInput
   }
 
-  export type GastoListRelationFilter = {
-    every?: GastoWhereInput
-    some?: GastoWhereInput
-    none?: GastoWhereInput
-  }
-
   export type CajaListRelationFilter = {
     every?: CajaWhereInput
     some?: CajaWhereInput
@@ -33710,10 +35781,6 @@ export namespace Prisma {
   }
 
   export type VentaOrderByRelationAggregateInput = {
-    _count?: SortOrder
-  }
-
-  export type GastoOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -33821,6 +35888,29 @@ export namespace Prisma {
     _min?: NestedEnumEstadoRifaFilter<$PrismaModel>
     _max?: NestedEnumEstadoRifaFilter<$PrismaModel>
   }
+  export type JsonNullableFilter<$PrismaModel = never> =
+    | PatchUndefined<
+        Either<Required<JsonNullableFilterBase<$PrismaModel>>, Exclude<keyof Required<JsonNullableFilterBase<$PrismaModel>>, 'path'>>,
+        Required<JsonNullableFilterBase<$PrismaModel>>
+      >
+    | OptionalFlat<Omit<Required<JsonNullableFilterBase<$PrismaModel>>, 'path'>>
+
+  export type JsonNullableFilterBase<$PrismaModel = never> = {
+    equals?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+    path?: string[]
+    mode?: QueryMode | EnumQueryModeFieldRefInput<$PrismaModel>
+    string_contains?: string | StringFieldRefInput<$PrismaModel>
+    string_starts_with?: string | StringFieldRefInput<$PrismaModel>
+    string_ends_with?: string | StringFieldRefInput<$PrismaModel>
+    array_starts_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_ends_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_contains?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    lt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    lte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    gt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    gte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    not?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+  }
 
   export type EnumTipoPremioFilter<$PrismaModel = never> = {
     equals?: $Enums.TipoPremio | EnumTipoPremioFieldRefInput<$PrismaModel>
@@ -33860,6 +35950,7 @@ export namespace Prisma {
     rifaId?: SortOrder
     nombre?: SortOrder
     descripcion?: SortOrder
+    imagenesJson?: SortOrder
     tipo?: SortOrder
     mostrarValor?: SortOrder
     valor?: SortOrder
@@ -33897,6 +35988,32 @@ export namespace Prisma {
 
   export type PremioSumOrderByAggregateInput = {
     valor?: SortOrder
+  }
+  export type JsonNullableWithAggregatesFilter<$PrismaModel = never> =
+    | PatchUndefined<
+        Either<Required<JsonNullableWithAggregatesFilterBase<$PrismaModel>>, Exclude<keyof Required<JsonNullableWithAggregatesFilterBase<$PrismaModel>>, 'path'>>,
+        Required<JsonNullableWithAggregatesFilterBase<$PrismaModel>>
+      >
+    | OptionalFlat<Omit<Required<JsonNullableWithAggregatesFilterBase<$PrismaModel>>, 'path'>>
+
+  export type JsonNullableWithAggregatesFilterBase<$PrismaModel = never> = {
+    equals?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+    path?: string[]
+    mode?: QueryMode | EnumQueryModeFieldRefInput<$PrismaModel>
+    string_contains?: string | StringFieldRefInput<$PrismaModel>
+    string_starts_with?: string | StringFieldRefInput<$PrismaModel>
+    string_ends_with?: string | StringFieldRefInput<$PrismaModel>
+    array_starts_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_ends_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_contains?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    lt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    lte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    gt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    gte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    not?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedJsonNullableFilter<$PrismaModel>
+    _max?: NestedJsonNullableFilter<$PrismaModel>
   }
 
   export type EnumTipoPremioWithAggregatesFilter<$PrismaModel = never> = {
@@ -34137,26 +36254,6 @@ export namespace Prisma {
     isNot?: VendedorWhereInput
   }
 
-  export type DevolucionBoletasListRelationFilter = {
-    every?: DevolucionBoletasWhereInput
-    some?: DevolucionBoletasWhereInput
-    none?: DevolucionBoletasWhereInput
-  }
-
-  export type AbonoVendedorListRelationFilter = {
-    every?: AbonoVendedorWhereInput
-    some?: AbonoVendedorWhereInput
-    none?: AbonoVendedorWhereInput
-  }
-
-  export type DevolucionBoletasOrderByRelationAggregateInput = {
-    _count?: SortOrder
-  }
-
-  export type AbonoVendedorOrderByRelationAggregateInput = {
-    _count?: SortOrder
-  }
-
   export type RifaVendedorRifaIdVendedorIdCompoundUniqueInput = {
     rifaId: string
     vendedorId: string
@@ -34273,6 +36370,7 @@ export namespace Prisma {
     rifaVendedorId?: SortOrder
     destino?: SortOrder
     fecha?: SortOrder
+    usuarioId?: SortOrder
   }
 
   export type DevolucionBoletasMaxOrderByAggregateInput = {
@@ -34280,6 +36378,7 @@ export namespace Prisma {
     rifaVendedorId?: SortOrder
     destino?: SortOrder
     fecha?: SortOrder
+    usuarioId?: SortOrder
   }
 
   export type DevolucionBoletasMinOrderByAggregateInput = {
@@ -34287,6 +36386,7 @@ export namespace Prisma {
     rifaVendedorId?: SortOrder
     destino?: SortOrder
     fecha?: SortOrder
+    usuarioId?: SortOrder
   }
 
   export type EnumDestinoDevolucionWithAggregatesFilter<$PrismaModel = never> = {
@@ -34327,6 +36427,7 @@ export namespace Prisma {
     nombre?: SortOrder
     email?: SortOrder
     telefono?: SortOrder
+    documento?: SortOrder
   }
 
   export type ClienteMaxOrderByAggregateInput = {
@@ -34334,6 +36435,7 @@ export namespace Prisma {
     nombre?: SortOrder
     email?: SortOrder
     telefono?: SortOrder
+    documento?: SortOrder
   }
 
   export type ClienteMinOrderByAggregateInput = {
@@ -34341,6 +36443,7 @@ export namespace Prisma {
     nombre?: SortOrder
     email?: SortOrder
     telefono?: SortOrder
+    documento?: SortOrder
   }
 
   export type EnumEstadoVentaFilter<$PrismaModel = never> = {
@@ -34372,6 +36475,12 @@ export namespace Prisma {
     estado?: SortOrder
     total?: SortOrder
     saldoPendiente?: SortOrder
+    referenciaPago?: SortOrder
+    pasarelaPago?: SortOrder
+    pasarelaEstado?: SortOrder
+    pasarelaTransaccionId?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
   }
 
   export type VentaAvgOrderByAggregateInput = {
@@ -34386,6 +36495,12 @@ export namespace Prisma {
     estado?: SortOrder
     total?: SortOrder
     saldoPendiente?: SortOrder
+    referenciaPago?: SortOrder
+    pasarelaPago?: SortOrder
+    pasarelaEstado?: SortOrder
+    pasarelaTransaccionId?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
   }
 
   export type VentaMinOrderByAggregateInput = {
@@ -34395,6 +36510,12 @@ export namespace Prisma {
     estado?: SortOrder
     total?: SortOrder
     saldoPendiente?: SortOrder
+    referenciaPago?: SortOrder
+    pasarelaPago?: SortOrder
+    pasarelaEstado?: SortOrder
+    pasarelaTransaccionId?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
   }
 
   export type VentaSumOrderByAggregateInput = {
@@ -34500,6 +36621,7 @@ export namespace Prisma {
     id?: SortOrder
     rifaVendedorId?: SortOrder
     subCajaId?: SortOrder
+    usuarioId?: SortOrder
     valor?: SortOrder
     fecha?: SortOrder
     descripcion?: SortOrder
@@ -34523,6 +36645,7 @@ export namespace Prisma {
     id?: SortOrder
     rifaVendedorId?: SortOrder
     subCajaId?: SortOrder
+    usuarioId?: SortOrder
     valor?: SortOrder
     fecha?: SortOrder
     descripcion?: SortOrder
@@ -34539,6 +36662,7 @@ export namespace Prisma {
     id?: SortOrder
     rifaVendedorId?: SortOrder
     subCajaId?: SortOrder
+    usuarioId?: SortOrder
     valor?: SortOrder
     fecha?: SortOrder
     descripcion?: SortOrder
@@ -34798,6 +36922,7 @@ export namespace Prisma {
     id?: SortOrder
     rifaId?: SortOrder
     subCajaId?: SortOrder
+    usuarioId?: SortOrder
     categoria?: SortOrder
     descripcion?: SortOrder
     valor?: SortOrder
@@ -34814,6 +36939,7 @@ export namespace Prisma {
     id?: SortOrder
     rifaId?: SortOrder
     subCajaId?: SortOrder
+    usuarioId?: SortOrder
     categoria?: SortOrder
     descripcion?: SortOrder
     valor?: SortOrder
@@ -34826,6 +36952,7 @@ export namespace Prisma {
     id?: SortOrder
     rifaId?: SortOrder
     subCajaId?: SortOrder
+    usuarioId?: SortOrder
     categoria?: SortOrder
     descripcion?: SortOrder
     valor?: SortOrder
@@ -34846,6 +36973,46 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedEnumCategoriaGastoFilter<$PrismaModel>
     _max?: NestedEnumCategoriaGastoFilter<$PrismaModel>
+  }
+
+  export type JuegoRegistroRifaVendedorIdPremioIdCompoundUniqueInput = {
+    rifaVendedorId: string
+    premioId: string
+  }
+
+  export type JuegoRegistroCountOrderByAggregateInput = {
+    id?: SortOrder
+    rifaVendedorId?: SortOrder
+    premioId?: SortOrder
+    usuarioId?: SortOrder
+    fecha?: SortOrder
+    totalBoletas?: SortOrder
+  }
+
+  export type JuegoRegistroAvgOrderByAggregateInput = {
+    totalBoletas?: SortOrder
+  }
+
+  export type JuegoRegistroMaxOrderByAggregateInput = {
+    id?: SortOrder
+    rifaVendedorId?: SortOrder
+    premioId?: SortOrder
+    usuarioId?: SortOrder
+    fecha?: SortOrder
+    totalBoletas?: SortOrder
+  }
+
+  export type JuegoRegistroMinOrderByAggregateInput = {
+    id?: SortOrder
+    rifaVendedorId?: SortOrder
+    premioId?: SortOrder
+    usuarioId?: SortOrder
+    fecha?: SortOrder
+    totalBoletas?: SortOrder
+  }
+
+  export type JuegoRegistroSumOrderByAggregateInput = {
+    totalBoletas?: SortOrder
   }
 
   export type GastoScalarRelationFilter = {
@@ -34918,6 +37085,34 @@ export namespace Prisma {
     connect?: AsignacionBoletasWhereUniqueInput | AsignacionBoletasWhereUniqueInput[]
   }
 
+  export type DevolucionBoletasCreateNestedManyWithoutUsuarioInput = {
+    create?: XOR<DevolucionBoletasCreateWithoutUsuarioInput, DevolucionBoletasUncheckedCreateWithoutUsuarioInput> | DevolucionBoletasCreateWithoutUsuarioInput[] | DevolucionBoletasUncheckedCreateWithoutUsuarioInput[]
+    connectOrCreate?: DevolucionBoletasCreateOrConnectWithoutUsuarioInput | DevolucionBoletasCreateOrConnectWithoutUsuarioInput[]
+    createMany?: DevolucionBoletasCreateManyUsuarioInputEnvelope
+    connect?: DevolucionBoletasWhereUniqueInput | DevolucionBoletasWhereUniqueInput[]
+  }
+
+  export type AbonoVendedorCreateNestedManyWithoutUsuarioInput = {
+    create?: XOR<AbonoVendedorCreateWithoutUsuarioInput, AbonoVendedorUncheckedCreateWithoutUsuarioInput> | AbonoVendedorCreateWithoutUsuarioInput[] | AbonoVendedorUncheckedCreateWithoutUsuarioInput[]
+    connectOrCreate?: AbonoVendedorCreateOrConnectWithoutUsuarioInput | AbonoVendedorCreateOrConnectWithoutUsuarioInput[]
+    createMany?: AbonoVendedorCreateManyUsuarioInputEnvelope
+    connect?: AbonoVendedorWhereUniqueInput | AbonoVendedorWhereUniqueInput[]
+  }
+
+  export type GastoCreateNestedManyWithoutUsuarioInput = {
+    create?: XOR<GastoCreateWithoutUsuarioInput, GastoUncheckedCreateWithoutUsuarioInput> | GastoCreateWithoutUsuarioInput[] | GastoUncheckedCreateWithoutUsuarioInput[]
+    connectOrCreate?: GastoCreateOrConnectWithoutUsuarioInput | GastoCreateOrConnectWithoutUsuarioInput[]
+    createMany?: GastoCreateManyUsuarioInputEnvelope
+    connect?: GastoWhereUniqueInput | GastoWhereUniqueInput[]
+  }
+
+  export type JuegoRegistroCreateNestedManyWithoutUsuarioInput = {
+    create?: XOR<JuegoRegistroCreateWithoutUsuarioInput, JuegoRegistroUncheckedCreateWithoutUsuarioInput> | JuegoRegistroCreateWithoutUsuarioInput[] | JuegoRegistroUncheckedCreateWithoutUsuarioInput[]
+    connectOrCreate?: JuegoRegistroCreateOrConnectWithoutUsuarioInput | JuegoRegistroCreateOrConnectWithoutUsuarioInput[]
+    createMany?: JuegoRegistroCreateManyUsuarioInputEnvelope
+    connect?: JuegoRegistroWhereUniqueInput | JuegoRegistroWhereUniqueInput[]
+  }
+
   export type MovimientoCajaCreateNestedManyWithoutUsuarioInput = {
     create?: XOR<MovimientoCajaCreateWithoutUsuarioInput, MovimientoCajaUncheckedCreateWithoutUsuarioInput> | MovimientoCajaCreateWithoutUsuarioInput[] | MovimientoCajaUncheckedCreateWithoutUsuarioInput[]
     connectOrCreate?: MovimientoCajaCreateOrConnectWithoutUsuarioInput | MovimientoCajaCreateOrConnectWithoutUsuarioInput[]
@@ -34944,6 +37139,34 @@ export namespace Prisma {
     connectOrCreate?: AsignacionBoletasCreateOrConnectWithoutUsuarioInput | AsignacionBoletasCreateOrConnectWithoutUsuarioInput[]
     createMany?: AsignacionBoletasCreateManyUsuarioInputEnvelope
     connect?: AsignacionBoletasWhereUniqueInput | AsignacionBoletasWhereUniqueInput[]
+  }
+
+  export type DevolucionBoletasUncheckedCreateNestedManyWithoutUsuarioInput = {
+    create?: XOR<DevolucionBoletasCreateWithoutUsuarioInput, DevolucionBoletasUncheckedCreateWithoutUsuarioInput> | DevolucionBoletasCreateWithoutUsuarioInput[] | DevolucionBoletasUncheckedCreateWithoutUsuarioInput[]
+    connectOrCreate?: DevolucionBoletasCreateOrConnectWithoutUsuarioInput | DevolucionBoletasCreateOrConnectWithoutUsuarioInput[]
+    createMany?: DevolucionBoletasCreateManyUsuarioInputEnvelope
+    connect?: DevolucionBoletasWhereUniqueInput | DevolucionBoletasWhereUniqueInput[]
+  }
+
+  export type AbonoVendedorUncheckedCreateNestedManyWithoutUsuarioInput = {
+    create?: XOR<AbonoVendedorCreateWithoutUsuarioInput, AbonoVendedorUncheckedCreateWithoutUsuarioInput> | AbonoVendedorCreateWithoutUsuarioInput[] | AbonoVendedorUncheckedCreateWithoutUsuarioInput[]
+    connectOrCreate?: AbonoVendedorCreateOrConnectWithoutUsuarioInput | AbonoVendedorCreateOrConnectWithoutUsuarioInput[]
+    createMany?: AbonoVendedorCreateManyUsuarioInputEnvelope
+    connect?: AbonoVendedorWhereUniqueInput | AbonoVendedorWhereUniqueInput[]
+  }
+
+  export type GastoUncheckedCreateNestedManyWithoutUsuarioInput = {
+    create?: XOR<GastoCreateWithoutUsuarioInput, GastoUncheckedCreateWithoutUsuarioInput> | GastoCreateWithoutUsuarioInput[] | GastoUncheckedCreateWithoutUsuarioInput[]
+    connectOrCreate?: GastoCreateOrConnectWithoutUsuarioInput | GastoCreateOrConnectWithoutUsuarioInput[]
+    createMany?: GastoCreateManyUsuarioInputEnvelope
+    connect?: GastoWhereUniqueInput | GastoWhereUniqueInput[]
+  }
+
+  export type JuegoRegistroUncheckedCreateNestedManyWithoutUsuarioInput = {
+    create?: XOR<JuegoRegistroCreateWithoutUsuarioInput, JuegoRegistroUncheckedCreateWithoutUsuarioInput> | JuegoRegistroCreateWithoutUsuarioInput[] | JuegoRegistroUncheckedCreateWithoutUsuarioInput[]
+    connectOrCreate?: JuegoRegistroCreateOrConnectWithoutUsuarioInput | JuegoRegistroCreateOrConnectWithoutUsuarioInput[]
+    createMany?: JuegoRegistroCreateManyUsuarioInputEnvelope
+    connect?: JuegoRegistroWhereUniqueInput | JuegoRegistroWhereUniqueInput[]
   }
 
   export type MovimientoCajaUncheckedCreateNestedManyWithoutUsuarioInput = {
@@ -35003,6 +37226,62 @@ export namespace Prisma {
     deleteMany?: AsignacionBoletasScalarWhereInput | AsignacionBoletasScalarWhereInput[]
   }
 
+  export type DevolucionBoletasUpdateManyWithoutUsuarioNestedInput = {
+    create?: XOR<DevolucionBoletasCreateWithoutUsuarioInput, DevolucionBoletasUncheckedCreateWithoutUsuarioInput> | DevolucionBoletasCreateWithoutUsuarioInput[] | DevolucionBoletasUncheckedCreateWithoutUsuarioInput[]
+    connectOrCreate?: DevolucionBoletasCreateOrConnectWithoutUsuarioInput | DevolucionBoletasCreateOrConnectWithoutUsuarioInput[]
+    upsert?: DevolucionBoletasUpsertWithWhereUniqueWithoutUsuarioInput | DevolucionBoletasUpsertWithWhereUniqueWithoutUsuarioInput[]
+    createMany?: DevolucionBoletasCreateManyUsuarioInputEnvelope
+    set?: DevolucionBoletasWhereUniqueInput | DevolucionBoletasWhereUniqueInput[]
+    disconnect?: DevolucionBoletasWhereUniqueInput | DevolucionBoletasWhereUniqueInput[]
+    delete?: DevolucionBoletasWhereUniqueInput | DevolucionBoletasWhereUniqueInput[]
+    connect?: DevolucionBoletasWhereUniqueInput | DevolucionBoletasWhereUniqueInput[]
+    update?: DevolucionBoletasUpdateWithWhereUniqueWithoutUsuarioInput | DevolucionBoletasUpdateWithWhereUniqueWithoutUsuarioInput[]
+    updateMany?: DevolucionBoletasUpdateManyWithWhereWithoutUsuarioInput | DevolucionBoletasUpdateManyWithWhereWithoutUsuarioInput[]
+    deleteMany?: DevolucionBoletasScalarWhereInput | DevolucionBoletasScalarWhereInput[]
+  }
+
+  export type AbonoVendedorUpdateManyWithoutUsuarioNestedInput = {
+    create?: XOR<AbonoVendedorCreateWithoutUsuarioInput, AbonoVendedorUncheckedCreateWithoutUsuarioInput> | AbonoVendedorCreateWithoutUsuarioInput[] | AbonoVendedorUncheckedCreateWithoutUsuarioInput[]
+    connectOrCreate?: AbonoVendedorCreateOrConnectWithoutUsuarioInput | AbonoVendedorCreateOrConnectWithoutUsuarioInput[]
+    upsert?: AbonoVendedorUpsertWithWhereUniqueWithoutUsuarioInput | AbonoVendedorUpsertWithWhereUniqueWithoutUsuarioInput[]
+    createMany?: AbonoVendedorCreateManyUsuarioInputEnvelope
+    set?: AbonoVendedorWhereUniqueInput | AbonoVendedorWhereUniqueInput[]
+    disconnect?: AbonoVendedorWhereUniqueInput | AbonoVendedorWhereUniqueInput[]
+    delete?: AbonoVendedorWhereUniqueInput | AbonoVendedorWhereUniqueInput[]
+    connect?: AbonoVendedorWhereUniqueInput | AbonoVendedorWhereUniqueInput[]
+    update?: AbonoVendedorUpdateWithWhereUniqueWithoutUsuarioInput | AbonoVendedorUpdateWithWhereUniqueWithoutUsuarioInput[]
+    updateMany?: AbonoVendedorUpdateManyWithWhereWithoutUsuarioInput | AbonoVendedorUpdateManyWithWhereWithoutUsuarioInput[]
+    deleteMany?: AbonoVendedorScalarWhereInput | AbonoVendedorScalarWhereInput[]
+  }
+
+  export type GastoUpdateManyWithoutUsuarioNestedInput = {
+    create?: XOR<GastoCreateWithoutUsuarioInput, GastoUncheckedCreateWithoutUsuarioInput> | GastoCreateWithoutUsuarioInput[] | GastoUncheckedCreateWithoutUsuarioInput[]
+    connectOrCreate?: GastoCreateOrConnectWithoutUsuarioInput | GastoCreateOrConnectWithoutUsuarioInput[]
+    upsert?: GastoUpsertWithWhereUniqueWithoutUsuarioInput | GastoUpsertWithWhereUniqueWithoutUsuarioInput[]
+    createMany?: GastoCreateManyUsuarioInputEnvelope
+    set?: GastoWhereUniqueInput | GastoWhereUniqueInput[]
+    disconnect?: GastoWhereUniqueInput | GastoWhereUniqueInput[]
+    delete?: GastoWhereUniqueInput | GastoWhereUniqueInput[]
+    connect?: GastoWhereUniqueInput | GastoWhereUniqueInput[]
+    update?: GastoUpdateWithWhereUniqueWithoutUsuarioInput | GastoUpdateWithWhereUniqueWithoutUsuarioInput[]
+    updateMany?: GastoUpdateManyWithWhereWithoutUsuarioInput | GastoUpdateManyWithWhereWithoutUsuarioInput[]
+    deleteMany?: GastoScalarWhereInput | GastoScalarWhereInput[]
+  }
+
+  export type JuegoRegistroUpdateManyWithoutUsuarioNestedInput = {
+    create?: XOR<JuegoRegistroCreateWithoutUsuarioInput, JuegoRegistroUncheckedCreateWithoutUsuarioInput> | JuegoRegistroCreateWithoutUsuarioInput[] | JuegoRegistroUncheckedCreateWithoutUsuarioInput[]
+    connectOrCreate?: JuegoRegistroCreateOrConnectWithoutUsuarioInput | JuegoRegistroCreateOrConnectWithoutUsuarioInput[]
+    upsert?: JuegoRegistroUpsertWithWhereUniqueWithoutUsuarioInput | JuegoRegistroUpsertWithWhereUniqueWithoutUsuarioInput[]
+    createMany?: JuegoRegistroCreateManyUsuarioInputEnvelope
+    set?: JuegoRegistroWhereUniqueInput | JuegoRegistroWhereUniqueInput[]
+    disconnect?: JuegoRegistroWhereUniqueInput | JuegoRegistroWhereUniqueInput[]
+    delete?: JuegoRegistroWhereUniqueInput | JuegoRegistroWhereUniqueInput[]
+    connect?: JuegoRegistroWhereUniqueInput | JuegoRegistroWhereUniqueInput[]
+    update?: JuegoRegistroUpdateWithWhereUniqueWithoutUsuarioInput | JuegoRegistroUpdateWithWhereUniqueWithoutUsuarioInput[]
+    updateMany?: JuegoRegistroUpdateManyWithWhereWithoutUsuarioInput | JuegoRegistroUpdateManyWithWhereWithoutUsuarioInput[]
+    deleteMany?: JuegoRegistroScalarWhereInput | JuegoRegistroScalarWhereInput[]
+  }
+
   export type MovimientoCajaUpdateManyWithoutUsuarioNestedInput = {
     create?: XOR<MovimientoCajaCreateWithoutUsuarioInput, MovimientoCajaUncheckedCreateWithoutUsuarioInput> | MovimientoCajaCreateWithoutUsuarioInput[] | MovimientoCajaUncheckedCreateWithoutUsuarioInput[]
     connectOrCreate?: MovimientoCajaCreateOrConnectWithoutUsuarioInput | MovimientoCajaCreateOrConnectWithoutUsuarioInput[]
@@ -35057,6 +37336,62 @@ export namespace Prisma {
     update?: AsignacionBoletasUpdateWithWhereUniqueWithoutUsuarioInput | AsignacionBoletasUpdateWithWhereUniqueWithoutUsuarioInput[]
     updateMany?: AsignacionBoletasUpdateManyWithWhereWithoutUsuarioInput | AsignacionBoletasUpdateManyWithWhereWithoutUsuarioInput[]
     deleteMany?: AsignacionBoletasScalarWhereInput | AsignacionBoletasScalarWhereInput[]
+  }
+
+  export type DevolucionBoletasUncheckedUpdateManyWithoutUsuarioNestedInput = {
+    create?: XOR<DevolucionBoletasCreateWithoutUsuarioInput, DevolucionBoletasUncheckedCreateWithoutUsuarioInput> | DevolucionBoletasCreateWithoutUsuarioInput[] | DevolucionBoletasUncheckedCreateWithoutUsuarioInput[]
+    connectOrCreate?: DevolucionBoletasCreateOrConnectWithoutUsuarioInput | DevolucionBoletasCreateOrConnectWithoutUsuarioInput[]
+    upsert?: DevolucionBoletasUpsertWithWhereUniqueWithoutUsuarioInput | DevolucionBoletasUpsertWithWhereUniqueWithoutUsuarioInput[]
+    createMany?: DevolucionBoletasCreateManyUsuarioInputEnvelope
+    set?: DevolucionBoletasWhereUniqueInput | DevolucionBoletasWhereUniqueInput[]
+    disconnect?: DevolucionBoletasWhereUniqueInput | DevolucionBoletasWhereUniqueInput[]
+    delete?: DevolucionBoletasWhereUniqueInput | DevolucionBoletasWhereUniqueInput[]
+    connect?: DevolucionBoletasWhereUniqueInput | DevolucionBoletasWhereUniqueInput[]
+    update?: DevolucionBoletasUpdateWithWhereUniqueWithoutUsuarioInput | DevolucionBoletasUpdateWithWhereUniqueWithoutUsuarioInput[]
+    updateMany?: DevolucionBoletasUpdateManyWithWhereWithoutUsuarioInput | DevolucionBoletasUpdateManyWithWhereWithoutUsuarioInput[]
+    deleteMany?: DevolucionBoletasScalarWhereInput | DevolucionBoletasScalarWhereInput[]
+  }
+
+  export type AbonoVendedorUncheckedUpdateManyWithoutUsuarioNestedInput = {
+    create?: XOR<AbonoVendedorCreateWithoutUsuarioInput, AbonoVendedorUncheckedCreateWithoutUsuarioInput> | AbonoVendedorCreateWithoutUsuarioInput[] | AbonoVendedorUncheckedCreateWithoutUsuarioInput[]
+    connectOrCreate?: AbonoVendedorCreateOrConnectWithoutUsuarioInput | AbonoVendedorCreateOrConnectWithoutUsuarioInput[]
+    upsert?: AbonoVendedorUpsertWithWhereUniqueWithoutUsuarioInput | AbonoVendedorUpsertWithWhereUniqueWithoutUsuarioInput[]
+    createMany?: AbonoVendedorCreateManyUsuarioInputEnvelope
+    set?: AbonoVendedorWhereUniqueInput | AbonoVendedorWhereUniqueInput[]
+    disconnect?: AbonoVendedorWhereUniqueInput | AbonoVendedorWhereUniqueInput[]
+    delete?: AbonoVendedorWhereUniqueInput | AbonoVendedorWhereUniqueInput[]
+    connect?: AbonoVendedorWhereUniqueInput | AbonoVendedorWhereUniqueInput[]
+    update?: AbonoVendedorUpdateWithWhereUniqueWithoutUsuarioInput | AbonoVendedorUpdateWithWhereUniqueWithoutUsuarioInput[]
+    updateMany?: AbonoVendedorUpdateManyWithWhereWithoutUsuarioInput | AbonoVendedorUpdateManyWithWhereWithoutUsuarioInput[]
+    deleteMany?: AbonoVendedorScalarWhereInput | AbonoVendedorScalarWhereInput[]
+  }
+
+  export type GastoUncheckedUpdateManyWithoutUsuarioNestedInput = {
+    create?: XOR<GastoCreateWithoutUsuarioInput, GastoUncheckedCreateWithoutUsuarioInput> | GastoCreateWithoutUsuarioInput[] | GastoUncheckedCreateWithoutUsuarioInput[]
+    connectOrCreate?: GastoCreateOrConnectWithoutUsuarioInput | GastoCreateOrConnectWithoutUsuarioInput[]
+    upsert?: GastoUpsertWithWhereUniqueWithoutUsuarioInput | GastoUpsertWithWhereUniqueWithoutUsuarioInput[]
+    createMany?: GastoCreateManyUsuarioInputEnvelope
+    set?: GastoWhereUniqueInput | GastoWhereUniqueInput[]
+    disconnect?: GastoWhereUniqueInput | GastoWhereUniqueInput[]
+    delete?: GastoWhereUniqueInput | GastoWhereUniqueInput[]
+    connect?: GastoWhereUniqueInput | GastoWhereUniqueInput[]
+    update?: GastoUpdateWithWhereUniqueWithoutUsuarioInput | GastoUpdateWithWhereUniqueWithoutUsuarioInput[]
+    updateMany?: GastoUpdateManyWithWhereWithoutUsuarioInput | GastoUpdateManyWithWhereWithoutUsuarioInput[]
+    deleteMany?: GastoScalarWhereInput | GastoScalarWhereInput[]
+  }
+
+  export type JuegoRegistroUncheckedUpdateManyWithoutUsuarioNestedInput = {
+    create?: XOR<JuegoRegistroCreateWithoutUsuarioInput, JuegoRegistroUncheckedCreateWithoutUsuarioInput> | JuegoRegistroCreateWithoutUsuarioInput[] | JuegoRegistroUncheckedCreateWithoutUsuarioInput[]
+    connectOrCreate?: JuegoRegistroCreateOrConnectWithoutUsuarioInput | JuegoRegistroCreateOrConnectWithoutUsuarioInput[]
+    upsert?: JuegoRegistroUpsertWithWhereUniqueWithoutUsuarioInput | JuegoRegistroUpsertWithWhereUniqueWithoutUsuarioInput[]
+    createMany?: JuegoRegistroCreateManyUsuarioInputEnvelope
+    set?: JuegoRegistroWhereUniqueInput | JuegoRegistroWhereUniqueInput[]
+    disconnect?: JuegoRegistroWhereUniqueInput | JuegoRegistroWhereUniqueInput[]
+    delete?: JuegoRegistroWhereUniqueInput | JuegoRegistroWhereUniqueInput[]
+    connect?: JuegoRegistroWhereUniqueInput | JuegoRegistroWhereUniqueInput[]
+    update?: JuegoRegistroUpdateWithWhereUniqueWithoutUsuarioInput | JuegoRegistroUpdateWithWhereUniqueWithoutUsuarioInput[]
+    updateMany?: JuegoRegistroUpdateManyWithWhereWithoutUsuarioInput | JuegoRegistroUpdateManyWithWhereWithoutUsuarioInput[]
+    deleteMany?: JuegoRegistroScalarWhereInput | JuegoRegistroScalarWhereInput[]
   }
 
   export type MovimientoCajaUncheckedUpdateManyWithoutUsuarioNestedInput = {
@@ -35432,11 +37767,25 @@ export namespace Prisma {
     connect?: BoletaPremioWhereUniqueInput | BoletaPremioWhereUniqueInput[]
   }
 
+  export type JuegoRegistroCreateNestedManyWithoutPremioInput = {
+    create?: XOR<JuegoRegistroCreateWithoutPremioInput, JuegoRegistroUncheckedCreateWithoutPremioInput> | JuegoRegistroCreateWithoutPremioInput[] | JuegoRegistroUncheckedCreateWithoutPremioInput[]
+    connectOrCreate?: JuegoRegistroCreateOrConnectWithoutPremioInput | JuegoRegistroCreateOrConnectWithoutPremioInput[]
+    createMany?: JuegoRegistroCreateManyPremioInputEnvelope
+    connect?: JuegoRegistroWhereUniqueInput | JuegoRegistroWhereUniqueInput[]
+  }
+
   export type BoletaPremioUncheckedCreateNestedManyWithoutPremioInput = {
     create?: XOR<BoletaPremioCreateWithoutPremioInput, BoletaPremioUncheckedCreateWithoutPremioInput> | BoletaPremioCreateWithoutPremioInput[] | BoletaPremioUncheckedCreateWithoutPremioInput[]
     connectOrCreate?: BoletaPremioCreateOrConnectWithoutPremioInput | BoletaPremioCreateOrConnectWithoutPremioInput[]
     createMany?: BoletaPremioCreateManyPremioInputEnvelope
     connect?: BoletaPremioWhereUniqueInput | BoletaPremioWhereUniqueInput[]
+  }
+
+  export type JuegoRegistroUncheckedCreateNestedManyWithoutPremioInput = {
+    create?: XOR<JuegoRegistroCreateWithoutPremioInput, JuegoRegistroUncheckedCreateWithoutPremioInput> | JuegoRegistroCreateWithoutPremioInput[] | JuegoRegistroUncheckedCreateWithoutPremioInput[]
+    connectOrCreate?: JuegoRegistroCreateOrConnectWithoutPremioInput | JuegoRegistroCreateOrConnectWithoutPremioInput[]
+    createMany?: JuegoRegistroCreateManyPremioInputEnvelope
+    connect?: JuegoRegistroWhereUniqueInput | JuegoRegistroWhereUniqueInput[]
   }
 
   export type EnumTipoPremioFieldUpdateOperationsInput = {
@@ -35473,6 +37822,20 @@ export namespace Prisma {
     deleteMany?: BoletaPremioScalarWhereInput | BoletaPremioScalarWhereInput[]
   }
 
+  export type JuegoRegistroUpdateManyWithoutPremioNestedInput = {
+    create?: XOR<JuegoRegistroCreateWithoutPremioInput, JuegoRegistroUncheckedCreateWithoutPremioInput> | JuegoRegistroCreateWithoutPremioInput[] | JuegoRegistroUncheckedCreateWithoutPremioInput[]
+    connectOrCreate?: JuegoRegistroCreateOrConnectWithoutPremioInput | JuegoRegistroCreateOrConnectWithoutPremioInput[]
+    upsert?: JuegoRegistroUpsertWithWhereUniqueWithoutPremioInput | JuegoRegistroUpsertWithWhereUniqueWithoutPremioInput[]
+    createMany?: JuegoRegistroCreateManyPremioInputEnvelope
+    set?: JuegoRegistroWhereUniqueInput | JuegoRegistroWhereUniqueInput[]
+    disconnect?: JuegoRegistroWhereUniqueInput | JuegoRegistroWhereUniqueInput[]
+    delete?: JuegoRegistroWhereUniqueInput | JuegoRegistroWhereUniqueInput[]
+    connect?: JuegoRegistroWhereUniqueInput | JuegoRegistroWhereUniqueInput[]
+    update?: JuegoRegistroUpdateWithWhereUniqueWithoutPremioInput | JuegoRegistroUpdateWithWhereUniqueWithoutPremioInput[]
+    updateMany?: JuegoRegistroUpdateManyWithWhereWithoutPremioInput | JuegoRegistroUpdateManyWithWhereWithoutPremioInput[]
+    deleteMany?: JuegoRegistroScalarWhereInput | JuegoRegistroScalarWhereInput[]
+  }
+
   export type BoletaPremioUncheckedUpdateManyWithoutPremioNestedInput = {
     create?: XOR<BoletaPremioCreateWithoutPremioInput, BoletaPremioUncheckedCreateWithoutPremioInput> | BoletaPremioCreateWithoutPremioInput[] | BoletaPremioUncheckedCreateWithoutPremioInput[]
     connectOrCreate?: BoletaPremioCreateOrConnectWithoutPremioInput | BoletaPremioCreateOrConnectWithoutPremioInput[]
@@ -35485,6 +37848,20 @@ export namespace Prisma {
     update?: BoletaPremioUpdateWithWhereUniqueWithoutPremioInput | BoletaPremioUpdateWithWhereUniqueWithoutPremioInput[]
     updateMany?: BoletaPremioUpdateManyWithWhereWithoutPremioInput | BoletaPremioUpdateManyWithWhereWithoutPremioInput[]
     deleteMany?: BoletaPremioScalarWhereInput | BoletaPremioScalarWhereInput[]
+  }
+
+  export type JuegoRegistroUncheckedUpdateManyWithoutPremioNestedInput = {
+    create?: XOR<JuegoRegistroCreateWithoutPremioInput, JuegoRegistroUncheckedCreateWithoutPremioInput> | JuegoRegistroCreateWithoutPremioInput[] | JuegoRegistroUncheckedCreateWithoutPremioInput[]
+    connectOrCreate?: JuegoRegistroCreateOrConnectWithoutPremioInput | JuegoRegistroCreateOrConnectWithoutPremioInput[]
+    upsert?: JuegoRegistroUpsertWithWhereUniqueWithoutPremioInput | JuegoRegistroUpsertWithWhereUniqueWithoutPremioInput[]
+    createMany?: JuegoRegistroCreateManyPremioInputEnvelope
+    set?: JuegoRegistroWhereUniqueInput | JuegoRegistroWhereUniqueInput[]
+    disconnect?: JuegoRegistroWhereUniqueInput | JuegoRegistroWhereUniqueInput[]
+    delete?: JuegoRegistroWhereUniqueInput | JuegoRegistroWhereUniqueInput[]
+    connect?: JuegoRegistroWhereUniqueInput | JuegoRegistroWhereUniqueInput[]
+    update?: JuegoRegistroUpdateWithWhereUniqueWithoutPremioInput | JuegoRegistroUpdateWithWhereUniqueWithoutPremioInput[]
+    updateMany?: JuegoRegistroUpdateManyWithWhereWithoutPremioInput | JuegoRegistroUpdateManyWithWhereWithoutPremioInput[]
+    deleteMany?: JuegoRegistroScalarWhereInput | JuegoRegistroScalarWhereInput[]
   }
 
   export type BoletaCreateNestedOneWithoutPremiosInput = {
@@ -35835,6 +38212,13 @@ export namespace Prisma {
     connect?: BoletaWhereUniqueInput | BoletaWhereUniqueInput[]
   }
 
+  export type JuegoRegistroCreateNestedManyWithoutRifaVendedorInput = {
+    create?: XOR<JuegoRegistroCreateWithoutRifaVendedorInput, JuegoRegistroUncheckedCreateWithoutRifaVendedorInput> | JuegoRegistroCreateWithoutRifaVendedorInput[] | JuegoRegistroUncheckedCreateWithoutRifaVendedorInput[]
+    connectOrCreate?: JuegoRegistroCreateOrConnectWithoutRifaVendedorInput | JuegoRegistroCreateOrConnectWithoutRifaVendedorInput[]
+    createMany?: JuegoRegistroCreateManyRifaVendedorInputEnvelope
+    connect?: JuegoRegistroWhereUniqueInput | JuegoRegistroWhereUniqueInput[]
+  }
+
   export type AsignacionBoletasUncheckedCreateNestedManyWithoutRifaVendedorInput = {
     create?: XOR<AsignacionBoletasCreateWithoutRifaVendedorInput, AsignacionBoletasUncheckedCreateWithoutRifaVendedorInput> | AsignacionBoletasCreateWithoutRifaVendedorInput[] | AsignacionBoletasUncheckedCreateWithoutRifaVendedorInput[]
     connectOrCreate?: AsignacionBoletasCreateOrConnectWithoutRifaVendedorInput | AsignacionBoletasCreateOrConnectWithoutRifaVendedorInput[]
@@ -35861,6 +38245,13 @@ export namespace Prisma {
     connectOrCreate?: BoletaCreateOrConnectWithoutRifaVendedorInput | BoletaCreateOrConnectWithoutRifaVendedorInput[]
     createMany?: BoletaCreateManyRifaVendedorInputEnvelope
     connect?: BoletaWhereUniqueInput | BoletaWhereUniqueInput[]
+  }
+
+  export type JuegoRegistroUncheckedCreateNestedManyWithoutRifaVendedorInput = {
+    create?: XOR<JuegoRegistroCreateWithoutRifaVendedorInput, JuegoRegistroUncheckedCreateWithoutRifaVendedorInput> | JuegoRegistroCreateWithoutRifaVendedorInput[] | JuegoRegistroUncheckedCreateWithoutRifaVendedorInput[]
+    connectOrCreate?: JuegoRegistroCreateOrConnectWithoutRifaVendedorInput | JuegoRegistroCreateOrConnectWithoutRifaVendedorInput[]
+    createMany?: JuegoRegistroCreateManyRifaVendedorInputEnvelope
+    connect?: JuegoRegistroWhereUniqueInput | JuegoRegistroWhereUniqueInput[]
   }
 
   export type RifaUpdateOneRequiredWithoutVendedoresNestedInput = {
@@ -35935,6 +38326,20 @@ export namespace Prisma {
     deleteMany?: BoletaScalarWhereInput | BoletaScalarWhereInput[]
   }
 
+  export type JuegoRegistroUpdateManyWithoutRifaVendedorNestedInput = {
+    create?: XOR<JuegoRegistroCreateWithoutRifaVendedorInput, JuegoRegistroUncheckedCreateWithoutRifaVendedorInput> | JuegoRegistroCreateWithoutRifaVendedorInput[] | JuegoRegistroUncheckedCreateWithoutRifaVendedorInput[]
+    connectOrCreate?: JuegoRegistroCreateOrConnectWithoutRifaVendedorInput | JuegoRegistroCreateOrConnectWithoutRifaVendedorInput[]
+    upsert?: JuegoRegistroUpsertWithWhereUniqueWithoutRifaVendedorInput | JuegoRegistroUpsertWithWhereUniqueWithoutRifaVendedorInput[]
+    createMany?: JuegoRegistroCreateManyRifaVendedorInputEnvelope
+    set?: JuegoRegistroWhereUniqueInput | JuegoRegistroWhereUniqueInput[]
+    disconnect?: JuegoRegistroWhereUniqueInput | JuegoRegistroWhereUniqueInput[]
+    delete?: JuegoRegistroWhereUniqueInput | JuegoRegistroWhereUniqueInput[]
+    connect?: JuegoRegistroWhereUniqueInput | JuegoRegistroWhereUniqueInput[]
+    update?: JuegoRegistroUpdateWithWhereUniqueWithoutRifaVendedorInput | JuegoRegistroUpdateWithWhereUniqueWithoutRifaVendedorInput[]
+    updateMany?: JuegoRegistroUpdateManyWithWhereWithoutRifaVendedorInput | JuegoRegistroUpdateManyWithWhereWithoutRifaVendedorInput[]
+    deleteMany?: JuegoRegistroScalarWhereInput | JuegoRegistroScalarWhereInput[]
+  }
+
   export type AsignacionBoletasUncheckedUpdateManyWithoutRifaVendedorNestedInput = {
     create?: XOR<AsignacionBoletasCreateWithoutRifaVendedorInput, AsignacionBoletasUncheckedCreateWithoutRifaVendedorInput> | AsignacionBoletasCreateWithoutRifaVendedorInput[] | AsignacionBoletasUncheckedCreateWithoutRifaVendedorInput[]
     connectOrCreate?: AsignacionBoletasCreateOrConnectWithoutRifaVendedorInput | AsignacionBoletasCreateOrConnectWithoutRifaVendedorInput[]
@@ -35989,6 +38394,20 @@ export namespace Prisma {
     update?: BoletaUpdateWithWhereUniqueWithoutRifaVendedorInput | BoletaUpdateWithWhereUniqueWithoutRifaVendedorInput[]
     updateMany?: BoletaUpdateManyWithWhereWithoutRifaVendedorInput | BoletaUpdateManyWithWhereWithoutRifaVendedorInput[]
     deleteMany?: BoletaScalarWhereInput | BoletaScalarWhereInput[]
+  }
+
+  export type JuegoRegistroUncheckedUpdateManyWithoutRifaVendedorNestedInput = {
+    create?: XOR<JuegoRegistroCreateWithoutRifaVendedorInput, JuegoRegistroUncheckedCreateWithoutRifaVendedorInput> | JuegoRegistroCreateWithoutRifaVendedorInput[] | JuegoRegistroUncheckedCreateWithoutRifaVendedorInput[]
+    connectOrCreate?: JuegoRegistroCreateOrConnectWithoutRifaVendedorInput | JuegoRegistroCreateOrConnectWithoutRifaVendedorInput[]
+    upsert?: JuegoRegistroUpsertWithWhereUniqueWithoutRifaVendedorInput | JuegoRegistroUpsertWithWhereUniqueWithoutRifaVendedorInput[]
+    createMany?: JuegoRegistroCreateManyRifaVendedorInputEnvelope
+    set?: JuegoRegistroWhereUniqueInput | JuegoRegistroWhereUniqueInput[]
+    disconnect?: JuegoRegistroWhereUniqueInput | JuegoRegistroWhereUniqueInput[]
+    delete?: JuegoRegistroWhereUniqueInput | JuegoRegistroWhereUniqueInput[]
+    connect?: JuegoRegistroWhereUniqueInput | JuegoRegistroWhereUniqueInput[]
+    update?: JuegoRegistroUpdateWithWhereUniqueWithoutRifaVendedorInput | JuegoRegistroUpdateWithWhereUniqueWithoutRifaVendedorInput[]
+    updateMany?: JuegoRegistroUpdateManyWithWhereWithoutRifaVendedorInput | JuegoRegistroUpdateManyWithWhereWithoutRifaVendedorInput[]
+    deleteMany?: JuegoRegistroScalarWhereInput | JuegoRegistroScalarWhereInput[]
   }
 
   export type RifaVendedorCreateNestedOneWithoutAsignacionesInput = {
@@ -36097,6 +38516,12 @@ export namespace Prisma {
     connect?: RifaVendedorWhereUniqueInput
   }
 
+  export type UsuarioCreateNestedOneWithoutDevolucionesInput = {
+    create?: XOR<UsuarioCreateWithoutDevolucionesInput, UsuarioUncheckedCreateWithoutDevolucionesInput>
+    connectOrCreate?: UsuarioCreateOrConnectWithoutDevolucionesInput
+    connect?: UsuarioWhereUniqueInput
+  }
+
   export type DevolucionDetalleCreateNestedManyWithoutDevolucionInput = {
     create?: XOR<DevolucionDetalleCreateWithoutDevolucionInput, DevolucionDetalleUncheckedCreateWithoutDevolucionInput> | DevolucionDetalleCreateWithoutDevolucionInput[] | DevolucionDetalleUncheckedCreateWithoutDevolucionInput[]
     connectOrCreate?: DevolucionDetalleCreateOrConnectWithoutDevolucionInput | DevolucionDetalleCreateOrConnectWithoutDevolucionInput[]
@@ -36121,6 +38546,16 @@ export namespace Prisma {
     upsert?: RifaVendedorUpsertWithoutDevolucionesInput
     connect?: RifaVendedorWhereUniqueInput
     update?: XOR<XOR<RifaVendedorUpdateToOneWithWhereWithoutDevolucionesInput, RifaVendedorUpdateWithoutDevolucionesInput>, RifaVendedorUncheckedUpdateWithoutDevolucionesInput>
+  }
+
+  export type UsuarioUpdateOneWithoutDevolucionesNestedInput = {
+    create?: XOR<UsuarioCreateWithoutDevolucionesInput, UsuarioUncheckedCreateWithoutDevolucionesInput>
+    connectOrCreate?: UsuarioCreateOrConnectWithoutDevolucionesInput
+    upsert?: UsuarioUpsertWithoutDevolucionesInput
+    disconnect?: UsuarioWhereInput | boolean
+    delete?: UsuarioWhereInput | boolean
+    connect?: UsuarioWhereUniqueInput
+    update?: XOR<XOR<UsuarioUpdateToOneWithWhereWithoutDevolucionesInput, UsuarioUpdateWithoutDevolucionesInput>, UsuarioUncheckedUpdateWithoutDevolucionesInput>
   }
 
   export type DevolucionDetalleUpdateManyWithoutDevolucionNestedInput = {
@@ -36539,6 +38974,12 @@ export namespace Prisma {
     connect?: SubCajaWhereUniqueInput
   }
 
+  export type UsuarioCreateNestedOneWithoutAbonosRegistradosInput = {
+    create?: XOR<UsuarioCreateWithoutAbonosRegistradosInput, UsuarioUncheckedCreateWithoutAbonosRegistradosInput>
+    connectOrCreate?: UsuarioCreateOrConnectWithoutAbonosRegistradosInput
+    connect?: UsuarioWhereUniqueInput
+  }
+
   export type ReciboCreateNestedOneWithoutAbonoInput = {
     create?: XOR<ReciboCreateWithoutAbonoInput, ReciboUncheckedCreateWithoutAbonoInput>
     connectOrCreate?: ReciboCreateOrConnectWithoutAbonoInput
@@ -36581,6 +39022,16 @@ export namespace Prisma {
     delete?: SubCajaWhereInput | boolean
     connect?: SubCajaWhereUniqueInput
     update?: XOR<XOR<SubCajaUpdateToOneWithWhereWithoutAbonosInput, SubCajaUpdateWithoutAbonosInput>, SubCajaUncheckedUpdateWithoutAbonosInput>
+  }
+
+  export type UsuarioUpdateOneWithoutAbonosRegistradosNestedInput = {
+    create?: XOR<UsuarioCreateWithoutAbonosRegistradosInput, UsuarioUncheckedCreateWithoutAbonosRegistradosInput>
+    connectOrCreate?: UsuarioCreateOrConnectWithoutAbonosRegistradosInput
+    upsert?: UsuarioUpsertWithoutAbonosRegistradosInput
+    disconnect?: UsuarioWhereInput | boolean
+    delete?: UsuarioWhereInput | boolean
+    connect?: UsuarioWhereUniqueInput
+    update?: XOR<XOR<UsuarioUpdateToOneWithWhereWithoutAbonosRegistradosInput, UsuarioUpdateWithoutAbonosRegistradosInput>, UsuarioUncheckedUpdateWithoutAbonosRegistradosInput>
   }
 
   export type ReciboUpdateOneWithoutAbonoNestedInput = {
@@ -37057,6 +39508,12 @@ export namespace Prisma {
     connect?: SubCajaWhereUniqueInput
   }
 
+  export type UsuarioCreateNestedOneWithoutGastosRegistradosInput = {
+    create?: XOR<UsuarioCreateWithoutGastosRegistradosInput, UsuarioUncheckedCreateWithoutGastosRegistradosInput>
+    connectOrCreate?: UsuarioCreateOrConnectWithoutGastosRegistradosInput
+    connect?: UsuarioWhereUniqueInput
+  }
+
   export type MovimientoCajaCreateNestedManyWithoutGastoInput = {
     create?: XOR<MovimientoCajaCreateWithoutGastoInput, MovimientoCajaUncheckedCreateWithoutGastoInput> | MovimientoCajaCreateWithoutGastoInput[] | MovimientoCajaUncheckedCreateWithoutGastoInput[]
     connectOrCreate?: MovimientoCajaCreateOrConnectWithoutGastoInput | MovimientoCajaCreateOrConnectWithoutGastoInput[]
@@ -37105,6 +39562,16 @@ export namespace Prisma {
     update?: XOR<XOR<SubCajaUpdateToOneWithWhereWithoutGastosInput, SubCajaUpdateWithoutGastosInput>, SubCajaUncheckedUpdateWithoutGastosInput>
   }
 
+  export type UsuarioUpdateOneWithoutGastosRegistradosNestedInput = {
+    create?: XOR<UsuarioCreateWithoutGastosRegistradosInput, UsuarioUncheckedCreateWithoutGastosRegistradosInput>
+    connectOrCreate?: UsuarioCreateOrConnectWithoutGastosRegistradosInput
+    upsert?: UsuarioUpsertWithoutGastosRegistradosInput
+    disconnect?: UsuarioWhereInput | boolean
+    delete?: UsuarioWhereInput | boolean
+    connect?: UsuarioWhereUniqueInput
+    update?: XOR<XOR<UsuarioUpdateToOneWithWhereWithoutGastosRegistradosInput, UsuarioUpdateWithoutGastosRegistradosInput>, UsuarioUncheckedUpdateWithoutGastosRegistradosInput>
+  }
+
   export type MovimientoCajaUpdateManyWithoutGastoNestedInput = {
     create?: XOR<MovimientoCajaCreateWithoutGastoInput, MovimientoCajaUncheckedCreateWithoutGastoInput> | MovimientoCajaCreateWithoutGastoInput[] | MovimientoCajaUncheckedCreateWithoutGastoInput[]
     connectOrCreate?: MovimientoCajaCreateOrConnectWithoutGastoInput | MovimientoCajaCreateOrConnectWithoutGastoInput[]
@@ -37151,6 +39618,50 @@ export namespace Prisma {
     delete?: GastoReciboWhereInput | boolean
     connect?: GastoReciboWhereUniqueInput
     update?: XOR<XOR<GastoReciboUpdateToOneWithWhereWithoutGastoInput, GastoReciboUpdateWithoutGastoInput>, GastoReciboUncheckedUpdateWithoutGastoInput>
+  }
+
+  export type RifaVendedorCreateNestedOneWithoutJuegosInput = {
+    create?: XOR<RifaVendedorCreateWithoutJuegosInput, RifaVendedorUncheckedCreateWithoutJuegosInput>
+    connectOrCreate?: RifaVendedorCreateOrConnectWithoutJuegosInput
+    connect?: RifaVendedorWhereUniqueInput
+  }
+
+  export type PremioCreateNestedOneWithoutJuegosInput = {
+    create?: XOR<PremioCreateWithoutJuegosInput, PremioUncheckedCreateWithoutJuegosInput>
+    connectOrCreate?: PremioCreateOrConnectWithoutJuegosInput
+    connect?: PremioWhereUniqueInput
+  }
+
+  export type UsuarioCreateNestedOneWithoutJuegosRegistradosInput = {
+    create?: XOR<UsuarioCreateWithoutJuegosRegistradosInput, UsuarioUncheckedCreateWithoutJuegosRegistradosInput>
+    connectOrCreate?: UsuarioCreateOrConnectWithoutJuegosRegistradosInput
+    connect?: UsuarioWhereUniqueInput
+  }
+
+  export type RifaVendedorUpdateOneRequiredWithoutJuegosNestedInput = {
+    create?: XOR<RifaVendedorCreateWithoutJuegosInput, RifaVendedorUncheckedCreateWithoutJuegosInput>
+    connectOrCreate?: RifaVendedorCreateOrConnectWithoutJuegosInput
+    upsert?: RifaVendedorUpsertWithoutJuegosInput
+    connect?: RifaVendedorWhereUniqueInput
+    update?: XOR<XOR<RifaVendedorUpdateToOneWithWhereWithoutJuegosInput, RifaVendedorUpdateWithoutJuegosInput>, RifaVendedorUncheckedUpdateWithoutJuegosInput>
+  }
+
+  export type PremioUpdateOneRequiredWithoutJuegosNestedInput = {
+    create?: XOR<PremioCreateWithoutJuegosInput, PremioUncheckedCreateWithoutJuegosInput>
+    connectOrCreate?: PremioCreateOrConnectWithoutJuegosInput
+    upsert?: PremioUpsertWithoutJuegosInput
+    connect?: PremioWhereUniqueInput
+    update?: XOR<XOR<PremioUpdateToOneWithWhereWithoutJuegosInput, PremioUpdateWithoutJuegosInput>, PremioUncheckedUpdateWithoutJuegosInput>
+  }
+
+  export type UsuarioUpdateOneWithoutJuegosRegistradosNestedInput = {
+    create?: XOR<UsuarioCreateWithoutJuegosRegistradosInput, UsuarioUncheckedCreateWithoutJuegosRegistradosInput>
+    connectOrCreate?: UsuarioCreateOrConnectWithoutJuegosRegistradosInput
+    upsert?: UsuarioUpsertWithoutJuegosRegistradosInput
+    disconnect?: UsuarioWhereInput | boolean
+    delete?: UsuarioWhereInput | boolean
+    connect?: UsuarioWhereUniqueInput
+    update?: XOR<XOR<UsuarioUpdateToOneWithWhereWithoutJuegosRegistradosInput, UsuarioUpdateWithoutJuegosRegistradosInput>, UsuarioUncheckedUpdateWithoutJuegosRegistradosInput>
   }
 
   export type GastoCreateNestedOneWithoutReciboInput = {
@@ -37393,6 +39904,29 @@ export namespace Prisma {
     gt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
     gte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
     not?: NestedDecimalNullableFilter<$PrismaModel> | Decimal | DecimalJsLike | number | string | null
+  }
+  export type NestedJsonNullableFilter<$PrismaModel = never> =
+    | PatchUndefined<
+        Either<Required<NestedJsonNullableFilterBase<$PrismaModel>>, Exclude<keyof Required<NestedJsonNullableFilterBase<$PrismaModel>>, 'path'>>,
+        Required<NestedJsonNullableFilterBase<$PrismaModel>>
+      >
+    | OptionalFlat<Omit<Required<NestedJsonNullableFilterBase<$PrismaModel>>, 'path'>>
+
+  export type NestedJsonNullableFilterBase<$PrismaModel = never> = {
+    equals?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+    path?: string[]
+    mode?: QueryMode | EnumQueryModeFieldRefInput<$PrismaModel>
+    string_contains?: string | StringFieldRefInput<$PrismaModel>
+    string_starts_with?: string | StringFieldRefInput<$PrismaModel>
+    string_ends_with?: string | StringFieldRefInput<$PrismaModel>
+    array_starts_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_ends_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_contains?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    lt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    lte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    gt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    gte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    not?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
   }
 
   export type NestedEnumTipoPremioWithAggregatesFilter<$PrismaModel = never> = {
@@ -37695,6 +40229,142 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type DevolucionBoletasCreateWithoutUsuarioInput = {
+    id?: string
+    destino?: $Enums.DestinoDevolucion
+    fecha?: Date | string
+    rifaVendedor: RifaVendedorCreateNestedOneWithoutDevolucionesInput
+    detalle?: DevolucionDetalleCreateNestedManyWithoutDevolucionInput
+  }
+
+  export type DevolucionBoletasUncheckedCreateWithoutUsuarioInput = {
+    id?: string
+    rifaVendedorId: string
+    destino?: $Enums.DestinoDevolucion
+    fecha?: Date | string
+    detalle?: DevolucionDetalleUncheckedCreateNestedManyWithoutDevolucionInput
+  }
+
+  export type DevolucionBoletasCreateOrConnectWithoutUsuarioInput = {
+    where: DevolucionBoletasWhereUniqueInput
+    create: XOR<DevolucionBoletasCreateWithoutUsuarioInput, DevolucionBoletasUncheckedCreateWithoutUsuarioInput>
+  }
+
+  export type DevolucionBoletasCreateManyUsuarioInputEnvelope = {
+    data: DevolucionBoletasCreateManyUsuarioInput | DevolucionBoletasCreateManyUsuarioInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type AbonoVendedorCreateWithoutUsuarioInput = {
+    id?: string
+    valor: Decimal | DecimalJsLike | number | string
+    fecha?: Date | string
+    descripcion?: string | null
+    metodoPago: $Enums.MetodoPago
+    estado?: $Enums.EstadoPago
+    anuladoAt?: Date | string | null
+    anuladoMotivo?: string | null
+    saldoAnterior: Decimal | DecimalJsLike | number | string
+    saldoDespues: Decimal | DecimalJsLike | number | string
+    boletasActuales?: number
+    rifaVendedor: RifaVendedorCreateNestedOneWithoutAbonosInput
+    subCaja?: SubCajaCreateNestedOneWithoutAbonosInput
+    recibo?: ReciboCreateNestedOneWithoutAbonoInput
+    movimientos?: MovimientoCajaCreateNestedManyWithoutAbonoVendedorInput
+  }
+
+  export type AbonoVendedorUncheckedCreateWithoutUsuarioInput = {
+    id?: string
+    rifaVendedorId: string
+    subCajaId?: string | null
+    valor: Decimal | DecimalJsLike | number | string
+    fecha?: Date | string
+    descripcion?: string | null
+    metodoPago: $Enums.MetodoPago
+    estado?: $Enums.EstadoPago
+    anuladoAt?: Date | string | null
+    anuladoMotivo?: string | null
+    saldoAnterior: Decimal | DecimalJsLike | number | string
+    saldoDespues: Decimal | DecimalJsLike | number | string
+    boletasActuales?: number
+    recibo?: ReciboUncheckedCreateNestedOneWithoutAbonoInput
+    movimientos?: MovimientoCajaUncheckedCreateNestedManyWithoutAbonoVendedorInput
+  }
+
+  export type AbonoVendedorCreateOrConnectWithoutUsuarioInput = {
+    where: AbonoVendedorWhereUniqueInput
+    create: XOR<AbonoVendedorCreateWithoutUsuarioInput, AbonoVendedorUncheckedCreateWithoutUsuarioInput>
+  }
+
+  export type AbonoVendedorCreateManyUsuarioInputEnvelope = {
+    data: AbonoVendedorCreateManyUsuarioInput | AbonoVendedorCreateManyUsuarioInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type GastoCreateWithoutUsuarioInput = {
+    id?: string
+    categoria?: $Enums.CategoriaGasto
+    descripcion: string
+    valor: Decimal | DecimalJsLike | number | string
+    fecha?: Date | string
+    anuladoAt?: Date | string | null
+    anuladoMotivo?: string | null
+    rifa: RifaCreateNestedOneWithoutGastosInput
+    subCaja?: SubCajaCreateNestedOneWithoutGastosInput
+    movimientos?: MovimientoCajaCreateNestedManyWithoutGastoInput
+    recibo?: GastoReciboCreateNestedOneWithoutGastoInput
+  }
+
+  export type GastoUncheckedCreateWithoutUsuarioInput = {
+    id?: string
+    rifaId: string
+    subCajaId?: string | null
+    categoria?: $Enums.CategoriaGasto
+    descripcion: string
+    valor: Decimal | DecimalJsLike | number | string
+    fecha?: Date | string
+    anuladoAt?: Date | string | null
+    anuladoMotivo?: string | null
+    movimientos?: MovimientoCajaUncheckedCreateNestedManyWithoutGastoInput
+    recibo?: GastoReciboUncheckedCreateNestedOneWithoutGastoInput
+  }
+
+  export type GastoCreateOrConnectWithoutUsuarioInput = {
+    where: GastoWhereUniqueInput
+    create: XOR<GastoCreateWithoutUsuarioInput, GastoUncheckedCreateWithoutUsuarioInput>
+  }
+
+  export type GastoCreateManyUsuarioInputEnvelope = {
+    data: GastoCreateManyUsuarioInput | GastoCreateManyUsuarioInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type JuegoRegistroCreateWithoutUsuarioInput = {
+    id?: string
+    fecha?: Date | string
+    totalBoletas?: number
+    rifaVendedor: RifaVendedorCreateNestedOneWithoutJuegosInput
+    premio: PremioCreateNestedOneWithoutJuegosInput
+  }
+
+  export type JuegoRegistroUncheckedCreateWithoutUsuarioInput = {
+    id?: string
+    rifaVendedorId: string
+    premioId: string
+    fecha?: Date | string
+    totalBoletas?: number
+  }
+
+  export type JuegoRegistroCreateOrConnectWithoutUsuarioInput = {
+    where: JuegoRegistroWhereUniqueInput
+    create: XOR<JuegoRegistroCreateWithoutUsuarioInput, JuegoRegistroUncheckedCreateWithoutUsuarioInput>
+  }
+
+  export type JuegoRegistroCreateManyUsuarioInputEnvelope = {
+    data: JuegoRegistroCreateManyUsuarioInput | JuegoRegistroCreateManyUsuarioInput[]
+    skipDuplicates?: boolean
+  }
+
   export type MovimientoCajaCreateWithoutUsuarioInput = {
     id?: string
     tipo: $Enums.TipoMovimientoCaja
@@ -37816,6 +40486,129 @@ export namespace Prisma {
     usuarioId?: StringNullableFilter<"AsignacionBoletas"> | string | null
   }
 
+  export type DevolucionBoletasUpsertWithWhereUniqueWithoutUsuarioInput = {
+    where: DevolucionBoletasWhereUniqueInput
+    update: XOR<DevolucionBoletasUpdateWithoutUsuarioInput, DevolucionBoletasUncheckedUpdateWithoutUsuarioInput>
+    create: XOR<DevolucionBoletasCreateWithoutUsuarioInput, DevolucionBoletasUncheckedCreateWithoutUsuarioInput>
+  }
+
+  export type DevolucionBoletasUpdateWithWhereUniqueWithoutUsuarioInput = {
+    where: DevolucionBoletasWhereUniqueInput
+    data: XOR<DevolucionBoletasUpdateWithoutUsuarioInput, DevolucionBoletasUncheckedUpdateWithoutUsuarioInput>
+  }
+
+  export type DevolucionBoletasUpdateManyWithWhereWithoutUsuarioInput = {
+    where: DevolucionBoletasScalarWhereInput
+    data: XOR<DevolucionBoletasUpdateManyMutationInput, DevolucionBoletasUncheckedUpdateManyWithoutUsuarioInput>
+  }
+
+  export type DevolucionBoletasScalarWhereInput = {
+    AND?: DevolucionBoletasScalarWhereInput | DevolucionBoletasScalarWhereInput[]
+    OR?: DevolucionBoletasScalarWhereInput[]
+    NOT?: DevolucionBoletasScalarWhereInput | DevolucionBoletasScalarWhereInput[]
+    id?: StringFilter<"DevolucionBoletas"> | string
+    rifaVendedorId?: StringFilter<"DevolucionBoletas"> | string
+    destino?: EnumDestinoDevolucionFilter<"DevolucionBoletas"> | $Enums.DestinoDevolucion
+    fecha?: DateTimeFilter<"DevolucionBoletas"> | Date | string
+    usuarioId?: StringNullableFilter<"DevolucionBoletas"> | string | null
+  }
+
+  export type AbonoVendedorUpsertWithWhereUniqueWithoutUsuarioInput = {
+    where: AbonoVendedorWhereUniqueInput
+    update: XOR<AbonoVendedorUpdateWithoutUsuarioInput, AbonoVendedorUncheckedUpdateWithoutUsuarioInput>
+    create: XOR<AbonoVendedorCreateWithoutUsuarioInput, AbonoVendedorUncheckedCreateWithoutUsuarioInput>
+  }
+
+  export type AbonoVendedorUpdateWithWhereUniqueWithoutUsuarioInput = {
+    where: AbonoVendedorWhereUniqueInput
+    data: XOR<AbonoVendedorUpdateWithoutUsuarioInput, AbonoVendedorUncheckedUpdateWithoutUsuarioInput>
+  }
+
+  export type AbonoVendedorUpdateManyWithWhereWithoutUsuarioInput = {
+    where: AbonoVendedorScalarWhereInput
+    data: XOR<AbonoVendedorUpdateManyMutationInput, AbonoVendedorUncheckedUpdateManyWithoutUsuarioInput>
+  }
+
+  export type AbonoVendedorScalarWhereInput = {
+    AND?: AbonoVendedorScalarWhereInput | AbonoVendedorScalarWhereInput[]
+    OR?: AbonoVendedorScalarWhereInput[]
+    NOT?: AbonoVendedorScalarWhereInput | AbonoVendedorScalarWhereInput[]
+    id?: StringFilter<"AbonoVendedor"> | string
+    rifaVendedorId?: StringFilter<"AbonoVendedor"> | string
+    subCajaId?: StringNullableFilter<"AbonoVendedor"> | string | null
+    usuarioId?: StringNullableFilter<"AbonoVendedor"> | string | null
+    valor?: DecimalFilter<"AbonoVendedor"> | Decimal | DecimalJsLike | number | string
+    fecha?: DateTimeFilter<"AbonoVendedor"> | Date | string
+    descripcion?: StringNullableFilter<"AbonoVendedor"> | string | null
+    metodoPago?: EnumMetodoPagoFilter<"AbonoVendedor"> | $Enums.MetodoPago
+    estado?: EnumEstadoPagoFilter<"AbonoVendedor"> | $Enums.EstadoPago
+    anuladoAt?: DateTimeNullableFilter<"AbonoVendedor"> | Date | string | null
+    anuladoMotivo?: StringNullableFilter<"AbonoVendedor"> | string | null
+    saldoAnterior?: DecimalFilter<"AbonoVendedor"> | Decimal | DecimalJsLike | number | string
+    saldoDespues?: DecimalFilter<"AbonoVendedor"> | Decimal | DecimalJsLike | number | string
+    boletasActuales?: IntFilter<"AbonoVendedor"> | number
+  }
+
+  export type GastoUpsertWithWhereUniqueWithoutUsuarioInput = {
+    where: GastoWhereUniqueInput
+    update: XOR<GastoUpdateWithoutUsuarioInput, GastoUncheckedUpdateWithoutUsuarioInput>
+    create: XOR<GastoCreateWithoutUsuarioInput, GastoUncheckedCreateWithoutUsuarioInput>
+  }
+
+  export type GastoUpdateWithWhereUniqueWithoutUsuarioInput = {
+    where: GastoWhereUniqueInput
+    data: XOR<GastoUpdateWithoutUsuarioInput, GastoUncheckedUpdateWithoutUsuarioInput>
+  }
+
+  export type GastoUpdateManyWithWhereWithoutUsuarioInput = {
+    where: GastoScalarWhereInput
+    data: XOR<GastoUpdateManyMutationInput, GastoUncheckedUpdateManyWithoutUsuarioInput>
+  }
+
+  export type GastoScalarWhereInput = {
+    AND?: GastoScalarWhereInput | GastoScalarWhereInput[]
+    OR?: GastoScalarWhereInput[]
+    NOT?: GastoScalarWhereInput | GastoScalarWhereInput[]
+    id?: StringFilter<"Gasto"> | string
+    rifaId?: StringFilter<"Gasto"> | string
+    subCajaId?: StringNullableFilter<"Gasto"> | string | null
+    usuarioId?: StringNullableFilter<"Gasto"> | string | null
+    categoria?: EnumCategoriaGastoFilter<"Gasto"> | $Enums.CategoriaGasto
+    descripcion?: StringFilter<"Gasto"> | string
+    valor?: DecimalFilter<"Gasto"> | Decimal | DecimalJsLike | number | string
+    fecha?: DateTimeFilter<"Gasto"> | Date | string
+    anuladoAt?: DateTimeNullableFilter<"Gasto"> | Date | string | null
+    anuladoMotivo?: StringNullableFilter<"Gasto"> | string | null
+  }
+
+  export type JuegoRegistroUpsertWithWhereUniqueWithoutUsuarioInput = {
+    where: JuegoRegistroWhereUniqueInput
+    update: XOR<JuegoRegistroUpdateWithoutUsuarioInput, JuegoRegistroUncheckedUpdateWithoutUsuarioInput>
+    create: XOR<JuegoRegistroCreateWithoutUsuarioInput, JuegoRegistroUncheckedCreateWithoutUsuarioInput>
+  }
+
+  export type JuegoRegistroUpdateWithWhereUniqueWithoutUsuarioInput = {
+    where: JuegoRegistroWhereUniqueInput
+    data: XOR<JuegoRegistroUpdateWithoutUsuarioInput, JuegoRegistroUncheckedUpdateWithoutUsuarioInput>
+  }
+
+  export type JuegoRegistroUpdateManyWithWhereWithoutUsuarioInput = {
+    where: JuegoRegistroScalarWhereInput
+    data: XOR<JuegoRegistroUpdateManyMutationInput, JuegoRegistroUncheckedUpdateManyWithoutUsuarioInput>
+  }
+
+  export type JuegoRegistroScalarWhereInput = {
+    AND?: JuegoRegistroScalarWhereInput | JuegoRegistroScalarWhereInput[]
+    OR?: JuegoRegistroScalarWhereInput[]
+    NOT?: JuegoRegistroScalarWhereInput | JuegoRegistroScalarWhereInput[]
+    id?: StringFilter<"JuegoRegistro"> | string
+    rifaVendedorId?: StringFilter<"JuegoRegistro"> | string
+    premioId?: StringFilter<"JuegoRegistro"> | string
+    usuarioId?: StringNullableFilter<"JuegoRegistro"> | string | null
+    fecha?: DateTimeFilter<"JuegoRegistro"> | Date | string
+    totalBoletas?: IntFilter<"JuegoRegistro"> | number
+  }
+
   export type MovimientoCajaUpsertWithWhereUniqueWithoutUsuarioInput = {
     where: MovimientoCajaWhereUniqueInput
     update: XOR<MovimientoCajaUpdateWithoutUsuarioInput, MovimientoCajaUncheckedUpdateWithoutUsuarioInput>
@@ -37864,6 +40657,10 @@ export namespace Prisma {
     updatedAt?: Date | string
     rifasEditadas?: RifaCreateNestedManyWithoutUpdatedByInput
     asignaciones?: AsignacionBoletasCreateNestedManyWithoutUsuarioInput
+    devoluciones?: DevolucionBoletasCreateNestedManyWithoutUsuarioInput
+    abonosRegistrados?: AbonoVendedorCreateNestedManyWithoutUsuarioInput
+    gastosRegistrados?: GastoCreateNestedManyWithoutUsuarioInput
+    juegosRegistrados?: JuegoRegistroCreateNestedManyWithoutUsuarioInput
     movimientos?: MovimientoCajaCreateNestedManyWithoutUsuarioInput
   }
 
@@ -37878,6 +40675,10 @@ export namespace Prisma {
     updatedAt?: Date | string
     rifasEditadas?: RifaUncheckedCreateNestedManyWithoutUpdatedByInput
     asignaciones?: AsignacionBoletasUncheckedCreateNestedManyWithoutUsuarioInput
+    devoluciones?: DevolucionBoletasUncheckedCreateNestedManyWithoutUsuarioInput
+    abonosRegistrados?: AbonoVendedorUncheckedCreateNestedManyWithoutUsuarioInput
+    gastosRegistrados?: GastoUncheckedCreateNestedManyWithoutUsuarioInput
+    juegosRegistrados?: JuegoRegistroUncheckedCreateNestedManyWithoutUsuarioInput
     movimientos?: MovimientoCajaUncheckedCreateNestedManyWithoutUsuarioInput
   }
 
@@ -37897,6 +40698,10 @@ export namespace Prisma {
     updatedAt?: Date | string
     rifasCreadas?: RifaCreateNestedManyWithoutCreatedByInput
     asignaciones?: AsignacionBoletasCreateNestedManyWithoutUsuarioInput
+    devoluciones?: DevolucionBoletasCreateNestedManyWithoutUsuarioInput
+    abonosRegistrados?: AbonoVendedorCreateNestedManyWithoutUsuarioInput
+    gastosRegistrados?: GastoCreateNestedManyWithoutUsuarioInput
+    juegosRegistrados?: JuegoRegistroCreateNestedManyWithoutUsuarioInput
     movimientos?: MovimientoCajaCreateNestedManyWithoutUsuarioInput
   }
 
@@ -37911,6 +40716,10 @@ export namespace Prisma {
     updatedAt?: Date | string
     rifasCreadas?: RifaUncheckedCreateNestedManyWithoutCreatedByInput
     asignaciones?: AsignacionBoletasUncheckedCreateNestedManyWithoutUsuarioInput
+    devoluciones?: DevolucionBoletasUncheckedCreateNestedManyWithoutUsuarioInput
+    abonosRegistrados?: AbonoVendedorUncheckedCreateNestedManyWithoutUsuarioInput
+    gastosRegistrados?: GastoUncheckedCreateNestedManyWithoutUsuarioInput
+    juegosRegistrados?: JuegoRegistroUncheckedCreateNestedManyWithoutUsuarioInput
     movimientos?: MovimientoCajaUncheckedCreateNestedManyWithoutUsuarioInput
   }
 
@@ -37979,6 +40788,7 @@ export namespace Prisma {
     devoluciones?: DevolucionBoletasCreateNestedManyWithoutRifaVendedorInput
     abonos?: AbonoVendedorCreateNestedManyWithoutRifaVendedorInput
     boletas?: BoletaCreateNestedManyWithoutRifaVendedorInput
+    juegos?: JuegoRegistroCreateNestedManyWithoutRifaVendedorInput
   }
 
   export type RifaVendedorUncheckedCreateWithoutRifaInput = {
@@ -37991,6 +40801,7 @@ export namespace Prisma {
     devoluciones?: DevolucionBoletasUncheckedCreateNestedManyWithoutRifaVendedorInput
     abonos?: AbonoVendedorUncheckedCreateNestedManyWithoutRifaVendedorInput
     boletas?: BoletaUncheckedCreateNestedManyWithoutRifaVendedorInput
+    juegos?: JuegoRegistroUncheckedCreateNestedManyWithoutRifaVendedorInput
   }
 
   export type RifaVendedorCreateOrConnectWithoutRifaInput = {
@@ -38008,6 +40819,12 @@ export namespace Prisma {
     estado?: $Enums.EstadoVenta
     total: Decimal | DecimalJsLike | number | string
     saldoPendiente: Decimal | DecimalJsLike | number | string
+    referenciaPago?: string | null
+    pasarelaPago?: string | null
+    pasarelaEstado?: string | null
+    pasarelaTransaccionId?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
     cliente: ClienteCreateNestedOneWithoutVentasInput
     boletas?: BoletaCreateNestedManyWithoutVentaInput
     pagos?: PagoClienteCreateNestedManyWithoutVentaInput
@@ -38020,6 +40837,12 @@ export namespace Prisma {
     estado?: $Enums.EstadoVenta
     total: Decimal | DecimalJsLike | number | string
     saldoPendiente: Decimal | DecimalJsLike | number | string
+    referenciaPago?: string | null
+    pasarelaPago?: string | null
+    pasarelaEstado?: string | null
+    pasarelaTransaccionId?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
     boletas?: BoletaUncheckedCreateNestedManyWithoutVentaInput
     pagos?: PagoClienteUncheckedCreateNestedManyWithoutVentaInput
     movimientos?: MovimientoCajaUncheckedCreateNestedManyWithoutVentaInput
@@ -38044,6 +40867,7 @@ export namespace Prisma {
     anuladoAt?: Date | string | null
     anuladoMotivo?: string | null
     subCaja?: SubCajaCreateNestedOneWithoutGastosInput
+    usuario?: UsuarioCreateNestedOneWithoutGastosRegistradosInput
     movimientos?: MovimientoCajaCreateNestedManyWithoutGastoInput
     recibo?: GastoReciboCreateNestedOneWithoutGastoInput
   }
@@ -38051,6 +40875,7 @@ export namespace Prisma {
   export type GastoUncheckedCreateWithoutRifaInput = {
     id?: string
     subCajaId?: string | null
+    usuarioId?: string | null
     categoria?: $Enums.CategoriaGasto
     descripcion: string
     valor: Decimal | DecimalJsLike | number | string
@@ -38145,24 +40970,28 @@ export namespace Prisma {
     id?: string
     nombre: string
     descripcion?: string | null
+    imagenesJson?: NullableJsonNullValueInput | InputJsonValue
     tipo: $Enums.TipoPremio
     mostrarValor?: boolean
     valor?: Decimal | DecimalJsLike | number | string | null
     fecha: Date | string
     createdAt?: Date | string
     boletas?: BoletaPremioCreateNestedManyWithoutPremioInput
+    juegos?: JuegoRegistroCreateNestedManyWithoutPremioInput
   }
 
   export type PremioUncheckedCreateWithoutRifaInput = {
     id?: string
     nombre: string
     descripcion?: string | null
+    imagenesJson?: NullableJsonNullValueInput | InputJsonValue
     tipo: $Enums.TipoPremio
     mostrarValor?: boolean
     valor?: Decimal | DecimalJsLike | number | string | null
     fecha: Date | string
     createdAt?: Date | string
     boletas?: BoletaPremioUncheckedCreateNestedManyWithoutPremioInput
+    juegos?: JuegoRegistroUncheckedCreateNestedManyWithoutPremioInput
   }
 
   export type PremioCreateOrConnectWithoutRifaInput = {
@@ -38197,6 +41026,10 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     rifasEditadas?: RifaUpdateManyWithoutUpdatedByNestedInput
     asignaciones?: AsignacionBoletasUpdateManyWithoutUsuarioNestedInput
+    devoluciones?: DevolucionBoletasUpdateManyWithoutUsuarioNestedInput
+    abonosRegistrados?: AbonoVendedorUpdateManyWithoutUsuarioNestedInput
+    gastosRegistrados?: GastoUpdateManyWithoutUsuarioNestedInput
+    juegosRegistrados?: JuegoRegistroUpdateManyWithoutUsuarioNestedInput
     movimientos?: MovimientoCajaUpdateManyWithoutUsuarioNestedInput
   }
 
@@ -38211,6 +41044,10 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     rifasEditadas?: RifaUncheckedUpdateManyWithoutUpdatedByNestedInput
     asignaciones?: AsignacionBoletasUncheckedUpdateManyWithoutUsuarioNestedInput
+    devoluciones?: DevolucionBoletasUncheckedUpdateManyWithoutUsuarioNestedInput
+    abonosRegistrados?: AbonoVendedorUncheckedUpdateManyWithoutUsuarioNestedInput
+    gastosRegistrados?: GastoUncheckedUpdateManyWithoutUsuarioNestedInput
+    juegosRegistrados?: JuegoRegistroUncheckedUpdateManyWithoutUsuarioNestedInput
     movimientos?: MovimientoCajaUncheckedUpdateManyWithoutUsuarioNestedInput
   }
 
@@ -38236,6 +41073,10 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     rifasCreadas?: RifaUpdateManyWithoutCreatedByNestedInput
     asignaciones?: AsignacionBoletasUpdateManyWithoutUsuarioNestedInput
+    devoluciones?: DevolucionBoletasUpdateManyWithoutUsuarioNestedInput
+    abonosRegistrados?: AbonoVendedorUpdateManyWithoutUsuarioNestedInput
+    gastosRegistrados?: GastoUpdateManyWithoutUsuarioNestedInput
+    juegosRegistrados?: JuegoRegistroUpdateManyWithoutUsuarioNestedInput
     movimientos?: MovimientoCajaUpdateManyWithoutUsuarioNestedInput
   }
 
@@ -38250,6 +41091,10 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     rifasCreadas?: RifaUncheckedUpdateManyWithoutCreatedByNestedInput
     asignaciones?: AsignacionBoletasUncheckedUpdateManyWithoutUsuarioNestedInput
+    devoluciones?: DevolucionBoletasUncheckedUpdateManyWithoutUsuarioNestedInput
+    abonosRegistrados?: AbonoVendedorUncheckedUpdateManyWithoutUsuarioNestedInput
+    gastosRegistrados?: GastoUncheckedUpdateManyWithoutUsuarioNestedInput
+    juegosRegistrados?: JuegoRegistroUncheckedUpdateManyWithoutUsuarioNestedInput
     movimientos?: MovimientoCajaUncheckedUpdateManyWithoutUsuarioNestedInput
   }
 
@@ -38344,6 +41189,12 @@ export namespace Prisma {
     estado?: EnumEstadoVentaFilter<"Venta"> | $Enums.EstadoVenta
     total?: DecimalFilter<"Venta"> | Decimal | DecimalJsLike | number | string
     saldoPendiente?: DecimalFilter<"Venta"> | Decimal | DecimalJsLike | number | string
+    referenciaPago?: StringNullableFilter<"Venta"> | string | null
+    pasarelaPago?: StringNullableFilter<"Venta"> | string | null
+    pasarelaEstado?: StringNullableFilter<"Venta"> | string | null
+    pasarelaTransaccionId?: StringNullableFilter<"Venta"> | string | null
+    createdAt?: DateTimeFilter<"Venta"> | Date | string
+    updatedAt?: DateTimeFilter<"Venta"> | Date | string
   }
 
   export type GastoUpsertWithWhereUniqueWithoutRifaInput = {
@@ -38360,21 +41211,6 @@ export namespace Prisma {
   export type GastoUpdateManyWithWhereWithoutRifaInput = {
     where: GastoScalarWhereInput
     data: XOR<GastoUpdateManyMutationInput, GastoUncheckedUpdateManyWithoutRifaInput>
-  }
-
-  export type GastoScalarWhereInput = {
-    AND?: GastoScalarWhereInput | GastoScalarWhereInput[]
-    OR?: GastoScalarWhereInput[]
-    NOT?: GastoScalarWhereInput | GastoScalarWhereInput[]
-    id?: StringFilter<"Gasto"> | string
-    rifaId?: StringFilter<"Gasto"> | string
-    subCajaId?: StringNullableFilter<"Gasto"> | string | null
-    categoria?: EnumCategoriaGastoFilter<"Gasto"> | $Enums.CategoriaGasto
-    descripcion?: StringFilter<"Gasto"> | string
-    valor?: DecimalFilter<"Gasto"> | Decimal | DecimalJsLike | number | string
-    fecha?: DateTimeFilter<"Gasto"> | Date | string
-    anuladoAt?: DateTimeNullableFilter<"Gasto"> | Date | string | null
-    anuladoMotivo?: StringNullableFilter<"Gasto"> | string | null
   }
 
   export type CajaUpsertWithWhereUniqueWithoutRifaInput = {
@@ -38443,6 +41279,7 @@ export namespace Prisma {
     rifaId?: StringFilter<"Premio"> | string
     nombre?: StringFilter<"Premio"> | string
     descripcion?: StringNullableFilter<"Premio"> | string | null
+    imagenesJson?: JsonNullableFilter<"Premio">
     tipo?: EnumTipoPremioFilter<"Premio"> | $Enums.TipoPremio
     mostrarValor?: BoolFilter<"Premio"> | boolean
     valor?: DecimalNullableFilter<"Premio"> | Decimal | DecimalJsLike | number | string | null
@@ -38514,6 +41351,32 @@ export namespace Prisma {
 
   export type BoletaPremioCreateManyPremioInputEnvelope = {
     data: BoletaPremioCreateManyPremioInput | BoletaPremioCreateManyPremioInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type JuegoRegistroCreateWithoutPremioInput = {
+    id?: string
+    fecha?: Date | string
+    totalBoletas?: number
+    rifaVendedor: RifaVendedorCreateNestedOneWithoutJuegosInput
+    usuario?: UsuarioCreateNestedOneWithoutJuegosRegistradosInput
+  }
+
+  export type JuegoRegistroUncheckedCreateWithoutPremioInput = {
+    id?: string
+    rifaVendedorId: string
+    usuarioId?: string | null
+    fecha?: Date | string
+    totalBoletas?: number
+  }
+
+  export type JuegoRegistroCreateOrConnectWithoutPremioInput = {
+    where: JuegoRegistroWhereUniqueInput
+    create: XOR<JuegoRegistroCreateWithoutPremioInput, JuegoRegistroUncheckedCreateWithoutPremioInput>
+  }
+
+  export type JuegoRegistroCreateManyPremioInputEnvelope = {
+    data: JuegoRegistroCreateManyPremioInput | JuegoRegistroCreateManyPremioInput[]
     skipDuplicates?: boolean
   }
 
@@ -38595,6 +41458,22 @@ export namespace Prisma {
     premioId?: StringFilter<"BoletaPremio"> | string
   }
 
+  export type JuegoRegistroUpsertWithWhereUniqueWithoutPremioInput = {
+    where: JuegoRegistroWhereUniqueInput
+    update: XOR<JuegoRegistroUpdateWithoutPremioInput, JuegoRegistroUncheckedUpdateWithoutPremioInput>
+    create: XOR<JuegoRegistroCreateWithoutPremioInput, JuegoRegistroUncheckedCreateWithoutPremioInput>
+  }
+
+  export type JuegoRegistroUpdateWithWhereUniqueWithoutPremioInput = {
+    where: JuegoRegistroWhereUniqueInput
+    data: XOR<JuegoRegistroUpdateWithoutPremioInput, JuegoRegistroUncheckedUpdateWithoutPremioInput>
+  }
+
+  export type JuegoRegistroUpdateManyWithWhereWithoutPremioInput = {
+    where: JuegoRegistroScalarWhereInput
+    data: XOR<JuegoRegistroUpdateManyMutationInput, JuegoRegistroUncheckedUpdateManyWithoutPremioInput>
+  }
+
   export type BoletaCreateWithoutPremiosInput = {
     id?: string
     numero: string
@@ -38644,12 +41523,14 @@ export namespace Prisma {
     id?: string
     nombre: string
     descripcion?: string | null
+    imagenesJson?: NullableJsonNullValueInput | InputJsonValue
     tipo: $Enums.TipoPremio
     mostrarValor?: boolean
     valor?: Decimal | DecimalJsLike | number | string | null
     fecha: Date | string
     createdAt?: Date | string
     rifa: RifaCreateNestedOneWithoutPremiosInput
+    juegos?: JuegoRegistroCreateNestedManyWithoutPremioInput
   }
 
   export type PremioUncheckedCreateWithoutBoletasInput = {
@@ -38657,11 +41538,13 @@ export namespace Prisma {
     rifaId: string
     nombre: string
     descripcion?: string | null
+    imagenesJson?: NullableJsonNullValueInput | InputJsonValue
     tipo: $Enums.TipoPremio
     mostrarValor?: boolean
     valor?: Decimal | DecimalJsLike | number | string | null
     fecha: Date | string
     createdAt?: Date | string
+    juegos?: JuegoRegistroUncheckedCreateNestedManyWithoutPremioInput
   }
 
   export type PremioCreateOrConnectWithoutBoletasInput = {
@@ -38735,12 +41618,14 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     nombre?: StringFieldUpdateOperationsInput | string
     descripcion?: NullableStringFieldUpdateOperationsInput | string | null
+    imagenesJson?: NullableJsonNullValueInput | InputJsonValue
     tipo?: EnumTipoPremioFieldUpdateOperationsInput | $Enums.TipoPremio
     mostrarValor?: BoolFieldUpdateOperationsInput | boolean
     valor?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     fecha?: DateTimeFieldUpdateOperationsInput | Date | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     rifa?: RifaUpdateOneRequiredWithoutPremiosNestedInput
+    juegos?: JuegoRegistroUpdateManyWithoutPremioNestedInput
   }
 
   export type PremioUncheckedUpdateWithoutBoletasInput = {
@@ -38748,11 +41633,13 @@ export namespace Prisma {
     rifaId?: StringFieldUpdateOperationsInput | string
     nombre?: StringFieldUpdateOperationsInput | string
     descripcion?: NullableStringFieldUpdateOperationsInput | string | null
+    imagenesJson?: NullableJsonNullValueInput | InputJsonValue
     tipo?: EnumTipoPremioFieldUpdateOperationsInput | $Enums.TipoPremio
     mostrarValor?: BoolFieldUpdateOperationsInput | boolean
     valor?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     fecha?: DateTimeFieldUpdateOperationsInput | Date | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    juegos?: JuegoRegistroUncheckedUpdateManyWithoutPremioNestedInput
   }
 
   export type RifaCreateWithoutBoletasInput = {
@@ -38812,6 +41699,7 @@ export namespace Prisma {
     asignaciones?: AsignacionBoletasCreateNestedManyWithoutRifaVendedorInput
     devoluciones?: DevolucionBoletasCreateNestedManyWithoutRifaVendedorInput
     abonos?: AbonoVendedorCreateNestedManyWithoutRifaVendedorInput
+    juegos?: JuegoRegistroCreateNestedManyWithoutRifaVendedorInput
   }
 
   export type RifaVendedorUncheckedCreateWithoutBoletasInput = {
@@ -38824,6 +41712,7 @@ export namespace Prisma {
     asignaciones?: AsignacionBoletasUncheckedCreateNestedManyWithoutRifaVendedorInput
     devoluciones?: DevolucionBoletasUncheckedCreateNestedManyWithoutRifaVendedorInput
     abonos?: AbonoVendedorUncheckedCreateNestedManyWithoutRifaVendedorInput
+    juegos?: JuegoRegistroUncheckedCreateNestedManyWithoutRifaVendedorInput
   }
 
   export type RifaVendedorCreateOrConnectWithoutBoletasInput = {
@@ -38836,6 +41725,7 @@ export namespace Prisma {
     nombre: string
     email?: string | null
     telefono?: string | null
+    documento?: string | null
     ventas?: VentaCreateNestedManyWithoutClienteInput
     movimientos?: MovimientoCajaCreateNestedManyWithoutClienteInput
   }
@@ -38845,6 +41735,7 @@ export namespace Prisma {
     nombre: string
     email?: string | null
     telefono?: string | null
+    documento?: string | null
     ventas?: VentaUncheckedCreateNestedManyWithoutClienteInput
     movimientos?: MovimientoCajaUncheckedCreateNestedManyWithoutClienteInput
   }
@@ -38859,6 +41750,12 @@ export namespace Prisma {
     estado?: $Enums.EstadoVenta
     total: Decimal | DecimalJsLike | number | string
     saldoPendiente: Decimal | DecimalJsLike | number | string
+    referenciaPago?: string | null
+    pasarelaPago?: string | null
+    pasarelaEstado?: string | null
+    pasarelaTransaccionId?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
     cliente: ClienteCreateNestedOneWithoutVentasInput
     rifa: RifaCreateNestedOneWithoutVentasInput
     pagos?: PagoClienteCreateNestedManyWithoutVentaInput
@@ -38872,6 +41769,12 @@ export namespace Prisma {
     estado?: $Enums.EstadoVenta
     total: Decimal | DecimalJsLike | number | string
     saldoPendiente: Decimal | DecimalJsLike | number | string
+    referenciaPago?: string | null
+    pasarelaPago?: string | null
+    pasarelaEstado?: string | null
+    pasarelaTransaccionId?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
     pagos?: PagoClienteUncheckedCreateNestedManyWithoutVentaInput
     movimientos?: MovimientoCajaUncheckedCreateNestedManyWithoutVentaInput
   }
@@ -39015,6 +41918,7 @@ export namespace Prisma {
     asignaciones?: AsignacionBoletasUpdateManyWithoutRifaVendedorNestedInput
     devoluciones?: DevolucionBoletasUpdateManyWithoutRifaVendedorNestedInput
     abonos?: AbonoVendedorUpdateManyWithoutRifaVendedorNestedInput
+    juegos?: JuegoRegistroUpdateManyWithoutRifaVendedorNestedInput
   }
 
   export type RifaVendedorUncheckedUpdateWithoutBoletasInput = {
@@ -39027,6 +41931,7 @@ export namespace Prisma {
     asignaciones?: AsignacionBoletasUncheckedUpdateManyWithoutRifaVendedorNestedInput
     devoluciones?: DevolucionBoletasUncheckedUpdateManyWithoutRifaVendedorNestedInput
     abonos?: AbonoVendedorUncheckedUpdateManyWithoutRifaVendedorNestedInput
+    juegos?: JuegoRegistroUncheckedUpdateManyWithoutRifaVendedorNestedInput
   }
 
   export type ClienteUpsertWithoutBoletasInput = {
@@ -39045,6 +41950,7 @@ export namespace Prisma {
     nombre?: StringFieldUpdateOperationsInput | string
     email?: NullableStringFieldUpdateOperationsInput | string | null
     telefono?: NullableStringFieldUpdateOperationsInput | string | null
+    documento?: NullableStringFieldUpdateOperationsInput | string | null
     ventas?: VentaUpdateManyWithoutClienteNestedInput
     movimientos?: MovimientoCajaUpdateManyWithoutClienteNestedInput
   }
@@ -39054,6 +41960,7 @@ export namespace Prisma {
     nombre?: StringFieldUpdateOperationsInput | string
     email?: NullableStringFieldUpdateOperationsInput | string | null
     telefono?: NullableStringFieldUpdateOperationsInput | string | null
+    documento?: NullableStringFieldUpdateOperationsInput | string | null
     ventas?: VentaUncheckedUpdateManyWithoutClienteNestedInput
     movimientos?: MovimientoCajaUncheckedUpdateManyWithoutClienteNestedInput
   }
@@ -39074,6 +41981,12 @@ export namespace Prisma {
     estado?: EnumEstadoVentaFieldUpdateOperationsInput | $Enums.EstadoVenta
     total?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     saldoPendiente?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    referenciaPago?: NullableStringFieldUpdateOperationsInput | string | null
+    pasarelaPago?: NullableStringFieldUpdateOperationsInput | string | null
+    pasarelaEstado?: NullableStringFieldUpdateOperationsInput | string | null
+    pasarelaTransaccionId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     cliente?: ClienteUpdateOneRequiredWithoutVentasNestedInput
     rifa?: RifaUpdateOneRequiredWithoutVentasNestedInput
     pagos?: PagoClienteUpdateManyWithoutVentaNestedInput
@@ -39087,6 +42000,12 @@ export namespace Prisma {
     estado?: EnumEstadoVentaFieldUpdateOperationsInput | $Enums.EstadoVenta
     total?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     saldoPendiente?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    referenciaPago?: NullableStringFieldUpdateOperationsInput | string | null
+    pasarelaPago?: NullableStringFieldUpdateOperationsInput | string | null
+    pasarelaEstado?: NullableStringFieldUpdateOperationsInput | string | null
+    pasarelaTransaccionId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     pagos?: PagoClienteUncheckedUpdateManyWithoutVentaNestedInput
     movimientos?: MovimientoCajaUncheckedUpdateManyWithoutVentaNestedInput
   }
@@ -39167,6 +42086,7 @@ export namespace Prisma {
     devoluciones?: DevolucionBoletasCreateNestedManyWithoutRifaVendedorInput
     abonos?: AbonoVendedorCreateNestedManyWithoutRifaVendedorInput
     boletas?: BoletaCreateNestedManyWithoutRifaVendedorInput
+    juegos?: JuegoRegistroCreateNestedManyWithoutRifaVendedorInput
   }
 
   export type RifaVendedorUncheckedCreateWithoutVendedorInput = {
@@ -39179,6 +42099,7 @@ export namespace Prisma {
     devoluciones?: DevolucionBoletasUncheckedCreateNestedManyWithoutRifaVendedorInput
     abonos?: AbonoVendedorUncheckedCreateNestedManyWithoutRifaVendedorInput
     boletas?: BoletaUncheckedCreateNestedManyWithoutRifaVendedorInput
+    juegos?: JuegoRegistroUncheckedCreateNestedManyWithoutRifaVendedorInput
   }
 
   export type RifaVendedorCreateOrConnectWithoutVendedorInput = {
@@ -39371,6 +42292,7 @@ export namespace Prisma {
     id?: string
     destino?: $Enums.DestinoDevolucion
     fecha?: Date | string
+    usuario?: UsuarioCreateNestedOneWithoutDevolucionesInput
     detalle?: DevolucionDetalleCreateNestedManyWithoutDevolucionInput
   }
 
@@ -39378,6 +42300,7 @@ export namespace Prisma {
     id?: string
     destino?: $Enums.DestinoDevolucion
     fecha?: Date | string
+    usuarioId?: string | null
     detalle?: DevolucionDetalleUncheckedCreateNestedManyWithoutDevolucionInput
   }
 
@@ -39404,6 +42327,7 @@ export namespace Prisma {
     saldoDespues: Decimal | DecimalJsLike | number | string
     boletasActuales?: number
     subCaja?: SubCajaCreateNestedOneWithoutAbonosInput
+    usuario?: UsuarioCreateNestedOneWithoutAbonosRegistradosInput
     recibo?: ReciboCreateNestedOneWithoutAbonoInput
     movimientos?: MovimientoCajaCreateNestedManyWithoutAbonoVendedorInput
   }
@@ -39411,6 +42335,7 @@ export namespace Prisma {
   export type AbonoVendedorUncheckedCreateWithoutRifaVendedorInput = {
     id?: string
     subCajaId?: string | null
+    usuarioId?: string | null
     valor: Decimal | DecimalJsLike | number | string
     fecha?: Date | string
     descripcion?: string | null
@@ -39482,6 +42407,32 @@ export namespace Prisma {
 
   export type BoletaCreateManyRifaVendedorInputEnvelope = {
     data: BoletaCreateManyRifaVendedorInput | BoletaCreateManyRifaVendedorInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type JuegoRegistroCreateWithoutRifaVendedorInput = {
+    id?: string
+    fecha?: Date | string
+    totalBoletas?: number
+    premio: PremioCreateNestedOneWithoutJuegosInput
+    usuario?: UsuarioCreateNestedOneWithoutJuegosRegistradosInput
+  }
+
+  export type JuegoRegistroUncheckedCreateWithoutRifaVendedorInput = {
+    id?: string
+    premioId: string
+    usuarioId?: string | null
+    fecha?: Date | string
+    totalBoletas?: number
+  }
+
+  export type JuegoRegistroCreateOrConnectWithoutRifaVendedorInput = {
+    where: JuegoRegistroWhereUniqueInput
+    create: XOR<JuegoRegistroCreateWithoutRifaVendedorInput, JuegoRegistroUncheckedCreateWithoutRifaVendedorInput>
+  }
+
+  export type JuegoRegistroCreateManyRifaVendedorInputEnvelope = {
+    data: JuegoRegistroCreateManyRifaVendedorInput | JuegoRegistroCreateManyRifaVendedorInput[]
     skipDuplicates?: boolean
   }
 
@@ -39603,16 +42554,6 @@ export namespace Prisma {
     data: XOR<DevolucionBoletasUpdateManyMutationInput, DevolucionBoletasUncheckedUpdateManyWithoutRifaVendedorInput>
   }
 
-  export type DevolucionBoletasScalarWhereInput = {
-    AND?: DevolucionBoletasScalarWhereInput | DevolucionBoletasScalarWhereInput[]
-    OR?: DevolucionBoletasScalarWhereInput[]
-    NOT?: DevolucionBoletasScalarWhereInput | DevolucionBoletasScalarWhereInput[]
-    id?: StringFilter<"DevolucionBoletas"> | string
-    rifaVendedorId?: StringFilter<"DevolucionBoletas"> | string
-    destino?: EnumDestinoDevolucionFilter<"DevolucionBoletas"> | $Enums.DestinoDevolucion
-    fecha?: DateTimeFilter<"DevolucionBoletas"> | Date | string
-  }
-
   export type AbonoVendedorUpsertWithWhereUniqueWithoutRifaVendedorInput = {
     where: AbonoVendedorWhereUniqueInput
     update: XOR<AbonoVendedorUpdateWithoutRifaVendedorInput, AbonoVendedorUncheckedUpdateWithoutRifaVendedorInput>
@@ -39627,25 +42568,6 @@ export namespace Prisma {
   export type AbonoVendedorUpdateManyWithWhereWithoutRifaVendedorInput = {
     where: AbonoVendedorScalarWhereInput
     data: XOR<AbonoVendedorUpdateManyMutationInput, AbonoVendedorUncheckedUpdateManyWithoutRifaVendedorInput>
-  }
-
-  export type AbonoVendedorScalarWhereInput = {
-    AND?: AbonoVendedorScalarWhereInput | AbonoVendedorScalarWhereInput[]
-    OR?: AbonoVendedorScalarWhereInput[]
-    NOT?: AbonoVendedorScalarWhereInput | AbonoVendedorScalarWhereInput[]
-    id?: StringFilter<"AbonoVendedor"> | string
-    rifaVendedorId?: StringFilter<"AbonoVendedor"> | string
-    subCajaId?: StringNullableFilter<"AbonoVendedor"> | string | null
-    valor?: DecimalFilter<"AbonoVendedor"> | Decimal | DecimalJsLike | number | string
-    fecha?: DateTimeFilter<"AbonoVendedor"> | Date | string
-    descripcion?: StringNullableFilter<"AbonoVendedor"> | string | null
-    metodoPago?: EnumMetodoPagoFilter<"AbonoVendedor"> | $Enums.MetodoPago
-    estado?: EnumEstadoPagoFilter<"AbonoVendedor"> | $Enums.EstadoPago
-    anuladoAt?: DateTimeNullableFilter<"AbonoVendedor"> | Date | string | null
-    anuladoMotivo?: StringNullableFilter<"AbonoVendedor"> | string | null
-    saldoAnterior?: DecimalFilter<"AbonoVendedor"> | Decimal | DecimalJsLike | number | string
-    saldoDespues?: DecimalFilter<"AbonoVendedor"> | Decimal | DecimalJsLike | number | string
-    boletasActuales?: IntFilter<"AbonoVendedor"> | number
   }
 
   export type BoletaUpsertWithWhereUniqueWithoutRifaVendedorInput = {
@@ -39664,6 +42586,22 @@ export namespace Prisma {
     data: XOR<BoletaUpdateManyMutationInput, BoletaUncheckedUpdateManyWithoutRifaVendedorInput>
   }
 
+  export type JuegoRegistroUpsertWithWhereUniqueWithoutRifaVendedorInput = {
+    where: JuegoRegistroWhereUniqueInput
+    update: XOR<JuegoRegistroUpdateWithoutRifaVendedorInput, JuegoRegistroUncheckedUpdateWithoutRifaVendedorInput>
+    create: XOR<JuegoRegistroCreateWithoutRifaVendedorInput, JuegoRegistroUncheckedCreateWithoutRifaVendedorInput>
+  }
+
+  export type JuegoRegistroUpdateWithWhereUniqueWithoutRifaVendedorInput = {
+    where: JuegoRegistroWhereUniqueInput
+    data: XOR<JuegoRegistroUpdateWithoutRifaVendedorInput, JuegoRegistroUncheckedUpdateWithoutRifaVendedorInput>
+  }
+
+  export type JuegoRegistroUpdateManyWithWhereWithoutRifaVendedorInput = {
+    where: JuegoRegistroScalarWhereInput
+    data: XOR<JuegoRegistroUpdateManyMutationInput, JuegoRegistroUncheckedUpdateManyWithoutRifaVendedorInput>
+  }
+
   export type RifaVendedorCreateWithoutAsignacionesInput = {
     id?: string
     comisionPct: Decimal | DecimalJsLike | number | string
@@ -39674,6 +42612,7 @@ export namespace Prisma {
     devoluciones?: DevolucionBoletasCreateNestedManyWithoutRifaVendedorInput
     abonos?: AbonoVendedorCreateNestedManyWithoutRifaVendedorInput
     boletas?: BoletaCreateNestedManyWithoutRifaVendedorInput
+    juegos?: JuegoRegistroCreateNestedManyWithoutRifaVendedorInput
   }
 
   export type RifaVendedorUncheckedCreateWithoutAsignacionesInput = {
@@ -39686,6 +42625,7 @@ export namespace Prisma {
     devoluciones?: DevolucionBoletasUncheckedCreateNestedManyWithoutRifaVendedorInput
     abonos?: AbonoVendedorUncheckedCreateNestedManyWithoutRifaVendedorInput
     boletas?: BoletaUncheckedCreateNestedManyWithoutRifaVendedorInput
+    juegos?: JuegoRegistroUncheckedCreateNestedManyWithoutRifaVendedorInput
   }
 
   export type RifaVendedorCreateOrConnectWithoutAsignacionesInput = {
@@ -39704,6 +42644,10 @@ export namespace Prisma {
     updatedAt?: Date | string
     rifasCreadas?: RifaCreateNestedManyWithoutCreatedByInput
     rifasEditadas?: RifaCreateNestedManyWithoutUpdatedByInput
+    devoluciones?: DevolucionBoletasCreateNestedManyWithoutUsuarioInput
+    abonosRegistrados?: AbonoVendedorCreateNestedManyWithoutUsuarioInput
+    gastosRegistrados?: GastoCreateNestedManyWithoutUsuarioInput
+    juegosRegistrados?: JuegoRegistroCreateNestedManyWithoutUsuarioInput
     movimientos?: MovimientoCajaCreateNestedManyWithoutUsuarioInput
   }
 
@@ -39718,6 +42662,10 @@ export namespace Prisma {
     updatedAt?: Date | string
     rifasCreadas?: RifaUncheckedCreateNestedManyWithoutCreatedByInput
     rifasEditadas?: RifaUncheckedCreateNestedManyWithoutUpdatedByInput
+    devoluciones?: DevolucionBoletasUncheckedCreateNestedManyWithoutUsuarioInput
+    abonosRegistrados?: AbonoVendedorUncheckedCreateNestedManyWithoutUsuarioInput
+    gastosRegistrados?: GastoUncheckedCreateNestedManyWithoutUsuarioInput
+    juegosRegistrados?: JuegoRegistroUncheckedCreateNestedManyWithoutUsuarioInput
     movimientos?: MovimientoCajaUncheckedCreateNestedManyWithoutUsuarioInput
   }
 
@@ -39767,6 +42715,7 @@ export namespace Prisma {
     devoluciones?: DevolucionBoletasUpdateManyWithoutRifaVendedorNestedInput
     abonos?: AbonoVendedorUpdateManyWithoutRifaVendedorNestedInput
     boletas?: BoletaUpdateManyWithoutRifaVendedorNestedInput
+    juegos?: JuegoRegistroUpdateManyWithoutRifaVendedorNestedInput
   }
 
   export type RifaVendedorUncheckedUpdateWithoutAsignacionesInput = {
@@ -39779,6 +42728,7 @@ export namespace Prisma {
     devoluciones?: DevolucionBoletasUncheckedUpdateManyWithoutRifaVendedorNestedInput
     abonos?: AbonoVendedorUncheckedUpdateManyWithoutRifaVendedorNestedInput
     boletas?: BoletaUncheckedUpdateManyWithoutRifaVendedorNestedInput
+    juegos?: JuegoRegistroUncheckedUpdateManyWithoutRifaVendedorNestedInput
   }
 
   export type UsuarioUpsertWithoutAsignacionesInput = {
@@ -39803,6 +42753,10 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     rifasCreadas?: RifaUpdateManyWithoutCreatedByNestedInput
     rifasEditadas?: RifaUpdateManyWithoutUpdatedByNestedInput
+    devoluciones?: DevolucionBoletasUpdateManyWithoutUsuarioNestedInput
+    abonosRegistrados?: AbonoVendedorUpdateManyWithoutUsuarioNestedInput
+    gastosRegistrados?: GastoUpdateManyWithoutUsuarioNestedInput
+    juegosRegistrados?: JuegoRegistroUpdateManyWithoutUsuarioNestedInput
     movimientos?: MovimientoCajaUpdateManyWithoutUsuarioNestedInput
   }
 
@@ -39817,6 +42771,10 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     rifasCreadas?: RifaUncheckedUpdateManyWithoutCreatedByNestedInput
     rifasEditadas?: RifaUncheckedUpdateManyWithoutUpdatedByNestedInput
+    devoluciones?: DevolucionBoletasUncheckedUpdateManyWithoutUsuarioNestedInput
+    abonosRegistrados?: AbonoVendedorUncheckedUpdateManyWithoutUsuarioNestedInput
+    gastosRegistrados?: GastoUncheckedUpdateManyWithoutUsuarioNestedInput
+    juegosRegistrados?: JuegoRegistroUncheckedUpdateManyWithoutUsuarioNestedInput
     movimientos?: MovimientoCajaUncheckedUpdateManyWithoutUsuarioNestedInput
   }
 
@@ -39990,6 +42948,7 @@ export namespace Prisma {
     asignaciones?: AsignacionBoletasCreateNestedManyWithoutRifaVendedorInput
     abonos?: AbonoVendedorCreateNestedManyWithoutRifaVendedorInput
     boletas?: BoletaCreateNestedManyWithoutRifaVendedorInput
+    juegos?: JuegoRegistroCreateNestedManyWithoutRifaVendedorInput
   }
 
   export type RifaVendedorUncheckedCreateWithoutDevolucionesInput = {
@@ -40002,11 +42961,53 @@ export namespace Prisma {
     asignaciones?: AsignacionBoletasUncheckedCreateNestedManyWithoutRifaVendedorInput
     abonos?: AbonoVendedorUncheckedCreateNestedManyWithoutRifaVendedorInput
     boletas?: BoletaUncheckedCreateNestedManyWithoutRifaVendedorInput
+    juegos?: JuegoRegistroUncheckedCreateNestedManyWithoutRifaVendedorInput
   }
 
   export type RifaVendedorCreateOrConnectWithoutDevolucionesInput = {
     where: RifaVendedorWhereUniqueInput
     create: XOR<RifaVendedorCreateWithoutDevolucionesInput, RifaVendedorUncheckedCreateWithoutDevolucionesInput>
+  }
+
+  export type UsuarioCreateWithoutDevolucionesInput = {
+    id?: string
+    nombre: string
+    email: string
+    password: string
+    rol: $Enums.RolUsuario
+    activo?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    rifasCreadas?: RifaCreateNestedManyWithoutCreatedByInput
+    rifasEditadas?: RifaCreateNestedManyWithoutUpdatedByInput
+    asignaciones?: AsignacionBoletasCreateNestedManyWithoutUsuarioInput
+    abonosRegistrados?: AbonoVendedorCreateNestedManyWithoutUsuarioInput
+    gastosRegistrados?: GastoCreateNestedManyWithoutUsuarioInput
+    juegosRegistrados?: JuegoRegistroCreateNestedManyWithoutUsuarioInput
+    movimientos?: MovimientoCajaCreateNestedManyWithoutUsuarioInput
+  }
+
+  export type UsuarioUncheckedCreateWithoutDevolucionesInput = {
+    id?: string
+    nombre: string
+    email: string
+    password: string
+    rol: $Enums.RolUsuario
+    activo?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    rifasCreadas?: RifaUncheckedCreateNestedManyWithoutCreatedByInput
+    rifasEditadas?: RifaUncheckedCreateNestedManyWithoutUpdatedByInput
+    asignaciones?: AsignacionBoletasUncheckedCreateNestedManyWithoutUsuarioInput
+    abonosRegistrados?: AbonoVendedorUncheckedCreateNestedManyWithoutUsuarioInput
+    gastosRegistrados?: GastoUncheckedCreateNestedManyWithoutUsuarioInput
+    juegosRegistrados?: JuegoRegistroUncheckedCreateNestedManyWithoutUsuarioInput
+    movimientos?: MovimientoCajaUncheckedCreateNestedManyWithoutUsuarioInput
+  }
+
+  export type UsuarioCreateOrConnectWithoutDevolucionesInput = {
+    where: UsuarioWhereUniqueInput
+    create: XOR<UsuarioCreateWithoutDevolucionesInput, UsuarioUncheckedCreateWithoutDevolucionesInput>
   }
 
   export type DevolucionDetalleCreateWithoutDevolucionInput = {
@@ -40050,6 +43051,7 @@ export namespace Prisma {
     asignaciones?: AsignacionBoletasUpdateManyWithoutRifaVendedorNestedInput
     abonos?: AbonoVendedorUpdateManyWithoutRifaVendedorNestedInput
     boletas?: BoletaUpdateManyWithoutRifaVendedorNestedInput
+    juegos?: JuegoRegistroUpdateManyWithoutRifaVendedorNestedInput
   }
 
   export type RifaVendedorUncheckedUpdateWithoutDevolucionesInput = {
@@ -40062,6 +43064,54 @@ export namespace Prisma {
     asignaciones?: AsignacionBoletasUncheckedUpdateManyWithoutRifaVendedorNestedInput
     abonos?: AbonoVendedorUncheckedUpdateManyWithoutRifaVendedorNestedInput
     boletas?: BoletaUncheckedUpdateManyWithoutRifaVendedorNestedInput
+    juegos?: JuegoRegistroUncheckedUpdateManyWithoutRifaVendedorNestedInput
+  }
+
+  export type UsuarioUpsertWithoutDevolucionesInput = {
+    update: XOR<UsuarioUpdateWithoutDevolucionesInput, UsuarioUncheckedUpdateWithoutDevolucionesInput>
+    create: XOR<UsuarioCreateWithoutDevolucionesInput, UsuarioUncheckedCreateWithoutDevolucionesInput>
+    where?: UsuarioWhereInput
+  }
+
+  export type UsuarioUpdateToOneWithWhereWithoutDevolucionesInput = {
+    where?: UsuarioWhereInput
+    data: XOR<UsuarioUpdateWithoutDevolucionesInput, UsuarioUncheckedUpdateWithoutDevolucionesInput>
+  }
+
+  export type UsuarioUpdateWithoutDevolucionesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    nombre?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    password?: StringFieldUpdateOperationsInput | string
+    rol?: EnumRolUsuarioFieldUpdateOperationsInput | $Enums.RolUsuario
+    activo?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    rifasCreadas?: RifaUpdateManyWithoutCreatedByNestedInput
+    rifasEditadas?: RifaUpdateManyWithoutUpdatedByNestedInput
+    asignaciones?: AsignacionBoletasUpdateManyWithoutUsuarioNestedInput
+    abonosRegistrados?: AbonoVendedorUpdateManyWithoutUsuarioNestedInput
+    gastosRegistrados?: GastoUpdateManyWithoutUsuarioNestedInput
+    juegosRegistrados?: JuegoRegistroUpdateManyWithoutUsuarioNestedInput
+    movimientos?: MovimientoCajaUpdateManyWithoutUsuarioNestedInput
+  }
+
+  export type UsuarioUncheckedUpdateWithoutDevolucionesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    nombre?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    password?: StringFieldUpdateOperationsInput | string
+    rol?: EnumRolUsuarioFieldUpdateOperationsInput | $Enums.RolUsuario
+    activo?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    rifasCreadas?: RifaUncheckedUpdateManyWithoutCreatedByNestedInput
+    rifasEditadas?: RifaUncheckedUpdateManyWithoutUpdatedByNestedInput
+    asignaciones?: AsignacionBoletasUncheckedUpdateManyWithoutUsuarioNestedInput
+    abonosRegistrados?: AbonoVendedorUncheckedUpdateManyWithoutUsuarioNestedInput
+    gastosRegistrados?: GastoUncheckedUpdateManyWithoutUsuarioNestedInput
+    juegosRegistrados?: JuegoRegistroUncheckedUpdateManyWithoutUsuarioNestedInput
+    movimientos?: MovimientoCajaUncheckedUpdateManyWithoutUsuarioNestedInput
   }
 
   export type DevolucionDetalleUpsertWithWhereUniqueWithoutDevolucionInput = {
@@ -40085,6 +43135,7 @@ export namespace Prisma {
     destino?: $Enums.DestinoDevolucion
     fecha?: Date | string
     rifaVendedor: RifaVendedorCreateNestedOneWithoutDevolucionesInput
+    usuario?: UsuarioCreateNestedOneWithoutDevolucionesInput
   }
 
   export type DevolucionBoletasUncheckedCreateWithoutDetalleInput = {
@@ -40092,6 +43143,7 @@ export namespace Prisma {
     rifaVendedorId: string
     destino?: $Enums.DestinoDevolucion
     fecha?: Date | string
+    usuarioId?: string | null
   }
 
   export type DevolucionBoletasCreateOrConnectWithoutDetalleInput = {
@@ -40160,6 +43212,7 @@ export namespace Prisma {
     destino?: EnumDestinoDevolucionFieldUpdateOperationsInput | $Enums.DestinoDevolucion
     fecha?: DateTimeFieldUpdateOperationsInput | Date | string
     rifaVendedor?: RifaVendedorUpdateOneRequiredWithoutDevolucionesNestedInput
+    usuario?: UsuarioUpdateOneWithoutDevolucionesNestedInput
   }
 
   export type DevolucionBoletasUncheckedUpdateWithoutDetalleInput = {
@@ -40167,6 +43220,7 @@ export namespace Prisma {
     rifaVendedorId?: StringFieldUpdateOperationsInput | string
     destino?: EnumDestinoDevolucionFieldUpdateOperationsInput | $Enums.DestinoDevolucion
     fecha?: DateTimeFieldUpdateOperationsInput | Date | string
+    usuarioId?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type BoletaUpsertWithoutDevolucionesInput = {
@@ -40225,6 +43279,12 @@ export namespace Prisma {
     estado?: $Enums.EstadoVenta
     total: Decimal | DecimalJsLike | number | string
     saldoPendiente: Decimal | DecimalJsLike | number | string
+    referenciaPago?: string | null
+    pasarelaPago?: string | null
+    pasarelaEstado?: string | null
+    pasarelaTransaccionId?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
     rifa: RifaCreateNestedOneWithoutVentasInput
     boletas?: BoletaCreateNestedManyWithoutVentaInput
     pagos?: PagoClienteCreateNestedManyWithoutVentaInput
@@ -40237,6 +43297,12 @@ export namespace Prisma {
     estado?: $Enums.EstadoVenta
     total: Decimal | DecimalJsLike | number | string
     saldoPendiente: Decimal | DecimalJsLike | number | string
+    referenciaPago?: string | null
+    pasarelaPago?: string | null
+    pasarelaEstado?: string | null
+    pasarelaTransaccionId?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
     boletas?: BoletaUncheckedCreateNestedManyWithoutVentaInput
     pagos?: PagoClienteUncheckedCreateNestedManyWithoutVentaInput
     movimientos?: MovimientoCajaUncheckedCreateNestedManyWithoutVentaInput
@@ -40399,6 +43465,7 @@ export namespace Prisma {
     nombre: string
     email?: string | null
     telefono?: string | null
+    documento?: string | null
     boletas?: BoletaCreateNestedManyWithoutClienteInput
     movimientos?: MovimientoCajaCreateNestedManyWithoutClienteInput
   }
@@ -40408,6 +43475,7 @@ export namespace Prisma {
     nombre: string
     email?: string | null
     telefono?: string | null
+    documento?: string | null
     boletas?: BoletaUncheckedCreateNestedManyWithoutClienteInput
     movimientos?: MovimientoCajaUncheckedCreateNestedManyWithoutClienteInput
   }
@@ -40602,6 +43670,7 @@ export namespace Prisma {
     nombre?: StringFieldUpdateOperationsInput | string
     email?: NullableStringFieldUpdateOperationsInput | string | null
     telefono?: NullableStringFieldUpdateOperationsInput | string | null
+    documento?: NullableStringFieldUpdateOperationsInput | string | null
     boletas?: BoletaUpdateManyWithoutClienteNestedInput
     movimientos?: MovimientoCajaUpdateManyWithoutClienteNestedInput
   }
@@ -40611,6 +43680,7 @@ export namespace Prisma {
     nombre?: StringFieldUpdateOperationsInput | string
     email?: NullableStringFieldUpdateOperationsInput | string | null
     telefono?: NullableStringFieldUpdateOperationsInput | string | null
+    documento?: NullableStringFieldUpdateOperationsInput | string | null
     boletas?: BoletaUncheckedUpdateManyWithoutClienteNestedInput
     movimientos?: MovimientoCajaUncheckedUpdateManyWithoutClienteNestedInput
   }
@@ -40733,6 +43803,12 @@ export namespace Prisma {
     estado?: $Enums.EstadoVenta
     total: Decimal | DecimalJsLike | number | string
     saldoPendiente: Decimal | DecimalJsLike | number | string
+    referenciaPago?: string | null
+    pasarelaPago?: string | null
+    pasarelaEstado?: string | null
+    pasarelaTransaccionId?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
     cliente: ClienteCreateNestedOneWithoutVentasInput
     rifa: RifaCreateNestedOneWithoutVentasInput
     boletas?: BoletaCreateNestedManyWithoutVentaInput
@@ -40746,6 +43822,12 @@ export namespace Prisma {
     estado?: $Enums.EstadoVenta
     total: Decimal | DecimalJsLike | number | string
     saldoPendiente: Decimal | DecimalJsLike | number | string
+    referenciaPago?: string | null
+    pasarelaPago?: string | null
+    pasarelaEstado?: string | null
+    pasarelaTransaccionId?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
     boletas?: BoletaUncheckedCreateNestedManyWithoutVentaInput
     movimientos?: MovimientoCajaUncheckedCreateNestedManyWithoutVentaInput
   }
@@ -40815,6 +43897,12 @@ export namespace Prisma {
     estado?: EnumEstadoVentaFieldUpdateOperationsInput | $Enums.EstadoVenta
     total?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     saldoPendiente?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    referenciaPago?: NullableStringFieldUpdateOperationsInput | string | null
+    pasarelaPago?: NullableStringFieldUpdateOperationsInput | string | null
+    pasarelaEstado?: NullableStringFieldUpdateOperationsInput | string | null
+    pasarelaTransaccionId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     cliente?: ClienteUpdateOneRequiredWithoutVentasNestedInput
     rifa?: RifaUpdateOneRequiredWithoutVentasNestedInput
     boletas?: BoletaUpdateManyWithoutVentaNestedInput
@@ -40828,6 +43916,12 @@ export namespace Prisma {
     estado?: EnumEstadoVentaFieldUpdateOperationsInput | $Enums.EstadoVenta
     total?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     saldoPendiente?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    referenciaPago?: NullableStringFieldUpdateOperationsInput | string | null
+    pasarelaPago?: NullableStringFieldUpdateOperationsInput | string | null
+    pasarelaEstado?: NullableStringFieldUpdateOperationsInput | string | null
+    pasarelaTransaccionId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     boletas?: BoletaUncheckedUpdateManyWithoutVentaNestedInput
     movimientos?: MovimientoCajaUncheckedUpdateManyWithoutVentaNestedInput
   }
@@ -40858,6 +43952,7 @@ export namespace Prisma {
     asignaciones?: AsignacionBoletasCreateNestedManyWithoutRifaVendedorInput
     devoluciones?: DevolucionBoletasCreateNestedManyWithoutRifaVendedorInput
     boletas?: BoletaCreateNestedManyWithoutRifaVendedorInput
+    juegos?: JuegoRegistroCreateNestedManyWithoutRifaVendedorInput
   }
 
   export type RifaVendedorUncheckedCreateWithoutAbonosInput = {
@@ -40870,6 +43965,7 @@ export namespace Prisma {
     asignaciones?: AsignacionBoletasUncheckedCreateNestedManyWithoutRifaVendedorInput
     devoluciones?: DevolucionBoletasUncheckedCreateNestedManyWithoutRifaVendedorInput
     boletas?: BoletaUncheckedCreateNestedManyWithoutRifaVendedorInput
+    juegos?: JuegoRegistroUncheckedCreateNestedManyWithoutRifaVendedorInput
   }
 
   export type RifaVendedorCreateOrConnectWithoutAbonosInput = {
@@ -40898,6 +43994,47 @@ export namespace Prisma {
   export type SubCajaCreateOrConnectWithoutAbonosInput = {
     where: SubCajaWhereUniqueInput
     create: XOR<SubCajaCreateWithoutAbonosInput, SubCajaUncheckedCreateWithoutAbonosInput>
+  }
+
+  export type UsuarioCreateWithoutAbonosRegistradosInput = {
+    id?: string
+    nombre: string
+    email: string
+    password: string
+    rol: $Enums.RolUsuario
+    activo?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    rifasCreadas?: RifaCreateNestedManyWithoutCreatedByInput
+    rifasEditadas?: RifaCreateNestedManyWithoutUpdatedByInput
+    asignaciones?: AsignacionBoletasCreateNestedManyWithoutUsuarioInput
+    devoluciones?: DevolucionBoletasCreateNestedManyWithoutUsuarioInput
+    gastosRegistrados?: GastoCreateNestedManyWithoutUsuarioInput
+    juegosRegistrados?: JuegoRegistroCreateNestedManyWithoutUsuarioInput
+    movimientos?: MovimientoCajaCreateNestedManyWithoutUsuarioInput
+  }
+
+  export type UsuarioUncheckedCreateWithoutAbonosRegistradosInput = {
+    id?: string
+    nombre: string
+    email: string
+    password: string
+    rol: $Enums.RolUsuario
+    activo?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    rifasCreadas?: RifaUncheckedCreateNestedManyWithoutCreatedByInput
+    rifasEditadas?: RifaUncheckedCreateNestedManyWithoutUpdatedByInput
+    asignaciones?: AsignacionBoletasUncheckedCreateNestedManyWithoutUsuarioInput
+    devoluciones?: DevolucionBoletasUncheckedCreateNestedManyWithoutUsuarioInput
+    gastosRegistrados?: GastoUncheckedCreateNestedManyWithoutUsuarioInput
+    juegosRegistrados?: JuegoRegistroUncheckedCreateNestedManyWithoutUsuarioInput
+    movimientos?: MovimientoCajaUncheckedCreateNestedManyWithoutUsuarioInput
+  }
+
+  export type UsuarioCreateOrConnectWithoutAbonosRegistradosInput = {
+    where: UsuarioWhereUniqueInput
+    create: XOR<UsuarioCreateWithoutAbonosRegistradosInput, UsuarioUncheckedCreateWithoutAbonosRegistradosInput>
   }
 
   export type ReciboCreateWithoutAbonoInput = {
@@ -40984,6 +44121,7 @@ export namespace Prisma {
     asignaciones?: AsignacionBoletasUpdateManyWithoutRifaVendedorNestedInput
     devoluciones?: DevolucionBoletasUpdateManyWithoutRifaVendedorNestedInput
     boletas?: BoletaUpdateManyWithoutRifaVendedorNestedInput
+    juegos?: JuegoRegistroUpdateManyWithoutRifaVendedorNestedInput
   }
 
   export type RifaVendedorUncheckedUpdateWithoutAbonosInput = {
@@ -40996,6 +44134,7 @@ export namespace Prisma {
     asignaciones?: AsignacionBoletasUncheckedUpdateManyWithoutRifaVendedorNestedInput
     devoluciones?: DevolucionBoletasUncheckedUpdateManyWithoutRifaVendedorNestedInput
     boletas?: BoletaUncheckedUpdateManyWithoutRifaVendedorNestedInput
+    juegos?: JuegoRegistroUncheckedUpdateManyWithoutRifaVendedorNestedInput
   }
 
   export type SubCajaUpsertWithoutAbonosInput = {
@@ -41025,6 +44164,53 @@ export namespace Prisma {
     cajaId?: StringFieldUpdateOperationsInput | string
     movimientos?: MovimientoCajaUncheckedUpdateManyWithoutSubCajaNestedInput
     gastos?: GastoUncheckedUpdateManyWithoutSubCajaNestedInput
+  }
+
+  export type UsuarioUpsertWithoutAbonosRegistradosInput = {
+    update: XOR<UsuarioUpdateWithoutAbonosRegistradosInput, UsuarioUncheckedUpdateWithoutAbonosRegistradosInput>
+    create: XOR<UsuarioCreateWithoutAbonosRegistradosInput, UsuarioUncheckedCreateWithoutAbonosRegistradosInput>
+    where?: UsuarioWhereInput
+  }
+
+  export type UsuarioUpdateToOneWithWhereWithoutAbonosRegistradosInput = {
+    where?: UsuarioWhereInput
+    data: XOR<UsuarioUpdateWithoutAbonosRegistradosInput, UsuarioUncheckedUpdateWithoutAbonosRegistradosInput>
+  }
+
+  export type UsuarioUpdateWithoutAbonosRegistradosInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    nombre?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    password?: StringFieldUpdateOperationsInput | string
+    rol?: EnumRolUsuarioFieldUpdateOperationsInput | $Enums.RolUsuario
+    activo?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    rifasCreadas?: RifaUpdateManyWithoutCreatedByNestedInput
+    rifasEditadas?: RifaUpdateManyWithoutUpdatedByNestedInput
+    asignaciones?: AsignacionBoletasUpdateManyWithoutUsuarioNestedInput
+    devoluciones?: DevolucionBoletasUpdateManyWithoutUsuarioNestedInput
+    gastosRegistrados?: GastoUpdateManyWithoutUsuarioNestedInput
+    juegosRegistrados?: JuegoRegistroUpdateManyWithoutUsuarioNestedInput
+    movimientos?: MovimientoCajaUpdateManyWithoutUsuarioNestedInput
+  }
+
+  export type UsuarioUncheckedUpdateWithoutAbonosRegistradosInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    nombre?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    password?: StringFieldUpdateOperationsInput | string
+    rol?: EnumRolUsuarioFieldUpdateOperationsInput | $Enums.RolUsuario
+    activo?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    rifasCreadas?: RifaUncheckedUpdateManyWithoutCreatedByNestedInput
+    rifasEditadas?: RifaUncheckedUpdateManyWithoutUpdatedByNestedInput
+    asignaciones?: AsignacionBoletasUncheckedUpdateManyWithoutUsuarioNestedInput
+    devoluciones?: DevolucionBoletasUncheckedUpdateManyWithoutUsuarioNestedInput
+    gastosRegistrados?: GastoUncheckedUpdateManyWithoutUsuarioNestedInput
+    juegosRegistrados?: JuegoRegistroUncheckedUpdateManyWithoutUsuarioNestedInput
+    movimientos?: MovimientoCajaUncheckedUpdateManyWithoutUsuarioNestedInput
   }
 
   export type ReciboUpsertWithoutAbonoInput = {
@@ -41082,6 +44268,7 @@ export namespace Prisma {
     boletasActuales?: number
     rifaVendedor: RifaVendedorCreateNestedOneWithoutAbonosInput
     subCaja?: SubCajaCreateNestedOneWithoutAbonosInput
+    usuario?: UsuarioCreateNestedOneWithoutAbonosRegistradosInput
     movimientos?: MovimientoCajaCreateNestedManyWithoutAbonoVendedorInput
   }
 
@@ -41089,6 +44276,7 @@ export namespace Prisma {
     id?: string
     rifaVendedorId: string
     subCajaId?: string | null
+    usuarioId?: string | null
     valor: Decimal | DecimalJsLike | number | string
     fecha?: Date | string
     descripcion?: string | null
@@ -41132,6 +44320,7 @@ export namespace Prisma {
     boletasActuales?: IntFieldUpdateOperationsInput | number
     rifaVendedor?: RifaVendedorUpdateOneRequiredWithoutAbonosNestedInput
     subCaja?: SubCajaUpdateOneWithoutAbonosNestedInput
+    usuario?: UsuarioUpdateOneWithoutAbonosRegistradosNestedInput
     movimientos?: MovimientoCajaUpdateManyWithoutAbonoVendedorNestedInput
   }
 
@@ -41139,6 +44328,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     rifaVendedorId?: StringFieldUpdateOperationsInput | string
     subCajaId?: NullableStringFieldUpdateOperationsInput | string | null
+    usuarioId?: NullableStringFieldUpdateOperationsInput | string | null
     valor?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     fecha?: DateTimeFieldUpdateOperationsInput | Date | string
     descripcion?: NullableStringFieldUpdateOperationsInput | string | null
@@ -41444,6 +44634,7 @@ export namespace Prisma {
     saldoDespues: Decimal | DecimalJsLike | number | string
     boletasActuales?: number
     rifaVendedor: RifaVendedorCreateNestedOneWithoutAbonosInput
+    usuario?: UsuarioCreateNestedOneWithoutAbonosRegistradosInput
     recibo?: ReciboCreateNestedOneWithoutAbonoInput
     movimientos?: MovimientoCajaCreateNestedManyWithoutAbonoVendedorInput
   }
@@ -41451,6 +44642,7 @@ export namespace Prisma {
   export type AbonoVendedorUncheckedCreateWithoutSubCajaInput = {
     id?: string
     rifaVendedorId: string
+    usuarioId?: string | null
     valor: Decimal | DecimalJsLike | number | string
     fecha?: Date | string
     descripcion?: string | null
@@ -41484,6 +44676,7 @@ export namespace Prisma {
     anuladoAt?: Date | string | null
     anuladoMotivo?: string | null
     rifa: RifaCreateNestedOneWithoutGastosInput
+    usuario?: UsuarioCreateNestedOneWithoutGastosRegistradosInput
     movimientos?: MovimientoCajaCreateNestedManyWithoutGastoInput
     recibo?: GastoReciboCreateNestedOneWithoutGastoInput
   }
@@ -41491,6 +44684,7 @@ export namespace Prisma {
   export type GastoUncheckedCreateWithoutSubCajaInput = {
     id?: string
     rifaId: string
+    usuarioId?: string | null
     categoria?: $Enums.CategoriaGasto
     descripcion: string
     valor: Decimal | DecimalJsLike | number | string
@@ -41709,6 +44903,7 @@ export namespace Prisma {
     nombre: string
     email?: string | null
     telefono?: string | null
+    documento?: string | null
     ventas?: VentaCreateNestedManyWithoutClienteInput
     boletas?: BoletaCreateNestedManyWithoutClienteInput
   }
@@ -41718,6 +44913,7 @@ export namespace Prisma {
     nombre: string
     email?: string | null
     telefono?: string | null
+    documento?: string | null
     ventas?: VentaUncheckedCreateNestedManyWithoutClienteInput
     boletas?: BoletaUncheckedCreateNestedManyWithoutClienteInput
   }
@@ -41732,6 +44928,12 @@ export namespace Prisma {
     estado?: $Enums.EstadoVenta
     total: Decimal | DecimalJsLike | number | string
     saldoPendiente: Decimal | DecimalJsLike | number | string
+    referenciaPago?: string | null
+    pasarelaPago?: string | null
+    pasarelaEstado?: string | null
+    pasarelaTransaccionId?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
     cliente: ClienteCreateNestedOneWithoutVentasInput
     rifa: RifaCreateNestedOneWithoutVentasInput
     boletas?: BoletaCreateNestedManyWithoutVentaInput
@@ -41745,6 +44947,12 @@ export namespace Prisma {
     estado?: $Enums.EstadoVenta
     total: Decimal | DecimalJsLike | number | string
     saldoPendiente: Decimal | DecimalJsLike | number | string
+    referenciaPago?: string | null
+    pasarelaPago?: string | null
+    pasarelaEstado?: string | null
+    pasarelaTransaccionId?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
     boletas?: BoletaUncheckedCreateNestedManyWithoutVentaInput
     pagos?: PagoClienteUncheckedCreateNestedManyWithoutVentaInput
   }
@@ -41764,6 +44972,7 @@ export namespace Prisma {
     anuladoMotivo?: string | null
     rifa: RifaCreateNestedOneWithoutGastosInput
     subCaja?: SubCajaCreateNestedOneWithoutGastosInput
+    usuario?: UsuarioCreateNestedOneWithoutGastosRegistradosInput
     recibo?: GastoReciboCreateNestedOneWithoutGastoInput
   }
 
@@ -41771,6 +44980,7 @@ export namespace Prisma {
     id?: string
     rifaId: string
     subCajaId?: string | null
+    usuarioId?: string | null
     categoria?: $Enums.CategoriaGasto
     descripcion: string
     valor: Decimal | DecimalJsLike | number | string
@@ -41822,6 +45032,7 @@ export namespace Prisma {
     boletasActuales?: number
     rifaVendedor: RifaVendedorCreateNestedOneWithoutAbonosInput
     subCaja?: SubCajaCreateNestedOneWithoutAbonosInput
+    usuario?: UsuarioCreateNestedOneWithoutAbonosRegistradosInput
     recibo?: ReciboCreateNestedOneWithoutAbonoInput
   }
 
@@ -41829,6 +45040,7 @@ export namespace Prisma {
     id?: string
     rifaVendedorId: string
     subCajaId?: string | null
+    usuarioId?: string | null
     valor: Decimal | DecimalJsLike | number | string
     fecha?: Date | string
     descripcion?: string | null
@@ -41859,6 +45071,10 @@ export namespace Prisma {
     rifasCreadas?: RifaCreateNestedManyWithoutCreatedByInput
     rifasEditadas?: RifaCreateNestedManyWithoutUpdatedByInput
     asignaciones?: AsignacionBoletasCreateNestedManyWithoutUsuarioInput
+    devoluciones?: DevolucionBoletasCreateNestedManyWithoutUsuarioInput
+    abonosRegistrados?: AbonoVendedorCreateNestedManyWithoutUsuarioInput
+    gastosRegistrados?: GastoCreateNestedManyWithoutUsuarioInput
+    juegosRegistrados?: JuegoRegistroCreateNestedManyWithoutUsuarioInput
   }
 
   export type UsuarioUncheckedCreateWithoutMovimientosInput = {
@@ -41873,6 +45089,10 @@ export namespace Prisma {
     rifasCreadas?: RifaUncheckedCreateNestedManyWithoutCreatedByInput
     rifasEditadas?: RifaUncheckedCreateNestedManyWithoutUpdatedByInput
     asignaciones?: AsignacionBoletasUncheckedCreateNestedManyWithoutUsuarioInput
+    devoluciones?: DevolucionBoletasUncheckedCreateNestedManyWithoutUsuarioInput
+    abonosRegistrados?: AbonoVendedorUncheckedCreateNestedManyWithoutUsuarioInput
+    gastosRegistrados?: GastoUncheckedCreateNestedManyWithoutUsuarioInput
+    juegosRegistrados?: JuegoRegistroUncheckedCreateNestedManyWithoutUsuarioInput
   }
 
   export type UsuarioCreateOrConnectWithoutMovimientosInput = {
@@ -42038,6 +45258,7 @@ export namespace Prisma {
     nombre?: StringFieldUpdateOperationsInput | string
     email?: NullableStringFieldUpdateOperationsInput | string | null
     telefono?: NullableStringFieldUpdateOperationsInput | string | null
+    documento?: NullableStringFieldUpdateOperationsInput | string | null
     ventas?: VentaUpdateManyWithoutClienteNestedInput
     boletas?: BoletaUpdateManyWithoutClienteNestedInput
   }
@@ -42047,6 +45268,7 @@ export namespace Prisma {
     nombre?: StringFieldUpdateOperationsInput | string
     email?: NullableStringFieldUpdateOperationsInput | string | null
     telefono?: NullableStringFieldUpdateOperationsInput | string | null
+    documento?: NullableStringFieldUpdateOperationsInput | string | null
     ventas?: VentaUncheckedUpdateManyWithoutClienteNestedInput
     boletas?: BoletaUncheckedUpdateManyWithoutClienteNestedInput
   }
@@ -42067,6 +45289,12 @@ export namespace Prisma {
     estado?: EnumEstadoVentaFieldUpdateOperationsInput | $Enums.EstadoVenta
     total?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     saldoPendiente?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    referenciaPago?: NullableStringFieldUpdateOperationsInput | string | null
+    pasarelaPago?: NullableStringFieldUpdateOperationsInput | string | null
+    pasarelaEstado?: NullableStringFieldUpdateOperationsInput | string | null
+    pasarelaTransaccionId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     cliente?: ClienteUpdateOneRequiredWithoutVentasNestedInput
     rifa?: RifaUpdateOneRequiredWithoutVentasNestedInput
     boletas?: BoletaUpdateManyWithoutVentaNestedInput
@@ -42080,6 +45308,12 @@ export namespace Prisma {
     estado?: EnumEstadoVentaFieldUpdateOperationsInput | $Enums.EstadoVenta
     total?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     saldoPendiente?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    referenciaPago?: NullableStringFieldUpdateOperationsInput | string | null
+    pasarelaPago?: NullableStringFieldUpdateOperationsInput | string | null
+    pasarelaEstado?: NullableStringFieldUpdateOperationsInput | string | null
+    pasarelaTransaccionId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     boletas?: BoletaUncheckedUpdateManyWithoutVentaNestedInput
     pagos?: PagoClienteUncheckedUpdateManyWithoutVentaNestedInput
   }
@@ -42105,6 +45339,7 @@ export namespace Prisma {
     anuladoMotivo?: NullableStringFieldUpdateOperationsInput | string | null
     rifa?: RifaUpdateOneRequiredWithoutGastosNestedInput
     subCaja?: SubCajaUpdateOneWithoutGastosNestedInput
+    usuario?: UsuarioUpdateOneWithoutGastosRegistradosNestedInput
     recibo?: GastoReciboUpdateOneWithoutGastoNestedInput
   }
 
@@ -42112,6 +45347,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     rifaId?: StringFieldUpdateOperationsInput | string
     subCajaId?: NullableStringFieldUpdateOperationsInput | string | null
+    usuarioId?: NullableStringFieldUpdateOperationsInput | string | null
     categoria?: EnumCategoriaGastoFieldUpdateOperationsInput | $Enums.CategoriaGasto
     descripcion?: StringFieldUpdateOperationsInput | string
     valor?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
@@ -42175,6 +45411,7 @@ export namespace Prisma {
     boletasActuales?: IntFieldUpdateOperationsInput | number
     rifaVendedor?: RifaVendedorUpdateOneRequiredWithoutAbonosNestedInput
     subCaja?: SubCajaUpdateOneWithoutAbonosNestedInput
+    usuario?: UsuarioUpdateOneWithoutAbonosRegistradosNestedInput
     recibo?: ReciboUpdateOneWithoutAbonoNestedInput
   }
 
@@ -42182,6 +45419,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     rifaVendedorId?: StringFieldUpdateOperationsInput | string
     subCajaId?: NullableStringFieldUpdateOperationsInput | string | null
+    usuarioId?: NullableStringFieldUpdateOperationsInput | string | null
     valor?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     fecha?: DateTimeFieldUpdateOperationsInput | Date | string
     descripcion?: NullableStringFieldUpdateOperationsInput | string | null
@@ -42218,6 +45456,10 @@ export namespace Prisma {
     rifasCreadas?: RifaUpdateManyWithoutCreatedByNestedInput
     rifasEditadas?: RifaUpdateManyWithoutUpdatedByNestedInput
     asignaciones?: AsignacionBoletasUpdateManyWithoutUsuarioNestedInput
+    devoluciones?: DevolucionBoletasUpdateManyWithoutUsuarioNestedInput
+    abonosRegistrados?: AbonoVendedorUpdateManyWithoutUsuarioNestedInput
+    gastosRegistrados?: GastoUpdateManyWithoutUsuarioNestedInput
+    juegosRegistrados?: JuegoRegistroUpdateManyWithoutUsuarioNestedInput
   }
 
   export type UsuarioUncheckedUpdateWithoutMovimientosInput = {
@@ -42232,6 +45474,10 @@ export namespace Prisma {
     rifasCreadas?: RifaUncheckedUpdateManyWithoutCreatedByNestedInput
     rifasEditadas?: RifaUncheckedUpdateManyWithoutUpdatedByNestedInput
     asignaciones?: AsignacionBoletasUncheckedUpdateManyWithoutUsuarioNestedInput
+    devoluciones?: DevolucionBoletasUncheckedUpdateManyWithoutUsuarioNestedInput
+    abonosRegistrados?: AbonoVendedorUncheckedUpdateManyWithoutUsuarioNestedInput
+    gastosRegistrados?: GastoUncheckedUpdateManyWithoutUsuarioNestedInput
+    juegosRegistrados?: JuegoRegistroUncheckedUpdateManyWithoutUsuarioNestedInput
   }
 
   export type RifaCreateWithoutGastosInput = {
@@ -42302,6 +45548,47 @@ export namespace Prisma {
   export type SubCajaCreateOrConnectWithoutGastosInput = {
     where: SubCajaWhereUniqueInput
     create: XOR<SubCajaCreateWithoutGastosInput, SubCajaUncheckedCreateWithoutGastosInput>
+  }
+
+  export type UsuarioCreateWithoutGastosRegistradosInput = {
+    id?: string
+    nombre: string
+    email: string
+    password: string
+    rol: $Enums.RolUsuario
+    activo?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    rifasCreadas?: RifaCreateNestedManyWithoutCreatedByInput
+    rifasEditadas?: RifaCreateNestedManyWithoutUpdatedByInput
+    asignaciones?: AsignacionBoletasCreateNestedManyWithoutUsuarioInput
+    devoluciones?: DevolucionBoletasCreateNestedManyWithoutUsuarioInput
+    abonosRegistrados?: AbonoVendedorCreateNestedManyWithoutUsuarioInput
+    juegosRegistrados?: JuegoRegistroCreateNestedManyWithoutUsuarioInput
+    movimientos?: MovimientoCajaCreateNestedManyWithoutUsuarioInput
+  }
+
+  export type UsuarioUncheckedCreateWithoutGastosRegistradosInput = {
+    id?: string
+    nombre: string
+    email: string
+    password: string
+    rol: $Enums.RolUsuario
+    activo?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    rifasCreadas?: RifaUncheckedCreateNestedManyWithoutCreatedByInput
+    rifasEditadas?: RifaUncheckedCreateNestedManyWithoutUpdatedByInput
+    asignaciones?: AsignacionBoletasUncheckedCreateNestedManyWithoutUsuarioInput
+    devoluciones?: DevolucionBoletasUncheckedCreateNestedManyWithoutUsuarioInput
+    abonosRegistrados?: AbonoVendedorUncheckedCreateNestedManyWithoutUsuarioInput
+    juegosRegistrados?: JuegoRegistroUncheckedCreateNestedManyWithoutUsuarioInput
+    movimientos?: MovimientoCajaUncheckedCreateNestedManyWithoutUsuarioInput
+  }
+
+  export type UsuarioCreateOrConnectWithoutGastosRegistradosInput = {
+    where: UsuarioWhereUniqueInput
+    create: XOR<UsuarioCreateWithoutGastosRegistradosInput, UsuarioUncheckedCreateWithoutGastosRegistradosInput>
   }
 
   export type MovimientoCajaCreateWithoutGastoInput = {
@@ -42449,6 +45736,53 @@ export namespace Prisma {
     abonos?: AbonoVendedorUncheckedUpdateManyWithoutSubCajaNestedInput
   }
 
+  export type UsuarioUpsertWithoutGastosRegistradosInput = {
+    update: XOR<UsuarioUpdateWithoutGastosRegistradosInput, UsuarioUncheckedUpdateWithoutGastosRegistradosInput>
+    create: XOR<UsuarioCreateWithoutGastosRegistradosInput, UsuarioUncheckedCreateWithoutGastosRegistradosInput>
+    where?: UsuarioWhereInput
+  }
+
+  export type UsuarioUpdateToOneWithWhereWithoutGastosRegistradosInput = {
+    where?: UsuarioWhereInput
+    data: XOR<UsuarioUpdateWithoutGastosRegistradosInput, UsuarioUncheckedUpdateWithoutGastosRegistradosInput>
+  }
+
+  export type UsuarioUpdateWithoutGastosRegistradosInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    nombre?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    password?: StringFieldUpdateOperationsInput | string
+    rol?: EnumRolUsuarioFieldUpdateOperationsInput | $Enums.RolUsuario
+    activo?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    rifasCreadas?: RifaUpdateManyWithoutCreatedByNestedInput
+    rifasEditadas?: RifaUpdateManyWithoutUpdatedByNestedInput
+    asignaciones?: AsignacionBoletasUpdateManyWithoutUsuarioNestedInput
+    devoluciones?: DevolucionBoletasUpdateManyWithoutUsuarioNestedInput
+    abonosRegistrados?: AbonoVendedorUpdateManyWithoutUsuarioNestedInput
+    juegosRegistrados?: JuegoRegistroUpdateManyWithoutUsuarioNestedInput
+    movimientos?: MovimientoCajaUpdateManyWithoutUsuarioNestedInput
+  }
+
+  export type UsuarioUncheckedUpdateWithoutGastosRegistradosInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    nombre?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    password?: StringFieldUpdateOperationsInput | string
+    rol?: EnumRolUsuarioFieldUpdateOperationsInput | $Enums.RolUsuario
+    activo?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    rifasCreadas?: RifaUncheckedUpdateManyWithoutCreatedByNestedInput
+    rifasEditadas?: RifaUncheckedUpdateManyWithoutUpdatedByNestedInput
+    asignaciones?: AsignacionBoletasUncheckedUpdateManyWithoutUsuarioNestedInput
+    devoluciones?: DevolucionBoletasUncheckedUpdateManyWithoutUsuarioNestedInput
+    abonosRegistrados?: AbonoVendedorUncheckedUpdateManyWithoutUsuarioNestedInput
+    juegosRegistrados?: JuegoRegistroUncheckedUpdateManyWithoutUsuarioNestedInput
+    movimientos?: MovimientoCajaUncheckedUpdateManyWithoutUsuarioNestedInput
+  }
+
   export type MovimientoCajaUpsertWithWhereUniqueWithoutGastoInput = {
     where: MovimientoCajaWhereUniqueInput
     update: XOR<MovimientoCajaUpdateWithoutGastoInput, MovimientoCajaUncheckedUpdateWithoutGastoInput>
@@ -42490,6 +45824,234 @@ export namespace Prisma {
     fecha?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type RifaVendedorCreateWithoutJuegosInput = {
+    id?: string
+    comisionPct: Decimal | DecimalJsLike | number | string
+    precioCasa: Decimal | DecimalJsLike | number | string
+    saldoActual?: Decimal | DecimalJsLike | number | string
+    rifa: RifaCreateNestedOneWithoutVendedoresInput
+    vendedor: VendedorCreateNestedOneWithoutRifasInput
+    asignaciones?: AsignacionBoletasCreateNestedManyWithoutRifaVendedorInput
+    devoluciones?: DevolucionBoletasCreateNestedManyWithoutRifaVendedorInput
+    abonos?: AbonoVendedorCreateNestedManyWithoutRifaVendedorInput
+    boletas?: BoletaCreateNestedManyWithoutRifaVendedorInput
+  }
+
+  export type RifaVendedorUncheckedCreateWithoutJuegosInput = {
+    id?: string
+    rifaId: string
+    vendedorId: string
+    comisionPct: Decimal | DecimalJsLike | number | string
+    precioCasa: Decimal | DecimalJsLike | number | string
+    saldoActual?: Decimal | DecimalJsLike | number | string
+    asignaciones?: AsignacionBoletasUncheckedCreateNestedManyWithoutRifaVendedorInput
+    devoluciones?: DevolucionBoletasUncheckedCreateNestedManyWithoutRifaVendedorInput
+    abonos?: AbonoVendedorUncheckedCreateNestedManyWithoutRifaVendedorInput
+    boletas?: BoletaUncheckedCreateNestedManyWithoutRifaVendedorInput
+  }
+
+  export type RifaVendedorCreateOrConnectWithoutJuegosInput = {
+    where: RifaVendedorWhereUniqueInput
+    create: XOR<RifaVendedorCreateWithoutJuegosInput, RifaVendedorUncheckedCreateWithoutJuegosInput>
+  }
+
+  export type PremioCreateWithoutJuegosInput = {
+    id?: string
+    nombre: string
+    descripcion?: string | null
+    imagenesJson?: NullableJsonNullValueInput | InputJsonValue
+    tipo: $Enums.TipoPremio
+    mostrarValor?: boolean
+    valor?: Decimal | DecimalJsLike | number | string | null
+    fecha: Date | string
+    createdAt?: Date | string
+    rifa: RifaCreateNestedOneWithoutPremiosInput
+    boletas?: BoletaPremioCreateNestedManyWithoutPremioInput
+  }
+
+  export type PremioUncheckedCreateWithoutJuegosInput = {
+    id?: string
+    rifaId: string
+    nombre: string
+    descripcion?: string | null
+    imagenesJson?: NullableJsonNullValueInput | InputJsonValue
+    tipo: $Enums.TipoPremio
+    mostrarValor?: boolean
+    valor?: Decimal | DecimalJsLike | number | string | null
+    fecha: Date | string
+    createdAt?: Date | string
+    boletas?: BoletaPremioUncheckedCreateNestedManyWithoutPremioInput
+  }
+
+  export type PremioCreateOrConnectWithoutJuegosInput = {
+    where: PremioWhereUniqueInput
+    create: XOR<PremioCreateWithoutJuegosInput, PremioUncheckedCreateWithoutJuegosInput>
+  }
+
+  export type UsuarioCreateWithoutJuegosRegistradosInput = {
+    id?: string
+    nombre: string
+    email: string
+    password: string
+    rol: $Enums.RolUsuario
+    activo?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    rifasCreadas?: RifaCreateNestedManyWithoutCreatedByInput
+    rifasEditadas?: RifaCreateNestedManyWithoutUpdatedByInput
+    asignaciones?: AsignacionBoletasCreateNestedManyWithoutUsuarioInput
+    devoluciones?: DevolucionBoletasCreateNestedManyWithoutUsuarioInput
+    abonosRegistrados?: AbonoVendedorCreateNestedManyWithoutUsuarioInput
+    gastosRegistrados?: GastoCreateNestedManyWithoutUsuarioInput
+    movimientos?: MovimientoCajaCreateNestedManyWithoutUsuarioInput
+  }
+
+  export type UsuarioUncheckedCreateWithoutJuegosRegistradosInput = {
+    id?: string
+    nombre: string
+    email: string
+    password: string
+    rol: $Enums.RolUsuario
+    activo?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    rifasCreadas?: RifaUncheckedCreateNestedManyWithoutCreatedByInput
+    rifasEditadas?: RifaUncheckedCreateNestedManyWithoutUpdatedByInput
+    asignaciones?: AsignacionBoletasUncheckedCreateNestedManyWithoutUsuarioInput
+    devoluciones?: DevolucionBoletasUncheckedCreateNestedManyWithoutUsuarioInput
+    abonosRegistrados?: AbonoVendedorUncheckedCreateNestedManyWithoutUsuarioInput
+    gastosRegistrados?: GastoUncheckedCreateNestedManyWithoutUsuarioInput
+    movimientos?: MovimientoCajaUncheckedCreateNestedManyWithoutUsuarioInput
+  }
+
+  export type UsuarioCreateOrConnectWithoutJuegosRegistradosInput = {
+    where: UsuarioWhereUniqueInput
+    create: XOR<UsuarioCreateWithoutJuegosRegistradosInput, UsuarioUncheckedCreateWithoutJuegosRegistradosInput>
+  }
+
+  export type RifaVendedorUpsertWithoutJuegosInput = {
+    update: XOR<RifaVendedorUpdateWithoutJuegosInput, RifaVendedorUncheckedUpdateWithoutJuegosInput>
+    create: XOR<RifaVendedorCreateWithoutJuegosInput, RifaVendedorUncheckedCreateWithoutJuegosInput>
+    where?: RifaVendedorWhereInput
+  }
+
+  export type RifaVendedorUpdateToOneWithWhereWithoutJuegosInput = {
+    where?: RifaVendedorWhereInput
+    data: XOR<RifaVendedorUpdateWithoutJuegosInput, RifaVendedorUncheckedUpdateWithoutJuegosInput>
+  }
+
+  export type RifaVendedorUpdateWithoutJuegosInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    comisionPct?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    precioCasa?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    saldoActual?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    rifa?: RifaUpdateOneRequiredWithoutVendedoresNestedInput
+    vendedor?: VendedorUpdateOneRequiredWithoutRifasNestedInput
+    asignaciones?: AsignacionBoletasUpdateManyWithoutRifaVendedorNestedInput
+    devoluciones?: DevolucionBoletasUpdateManyWithoutRifaVendedorNestedInput
+    abonos?: AbonoVendedorUpdateManyWithoutRifaVendedorNestedInput
+    boletas?: BoletaUpdateManyWithoutRifaVendedorNestedInput
+  }
+
+  export type RifaVendedorUncheckedUpdateWithoutJuegosInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    rifaId?: StringFieldUpdateOperationsInput | string
+    vendedorId?: StringFieldUpdateOperationsInput | string
+    comisionPct?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    precioCasa?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    saldoActual?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    asignaciones?: AsignacionBoletasUncheckedUpdateManyWithoutRifaVendedorNestedInput
+    devoluciones?: DevolucionBoletasUncheckedUpdateManyWithoutRifaVendedorNestedInput
+    abonos?: AbonoVendedorUncheckedUpdateManyWithoutRifaVendedorNestedInput
+    boletas?: BoletaUncheckedUpdateManyWithoutRifaVendedorNestedInput
+  }
+
+  export type PremioUpsertWithoutJuegosInput = {
+    update: XOR<PremioUpdateWithoutJuegosInput, PremioUncheckedUpdateWithoutJuegosInput>
+    create: XOR<PremioCreateWithoutJuegosInput, PremioUncheckedCreateWithoutJuegosInput>
+    where?: PremioWhereInput
+  }
+
+  export type PremioUpdateToOneWithWhereWithoutJuegosInput = {
+    where?: PremioWhereInput
+    data: XOR<PremioUpdateWithoutJuegosInput, PremioUncheckedUpdateWithoutJuegosInput>
+  }
+
+  export type PremioUpdateWithoutJuegosInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    nombre?: StringFieldUpdateOperationsInput | string
+    descripcion?: NullableStringFieldUpdateOperationsInput | string | null
+    imagenesJson?: NullableJsonNullValueInput | InputJsonValue
+    tipo?: EnumTipoPremioFieldUpdateOperationsInput | $Enums.TipoPremio
+    mostrarValor?: BoolFieldUpdateOperationsInput | boolean
+    valor?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    fecha?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    rifa?: RifaUpdateOneRequiredWithoutPremiosNestedInput
+    boletas?: BoletaPremioUpdateManyWithoutPremioNestedInput
+  }
+
+  export type PremioUncheckedUpdateWithoutJuegosInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    rifaId?: StringFieldUpdateOperationsInput | string
+    nombre?: StringFieldUpdateOperationsInput | string
+    descripcion?: NullableStringFieldUpdateOperationsInput | string | null
+    imagenesJson?: NullableJsonNullValueInput | InputJsonValue
+    tipo?: EnumTipoPremioFieldUpdateOperationsInput | $Enums.TipoPremio
+    mostrarValor?: BoolFieldUpdateOperationsInput | boolean
+    valor?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    fecha?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    boletas?: BoletaPremioUncheckedUpdateManyWithoutPremioNestedInput
+  }
+
+  export type UsuarioUpsertWithoutJuegosRegistradosInput = {
+    update: XOR<UsuarioUpdateWithoutJuegosRegistradosInput, UsuarioUncheckedUpdateWithoutJuegosRegistradosInput>
+    create: XOR<UsuarioCreateWithoutJuegosRegistradosInput, UsuarioUncheckedCreateWithoutJuegosRegistradosInput>
+    where?: UsuarioWhereInput
+  }
+
+  export type UsuarioUpdateToOneWithWhereWithoutJuegosRegistradosInput = {
+    where?: UsuarioWhereInput
+    data: XOR<UsuarioUpdateWithoutJuegosRegistradosInput, UsuarioUncheckedUpdateWithoutJuegosRegistradosInput>
+  }
+
+  export type UsuarioUpdateWithoutJuegosRegistradosInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    nombre?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    password?: StringFieldUpdateOperationsInput | string
+    rol?: EnumRolUsuarioFieldUpdateOperationsInput | $Enums.RolUsuario
+    activo?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    rifasCreadas?: RifaUpdateManyWithoutCreatedByNestedInput
+    rifasEditadas?: RifaUpdateManyWithoutUpdatedByNestedInput
+    asignaciones?: AsignacionBoletasUpdateManyWithoutUsuarioNestedInput
+    devoluciones?: DevolucionBoletasUpdateManyWithoutUsuarioNestedInput
+    abonosRegistrados?: AbonoVendedorUpdateManyWithoutUsuarioNestedInput
+    gastosRegistrados?: GastoUpdateManyWithoutUsuarioNestedInput
+    movimientos?: MovimientoCajaUpdateManyWithoutUsuarioNestedInput
+  }
+
+  export type UsuarioUncheckedUpdateWithoutJuegosRegistradosInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    nombre?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    password?: StringFieldUpdateOperationsInput | string
+    rol?: EnumRolUsuarioFieldUpdateOperationsInput | $Enums.RolUsuario
+    activo?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    rifasCreadas?: RifaUncheckedUpdateManyWithoutCreatedByNestedInput
+    rifasEditadas?: RifaUncheckedUpdateManyWithoutUpdatedByNestedInput
+    asignaciones?: AsignacionBoletasUncheckedUpdateManyWithoutUsuarioNestedInput
+    devoluciones?: DevolucionBoletasUncheckedUpdateManyWithoutUsuarioNestedInput
+    abonosRegistrados?: AbonoVendedorUncheckedUpdateManyWithoutUsuarioNestedInput
+    gastosRegistrados?: GastoUncheckedUpdateManyWithoutUsuarioNestedInput
+    movimientos?: MovimientoCajaUncheckedUpdateManyWithoutUsuarioNestedInput
+  }
+
   export type GastoCreateWithoutReciboInput = {
     id?: string
     categoria?: $Enums.CategoriaGasto
@@ -42500,6 +46062,7 @@ export namespace Prisma {
     anuladoMotivo?: string | null
     rifa: RifaCreateNestedOneWithoutGastosInput
     subCaja?: SubCajaCreateNestedOneWithoutGastosInput
+    usuario?: UsuarioCreateNestedOneWithoutGastosRegistradosInput
     movimientos?: MovimientoCajaCreateNestedManyWithoutGastoInput
   }
 
@@ -42507,6 +46070,7 @@ export namespace Prisma {
     id?: string
     rifaId: string
     subCajaId?: string | null
+    usuarioId?: string | null
     categoria?: $Enums.CategoriaGasto
     descripcion: string
     valor: Decimal | DecimalJsLike | number | string
@@ -42542,6 +46106,7 @@ export namespace Prisma {
     anuladoMotivo?: NullableStringFieldUpdateOperationsInput | string | null
     rifa?: RifaUpdateOneRequiredWithoutGastosNestedInput
     subCaja?: SubCajaUpdateOneWithoutGastosNestedInput
+    usuario?: UsuarioUpdateOneWithoutGastosRegistradosNestedInput
     movimientos?: MovimientoCajaUpdateManyWithoutGastoNestedInput
   }
 
@@ -42549,6 +46114,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     rifaId?: StringFieldUpdateOperationsInput | string
     subCajaId?: NullableStringFieldUpdateOperationsInput | string | null
+    usuarioId?: NullableStringFieldUpdateOperationsInput | string | null
     categoria?: EnumCategoriaGastoFieldUpdateOperationsInput | $Enums.CategoriaGasto
     descripcion?: StringFieldUpdateOperationsInput | string
     valor?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
@@ -42591,6 +46157,49 @@ export namespace Prisma {
     rifaVendedorId: string
     cantidad: number
     fecha?: Date | string
+  }
+
+  export type DevolucionBoletasCreateManyUsuarioInput = {
+    id?: string
+    rifaVendedorId: string
+    destino?: $Enums.DestinoDevolucion
+    fecha?: Date | string
+  }
+
+  export type AbonoVendedorCreateManyUsuarioInput = {
+    id?: string
+    rifaVendedorId: string
+    subCajaId?: string | null
+    valor: Decimal | DecimalJsLike | number | string
+    fecha?: Date | string
+    descripcion?: string | null
+    metodoPago: $Enums.MetodoPago
+    estado?: $Enums.EstadoPago
+    anuladoAt?: Date | string | null
+    anuladoMotivo?: string | null
+    saldoAnterior: Decimal | DecimalJsLike | number | string
+    saldoDespues: Decimal | DecimalJsLike | number | string
+    boletasActuales?: number
+  }
+
+  export type GastoCreateManyUsuarioInput = {
+    id?: string
+    rifaId: string
+    subCajaId?: string | null
+    categoria?: $Enums.CategoriaGasto
+    descripcion: string
+    valor: Decimal | DecimalJsLike | number | string
+    fecha?: Date | string
+    anuladoAt?: Date | string | null
+    anuladoMotivo?: string | null
+  }
+
+  export type JuegoRegistroCreateManyUsuarioInput = {
+    id?: string
+    rifaVendedorId: string
+    premioId: string
+    fecha?: Date | string
+    totalBoletas?: number
   }
 
   export type MovimientoCajaCreateManyUsuarioInput = {
@@ -42745,6 +46354,145 @@ export namespace Prisma {
     fecha?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type DevolucionBoletasUpdateWithoutUsuarioInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    destino?: EnumDestinoDevolucionFieldUpdateOperationsInput | $Enums.DestinoDevolucion
+    fecha?: DateTimeFieldUpdateOperationsInput | Date | string
+    rifaVendedor?: RifaVendedorUpdateOneRequiredWithoutDevolucionesNestedInput
+    detalle?: DevolucionDetalleUpdateManyWithoutDevolucionNestedInput
+  }
+
+  export type DevolucionBoletasUncheckedUpdateWithoutUsuarioInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    rifaVendedorId?: StringFieldUpdateOperationsInput | string
+    destino?: EnumDestinoDevolucionFieldUpdateOperationsInput | $Enums.DestinoDevolucion
+    fecha?: DateTimeFieldUpdateOperationsInput | Date | string
+    detalle?: DevolucionDetalleUncheckedUpdateManyWithoutDevolucionNestedInput
+  }
+
+  export type DevolucionBoletasUncheckedUpdateManyWithoutUsuarioInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    rifaVendedorId?: StringFieldUpdateOperationsInput | string
+    destino?: EnumDestinoDevolucionFieldUpdateOperationsInput | $Enums.DestinoDevolucion
+    fecha?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type AbonoVendedorUpdateWithoutUsuarioInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    valor?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    fecha?: DateTimeFieldUpdateOperationsInput | Date | string
+    descripcion?: NullableStringFieldUpdateOperationsInput | string | null
+    metodoPago?: EnumMetodoPagoFieldUpdateOperationsInput | $Enums.MetodoPago
+    estado?: EnumEstadoPagoFieldUpdateOperationsInput | $Enums.EstadoPago
+    anuladoAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    anuladoMotivo?: NullableStringFieldUpdateOperationsInput | string | null
+    saldoAnterior?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    saldoDespues?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    boletasActuales?: IntFieldUpdateOperationsInput | number
+    rifaVendedor?: RifaVendedorUpdateOneRequiredWithoutAbonosNestedInput
+    subCaja?: SubCajaUpdateOneWithoutAbonosNestedInput
+    recibo?: ReciboUpdateOneWithoutAbonoNestedInput
+    movimientos?: MovimientoCajaUpdateManyWithoutAbonoVendedorNestedInput
+  }
+
+  export type AbonoVendedorUncheckedUpdateWithoutUsuarioInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    rifaVendedorId?: StringFieldUpdateOperationsInput | string
+    subCajaId?: NullableStringFieldUpdateOperationsInput | string | null
+    valor?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    fecha?: DateTimeFieldUpdateOperationsInput | Date | string
+    descripcion?: NullableStringFieldUpdateOperationsInput | string | null
+    metodoPago?: EnumMetodoPagoFieldUpdateOperationsInput | $Enums.MetodoPago
+    estado?: EnumEstadoPagoFieldUpdateOperationsInput | $Enums.EstadoPago
+    anuladoAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    anuladoMotivo?: NullableStringFieldUpdateOperationsInput | string | null
+    saldoAnterior?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    saldoDespues?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    boletasActuales?: IntFieldUpdateOperationsInput | number
+    recibo?: ReciboUncheckedUpdateOneWithoutAbonoNestedInput
+    movimientos?: MovimientoCajaUncheckedUpdateManyWithoutAbonoVendedorNestedInput
+  }
+
+  export type AbonoVendedorUncheckedUpdateManyWithoutUsuarioInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    rifaVendedorId?: StringFieldUpdateOperationsInput | string
+    subCajaId?: NullableStringFieldUpdateOperationsInput | string | null
+    valor?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    fecha?: DateTimeFieldUpdateOperationsInput | Date | string
+    descripcion?: NullableStringFieldUpdateOperationsInput | string | null
+    metodoPago?: EnumMetodoPagoFieldUpdateOperationsInput | $Enums.MetodoPago
+    estado?: EnumEstadoPagoFieldUpdateOperationsInput | $Enums.EstadoPago
+    anuladoAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    anuladoMotivo?: NullableStringFieldUpdateOperationsInput | string | null
+    saldoAnterior?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    saldoDespues?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    boletasActuales?: IntFieldUpdateOperationsInput | number
+  }
+
+  export type GastoUpdateWithoutUsuarioInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    categoria?: EnumCategoriaGastoFieldUpdateOperationsInput | $Enums.CategoriaGasto
+    descripcion?: StringFieldUpdateOperationsInput | string
+    valor?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    fecha?: DateTimeFieldUpdateOperationsInput | Date | string
+    anuladoAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    anuladoMotivo?: NullableStringFieldUpdateOperationsInput | string | null
+    rifa?: RifaUpdateOneRequiredWithoutGastosNestedInput
+    subCaja?: SubCajaUpdateOneWithoutGastosNestedInput
+    movimientos?: MovimientoCajaUpdateManyWithoutGastoNestedInput
+    recibo?: GastoReciboUpdateOneWithoutGastoNestedInput
+  }
+
+  export type GastoUncheckedUpdateWithoutUsuarioInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    rifaId?: StringFieldUpdateOperationsInput | string
+    subCajaId?: NullableStringFieldUpdateOperationsInput | string | null
+    categoria?: EnumCategoriaGastoFieldUpdateOperationsInput | $Enums.CategoriaGasto
+    descripcion?: StringFieldUpdateOperationsInput | string
+    valor?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    fecha?: DateTimeFieldUpdateOperationsInput | Date | string
+    anuladoAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    anuladoMotivo?: NullableStringFieldUpdateOperationsInput | string | null
+    movimientos?: MovimientoCajaUncheckedUpdateManyWithoutGastoNestedInput
+    recibo?: GastoReciboUncheckedUpdateOneWithoutGastoNestedInput
+  }
+
+  export type GastoUncheckedUpdateManyWithoutUsuarioInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    rifaId?: StringFieldUpdateOperationsInput | string
+    subCajaId?: NullableStringFieldUpdateOperationsInput | string | null
+    categoria?: EnumCategoriaGastoFieldUpdateOperationsInput | $Enums.CategoriaGasto
+    descripcion?: StringFieldUpdateOperationsInput | string
+    valor?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    fecha?: DateTimeFieldUpdateOperationsInput | Date | string
+    anuladoAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    anuladoMotivo?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type JuegoRegistroUpdateWithoutUsuarioInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    fecha?: DateTimeFieldUpdateOperationsInput | Date | string
+    totalBoletas?: IntFieldUpdateOperationsInput | number
+    rifaVendedor?: RifaVendedorUpdateOneRequiredWithoutJuegosNestedInput
+    premio?: PremioUpdateOneRequiredWithoutJuegosNestedInput
+  }
+
+  export type JuegoRegistroUncheckedUpdateWithoutUsuarioInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    rifaVendedorId?: StringFieldUpdateOperationsInput | string
+    premioId?: StringFieldUpdateOperationsInput | string
+    fecha?: DateTimeFieldUpdateOperationsInput | Date | string
+    totalBoletas?: IntFieldUpdateOperationsInput | number
+  }
+
+  export type JuegoRegistroUncheckedUpdateManyWithoutUsuarioInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    rifaVendedorId?: StringFieldUpdateOperationsInput | string
+    premioId?: StringFieldUpdateOperationsInput | string
+    fecha?: DateTimeFieldUpdateOperationsInput | Date | string
+    totalBoletas?: IntFieldUpdateOperationsInput | number
+  }
+
   export type MovimientoCajaUpdateWithoutUsuarioInput = {
     id?: StringFieldUpdateOperationsInput | string
     tipo?: EnumTipoMovimientoCajaFieldUpdateOperationsInput | $Enums.TipoMovimientoCaja
@@ -42827,11 +46575,18 @@ export namespace Prisma {
     estado?: $Enums.EstadoVenta
     total: Decimal | DecimalJsLike | number | string
     saldoPendiente: Decimal | DecimalJsLike | number | string
+    referenciaPago?: string | null
+    pasarelaPago?: string | null
+    pasarelaEstado?: string | null
+    pasarelaTransaccionId?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
   }
 
   export type GastoCreateManyRifaInput = {
     id?: string
     subCajaId?: string | null
+    usuarioId?: string | null
     categoria?: $Enums.CategoriaGasto
     descripcion: string
     valor: Decimal | DecimalJsLike | number | string
@@ -42867,6 +46622,7 @@ export namespace Prisma {
     id?: string
     nombre: string
     descripcion?: string | null
+    imagenesJson?: NullableJsonNullValueInput | InputJsonValue
     tipo: $Enums.TipoPremio
     mostrarValor?: boolean
     valor?: Decimal | DecimalJsLike | number | string | null
@@ -42941,6 +46697,7 @@ export namespace Prisma {
     devoluciones?: DevolucionBoletasUpdateManyWithoutRifaVendedorNestedInput
     abonos?: AbonoVendedorUpdateManyWithoutRifaVendedorNestedInput
     boletas?: BoletaUpdateManyWithoutRifaVendedorNestedInput
+    juegos?: JuegoRegistroUpdateManyWithoutRifaVendedorNestedInput
   }
 
   export type RifaVendedorUncheckedUpdateWithoutRifaInput = {
@@ -42953,6 +46710,7 @@ export namespace Prisma {
     devoluciones?: DevolucionBoletasUncheckedUpdateManyWithoutRifaVendedorNestedInput
     abonos?: AbonoVendedorUncheckedUpdateManyWithoutRifaVendedorNestedInput
     boletas?: BoletaUncheckedUpdateManyWithoutRifaVendedorNestedInput
+    juegos?: JuegoRegistroUncheckedUpdateManyWithoutRifaVendedorNestedInput
   }
 
   export type RifaVendedorUncheckedUpdateManyWithoutRifaInput = {
@@ -42968,6 +46726,12 @@ export namespace Prisma {
     estado?: EnumEstadoVentaFieldUpdateOperationsInput | $Enums.EstadoVenta
     total?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     saldoPendiente?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    referenciaPago?: NullableStringFieldUpdateOperationsInput | string | null
+    pasarelaPago?: NullableStringFieldUpdateOperationsInput | string | null
+    pasarelaEstado?: NullableStringFieldUpdateOperationsInput | string | null
+    pasarelaTransaccionId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     cliente?: ClienteUpdateOneRequiredWithoutVentasNestedInput
     boletas?: BoletaUpdateManyWithoutVentaNestedInput
     pagos?: PagoClienteUpdateManyWithoutVentaNestedInput
@@ -42980,6 +46744,12 @@ export namespace Prisma {
     estado?: EnumEstadoVentaFieldUpdateOperationsInput | $Enums.EstadoVenta
     total?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     saldoPendiente?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    referenciaPago?: NullableStringFieldUpdateOperationsInput | string | null
+    pasarelaPago?: NullableStringFieldUpdateOperationsInput | string | null
+    pasarelaEstado?: NullableStringFieldUpdateOperationsInput | string | null
+    pasarelaTransaccionId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     boletas?: BoletaUncheckedUpdateManyWithoutVentaNestedInput
     pagos?: PagoClienteUncheckedUpdateManyWithoutVentaNestedInput
     movimientos?: MovimientoCajaUncheckedUpdateManyWithoutVentaNestedInput
@@ -42991,6 +46761,12 @@ export namespace Prisma {
     estado?: EnumEstadoVentaFieldUpdateOperationsInput | $Enums.EstadoVenta
     total?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     saldoPendiente?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    referenciaPago?: NullableStringFieldUpdateOperationsInput | string | null
+    pasarelaPago?: NullableStringFieldUpdateOperationsInput | string | null
+    pasarelaEstado?: NullableStringFieldUpdateOperationsInput | string | null
+    pasarelaTransaccionId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type GastoUpdateWithoutRifaInput = {
@@ -43002,6 +46778,7 @@ export namespace Prisma {
     anuladoAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     anuladoMotivo?: NullableStringFieldUpdateOperationsInput | string | null
     subCaja?: SubCajaUpdateOneWithoutGastosNestedInput
+    usuario?: UsuarioUpdateOneWithoutGastosRegistradosNestedInput
     movimientos?: MovimientoCajaUpdateManyWithoutGastoNestedInput
     recibo?: GastoReciboUpdateOneWithoutGastoNestedInput
   }
@@ -43009,6 +46786,7 @@ export namespace Prisma {
   export type GastoUncheckedUpdateWithoutRifaInput = {
     id?: StringFieldUpdateOperationsInput | string
     subCajaId?: NullableStringFieldUpdateOperationsInput | string | null
+    usuarioId?: NullableStringFieldUpdateOperationsInput | string | null
     categoria?: EnumCategoriaGastoFieldUpdateOperationsInput | $Enums.CategoriaGasto
     descripcion?: StringFieldUpdateOperationsInput | string
     valor?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
@@ -43022,6 +46800,7 @@ export namespace Prisma {
   export type GastoUncheckedUpdateManyWithoutRifaInput = {
     id?: StringFieldUpdateOperationsInput | string
     subCajaId?: NullableStringFieldUpdateOperationsInput | string | null
+    usuarioId?: NullableStringFieldUpdateOperationsInput | string | null
     categoria?: EnumCategoriaGastoFieldUpdateOperationsInput | $Enums.CategoriaGasto
     descripcion?: StringFieldUpdateOperationsInput | string
     valor?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
@@ -43107,30 +46886,35 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     nombre?: StringFieldUpdateOperationsInput | string
     descripcion?: NullableStringFieldUpdateOperationsInput | string | null
+    imagenesJson?: NullableJsonNullValueInput | InputJsonValue
     tipo?: EnumTipoPremioFieldUpdateOperationsInput | $Enums.TipoPremio
     mostrarValor?: BoolFieldUpdateOperationsInput | boolean
     valor?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     fecha?: DateTimeFieldUpdateOperationsInput | Date | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     boletas?: BoletaPremioUpdateManyWithoutPremioNestedInput
+    juegos?: JuegoRegistroUpdateManyWithoutPremioNestedInput
   }
 
   export type PremioUncheckedUpdateWithoutRifaInput = {
     id?: StringFieldUpdateOperationsInput | string
     nombre?: StringFieldUpdateOperationsInput | string
     descripcion?: NullableStringFieldUpdateOperationsInput | string | null
+    imagenesJson?: NullableJsonNullValueInput | InputJsonValue
     tipo?: EnumTipoPremioFieldUpdateOperationsInput | $Enums.TipoPremio
     mostrarValor?: BoolFieldUpdateOperationsInput | boolean
     valor?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     fecha?: DateTimeFieldUpdateOperationsInput | Date | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     boletas?: BoletaPremioUncheckedUpdateManyWithoutPremioNestedInput
+    juegos?: JuegoRegistroUncheckedUpdateManyWithoutPremioNestedInput
   }
 
   export type PremioUncheckedUpdateManyWithoutRifaInput = {
     id?: StringFieldUpdateOperationsInput | string
     nombre?: StringFieldUpdateOperationsInput | string
     descripcion?: NullableStringFieldUpdateOperationsInput | string | null
+    imagenesJson?: NullableJsonNullValueInput | InputJsonValue
     tipo?: EnumTipoPremioFieldUpdateOperationsInput | $Enums.TipoPremio
     mostrarValor?: BoolFieldUpdateOperationsInput | boolean
     valor?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
@@ -43141,6 +46925,14 @@ export namespace Prisma {
   export type BoletaPremioCreateManyPremioInput = {
     id?: string
     boletaId: string
+  }
+
+  export type JuegoRegistroCreateManyPremioInput = {
+    id?: string
+    rifaVendedorId: string
+    usuarioId?: string | null
+    fecha?: Date | string
+    totalBoletas?: number
   }
 
   export type BoletaPremioUpdateWithoutPremioInput = {
@@ -43156,6 +46948,30 @@ export namespace Prisma {
   export type BoletaPremioUncheckedUpdateManyWithoutPremioInput = {
     id?: StringFieldUpdateOperationsInput | string
     boletaId?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type JuegoRegistroUpdateWithoutPremioInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    fecha?: DateTimeFieldUpdateOperationsInput | Date | string
+    totalBoletas?: IntFieldUpdateOperationsInput | number
+    rifaVendedor?: RifaVendedorUpdateOneRequiredWithoutJuegosNestedInput
+    usuario?: UsuarioUpdateOneWithoutJuegosRegistradosNestedInput
+  }
+
+  export type JuegoRegistroUncheckedUpdateWithoutPremioInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    rifaVendedorId?: StringFieldUpdateOperationsInput | string
+    usuarioId?: NullableStringFieldUpdateOperationsInput | string | null
+    fecha?: DateTimeFieldUpdateOperationsInput | Date | string
+    totalBoletas?: IntFieldUpdateOperationsInput | number
+  }
+
+  export type JuegoRegistroUncheckedUpdateManyWithoutPremioInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    rifaVendedorId?: StringFieldUpdateOperationsInput | string
+    usuarioId?: NullableStringFieldUpdateOperationsInput | string | null
+    fecha?: DateTimeFieldUpdateOperationsInput | Date | string
+    totalBoletas?: IntFieldUpdateOperationsInput | number
   }
 
   export type BoletaPremioCreateManyBoletaInput = {
@@ -43253,6 +47069,7 @@ export namespace Prisma {
     devoluciones?: DevolucionBoletasUpdateManyWithoutRifaVendedorNestedInput
     abonos?: AbonoVendedorUpdateManyWithoutRifaVendedorNestedInput
     boletas?: BoletaUpdateManyWithoutRifaVendedorNestedInput
+    juegos?: JuegoRegistroUpdateManyWithoutRifaVendedorNestedInput
   }
 
   export type RifaVendedorUncheckedUpdateWithoutVendedorInput = {
@@ -43265,6 +47082,7 @@ export namespace Prisma {
     devoluciones?: DevolucionBoletasUncheckedUpdateManyWithoutRifaVendedorNestedInput
     abonos?: AbonoVendedorUncheckedUpdateManyWithoutRifaVendedorNestedInput
     boletas?: BoletaUncheckedUpdateManyWithoutRifaVendedorNestedInput
+    juegos?: JuegoRegistroUncheckedUpdateManyWithoutRifaVendedorNestedInput
   }
 
   export type RifaVendedorUncheckedUpdateManyWithoutVendedorInput = {
@@ -43337,11 +47155,13 @@ export namespace Prisma {
     id?: string
     destino?: $Enums.DestinoDevolucion
     fecha?: Date | string
+    usuarioId?: string | null
   }
 
   export type AbonoVendedorCreateManyRifaVendedorInput = {
     id?: string
     subCajaId?: string | null
+    usuarioId?: string | null
     valor: Decimal | DecimalJsLike | number | string
     fecha?: Date | string
     descripcion?: string | null
@@ -43371,6 +47191,14 @@ export namespace Prisma {
     updatedAt?: Date | string
   }
 
+  export type JuegoRegistroCreateManyRifaVendedorInput = {
+    id?: string
+    premioId: string
+    usuarioId?: string | null
+    fecha?: Date | string
+    totalBoletas?: number
+  }
+
   export type AsignacionBoletasUpdateWithoutRifaVendedorInput = {
     id?: StringFieldUpdateOperationsInput | string
     cantidad?: IntFieldUpdateOperationsInput | number
@@ -43398,6 +47226,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     destino?: EnumDestinoDevolucionFieldUpdateOperationsInput | $Enums.DestinoDevolucion
     fecha?: DateTimeFieldUpdateOperationsInput | Date | string
+    usuario?: UsuarioUpdateOneWithoutDevolucionesNestedInput
     detalle?: DevolucionDetalleUpdateManyWithoutDevolucionNestedInput
   }
 
@@ -43405,6 +47234,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     destino?: EnumDestinoDevolucionFieldUpdateOperationsInput | $Enums.DestinoDevolucion
     fecha?: DateTimeFieldUpdateOperationsInput | Date | string
+    usuarioId?: NullableStringFieldUpdateOperationsInput | string | null
     detalle?: DevolucionDetalleUncheckedUpdateManyWithoutDevolucionNestedInput
   }
 
@@ -43412,6 +47242,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     destino?: EnumDestinoDevolucionFieldUpdateOperationsInput | $Enums.DestinoDevolucion
     fecha?: DateTimeFieldUpdateOperationsInput | Date | string
+    usuarioId?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type AbonoVendedorUpdateWithoutRifaVendedorInput = {
@@ -43427,6 +47258,7 @@ export namespace Prisma {
     saldoDespues?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     boletasActuales?: IntFieldUpdateOperationsInput | number
     subCaja?: SubCajaUpdateOneWithoutAbonosNestedInput
+    usuario?: UsuarioUpdateOneWithoutAbonosRegistradosNestedInput
     recibo?: ReciboUpdateOneWithoutAbonoNestedInput
     movimientos?: MovimientoCajaUpdateManyWithoutAbonoVendedorNestedInput
   }
@@ -43434,6 +47266,7 @@ export namespace Prisma {
   export type AbonoVendedorUncheckedUpdateWithoutRifaVendedorInput = {
     id?: StringFieldUpdateOperationsInput | string
     subCajaId?: NullableStringFieldUpdateOperationsInput | string | null
+    usuarioId?: NullableStringFieldUpdateOperationsInput | string | null
     valor?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     fecha?: DateTimeFieldUpdateOperationsInput | Date | string
     descripcion?: NullableStringFieldUpdateOperationsInput | string | null
@@ -43451,6 +47284,7 @@ export namespace Prisma {
   export type AbonoVendedorUncheckedUpdateManyWithoutRifaVendedorInput = {
     id?: StringFieldUpdateOperationsInput | string
     subCajaId?: NullableStringFieldUpdateOperationsInput | string | null
+    usuarioId?: NullableStringFieldUpdateOperationsInput | string | null
     valor?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     fecha?: DateTimeFieldUpdateOperationsInput | Date | string
     descripcion?: NullableStringFieldUpdateOperationsInput | string | null
@@ -43520,6 +47354,30 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type JuegoRegistroUpdateWithoutRifaVendedorInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    fecha?: DateTimeFieldUpdateOperationsInput | Date | string
+    totalBoletas?: IntFieldUpdateOperationsInput | number
+    premio?: PremioUpdateOneRequiredWithoutJuegosNestedInput
+    usuario?: UsuarioUpdateOneWithoutJuegosRegistradosNestedInput
+  }
+
+  export type JuegoRegistroUncheckedUpdateWithoutRifaVendedorInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    premioId?: StringFieldUpdateOperationsInput | string
+    usuarioId?: NullableStringFieldUpdateOperationsInput | string | null
+    fecha?: DateTimeFieldUpdateOperationsInput | Date | string
+    totalBoletas?: IntFieldUpdateOperationsInput | number
+  }
+
+  export type JuegoRegistroUncheckedUpdateManyWithoutRifaVendedorInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    premioId?: StringFieldUpdateOperationsInput | string
+    usuarioId?: NullableStringFieldUpdateOperationsInput | string | null
+    fecha?: DateTimeFieldUpdateOperationsInput | Date | string
+    totalBoletas?: IntFieldUpdateOperationsInput | number
+  }
+
   export type AsignacionDetalleCreateManyAsignacionInput = {
     id?: string
     boletaId: string
@@ -43566,6 +47424,12 @@ export namespace Prisma {
     estado?: $Enums.EstadoVenta
     total: Decimal | DecimalJsLike | number | string
     saldoPendiente: Decimal | DecimalJsLike | number | string
+    referenciaPago?: string | null
+    pasarelaPago?: string | null
+    pasarelaEstado?: string | null
+    pasarelaTransaccionId?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
   }
 
   export type BoletaCreateManyClienteInput = {
@@ -43607,6 +47471,12 @@ export namespace Prisma {
     estado?: EnumEstadoVentaFieldUpdateOperationsInput | $Enums.EstadoVenta
     total?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     saldoPendiente?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    referenciaPago?: NullableStringFieldUpdateOperationsInput | string | null
+    pasarelaPago?: NullableStringFieldUpdateOperationsInput | string | null
+    pasarelaEstado?: NullableStringFieldUpdateOperationsInput | string | null
+    pasarelaTransaccionId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     rifa?: RifaUpdateOneRequiredWithoutVentasNestedInput
     boletas?: BoletaUpdateManyWithoutVentaNestedInput
     pagos?: PagoClienteUpdateManyWithoutVentaNestedInput
@@ -43619,6 +47489,12 @@ export namespace Prisma {
     estado?: EnumEstadoVentaFieldUpdateOperationsInput | $Enums.EstadoVenta
     total?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     saldoPendiente?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    referenciaPago?: NullableStringFieldUpdateOperationsInput | string | null
+    pasarelaPago?: NullableStringFieldUpdateOperationsInput | string | null
+    pasarelaEstado?: NullableStringFieldUpdateOperationsInput | string | null
+    pasarelaTransaccionId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     boletas?: BoletaUncheckedUpdateManyWithoutVentaNestedInput
     pagos?: PagoClienteUncheckedUpdateManyWithoutVentaNestedInput
     movimientos?: MovimientoCajaUncheckedUpdateManyWithoutVentaNestedInput
@@ -43630,6 +47506,12 @@ export namespace Prisma {
     estado?: EnumEstadoVentaFieldUpdateOperationsInput | $Enums.EstadoVenta
     total?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     saldoPendiente?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    referenciaPago?: NullableStringFieldUpdateOperationsInput | string | null
+    pasarelaPago?: NullableStringFieldUpdateOperationsInput | string | null
+    pasarelaEstado?: NullableStringFieldUpdateOperationsInput | string | null
+    pasarelaTransaccionId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type BoletaUpdateWithoutClienteInput = {
@@ -44170,6 +48052,7 @@ export namespace Prisma {
   export type AbonoVendedorCreateManySubCajaInput = {
     id?: string
     rifaVendedorId: string
+    usuarioId?: string | null
     valor: Decimal | DecimalJsLike | number | string
     fecha?: Date | string
     descripcion?: string | null
@@ -44185,6 +48068,7 @@ export namespace Prisma {
   export type GastoCreateManySubCajaInput = {
     id?: string
     rifaId: string
+    usuarioId?: string | null
     categoria?: $Enums.CategoriaGasto
     descripcion: string
     valor: Decimal | DecimalJsLike | number | string
@@ -44257,6 +48141,7 @@ export namespace Prisma {
     saldoDespues?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     boletasActuales?: IntFieldUpdateOperationsInput | number
     rifaVendedor?: RifaVendedorUpdateOneRequiredWithoutAbonosNestedInput
+    usuario?: UsuarioUpdateOneWithoutAbonosRegistradosNestedInput
     recibo?: ReciboUpdateOneWithoutAbonoNestedInput
     movimientos?: MovimientoCajaUpdateManyWithoutAbonoVendedorNestedInput
   }
@@ -44264,6 +48149,7 @@ export namespace Prisma {
   export type AbonoVendedorUncheckedUpdateWithoutSubCajaInput = {
     id?: StringFieldUpdateOperationsInput | string
     rifaVendedorId?: StringFieldUpdateOperationsInput | string
+    usuarioId?: NullableStringFieldUpdateOperationsInput | string | null
     valor?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     fecha?: DateTimeFieldUpdateOperationsInput | Date | string
     descripcion?: NullableStringFieldUpdateOperationsInput | string | null
@@ -44281,6 +48167,7 @@ export namespace Prisma {
   export type AbonoVendedorUncheckedUpdateManyWithoutSubCajaInput = {
     id?: StringFieldUpdateOperationsInput | string
     rifaVendedorId?: StringFieldUpdateOperationsInput | string
+    usuarioId?: NullableStringFieldUpdateOperationsInput | string | null
     valor?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     fecha?: DateTimeFieldUpdateOperationsInput | Date | string
     descripcion?: NullableStringFieldUpdateOperationsInput | string | null
@@ -44302,6 +48189,7 @@ export namespace Prisma {
     anuladoAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     anuladoMotivo?: NullableStringFieldUpdateOperationsInput | string | null
     rifa?: RifaUpdateOneRequiredWithoutGastosNestedInput
+    usuario?: UsuarioUpdateOneWithoutGastosRegistradosNestedInput
     movimientos?: MovimientoCajaUpdateManyWithoutGastoNestedInput
     recibo?: GastoReciboUpdateOneWithoutGastoNestedInput
   }
@@ -44309,6 +48197,7 @@ export namespace Prisma {
   export type GastoUncheckedUpdateWithoutSubCajaInput = {
     id?: StringFieldUpdateOperationsInput | string
     rifaId?: StringFieldUpdateOperationsInput | string
+    usuarioId?: NullableStringFieldUpdateOperationsInput | string | null
     categoria?: EnumCategoriaGastoFieldUpdateOperationsInput | $Enums.CategoriaGasto
     descripcion?: StringFieldUpdateOperationsInput | string
     valor?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
@@ -44322,6 +48211,7 @@ export namespace Prisma {
   export type GastoUncheckedUpdateManyWithoutSubCajaInput = {
     id?: StringFieldUpdateOperationsInput | string
     rifaId?: StringFieldUpdateOperationsInput | string
+    usuarioId?: NullableStringFieldUpdateOperationsInput | string | null
     categoria?: EnumCategoriaGastoFieldUpdateOperationsInput | $Enums.CategoriaGasto
     descripcion?: StringFieldUpdateOperationsInput | string
     valor?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string

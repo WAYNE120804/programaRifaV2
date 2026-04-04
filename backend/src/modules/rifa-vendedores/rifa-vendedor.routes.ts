@@ -1,4 +1,6 @@
 import { Router } from 'express';
+import { RolUsuario } from '../../lib/prisma-client';
+import { requireRole } from '../../middlewares/auth';
 
 import {
   getAbonosRifaVendedor,
@@ -19,13 +21,29 @@ export const rifaVendedorRouter = Router();
 
 rifaVendedorRouter.get('/', getAllRifaVendedores);
 rifaVendedorRouter.get('/:id/asignaciones', getAsignacionesRifaVendedor);
-rifaVendedorRouter.post('/:id/asignaciones', postAsignacionRifaVendedor);
+rifaVendedorRouter.post(
+  '/:id/asignaciones',
+  requireRole(RolUsuario.ADMIN, RolUsuario.CAJERO),
+  postAsignacionRifaVendedor
+);
 rifaVendedorRouter.get('/:id/devoluciones', getDevolucionesRifaVendedor);
-rifaVendedorRouter.post('/:id/devoluciones', postDevolucionRifaVendedor);
+rifaVendedorRouter.post(
+  '/:id/devoluciones',
+  requireRole(RolUsuario.ADMIN, RolUsuario.CAJERO),
+  postDevolucionRifaVendedor
+);
 rifaVendedorRouter.get('/:id/abonos', getAbonosRifaVendedor);
-rifaVendedorRouter.post('/:id/abonos', postAbonoRifaVendedor);
-rifaVendedorRouter.post('/:id/abonos/:abonoId/anular', postAnularAbono);
+rifaVendedorRouter.post(
+  '/:id/abonos',
+  requireRole(RolUsuario.ADMIN, RolUsuario.CAJERO),
+  postAbonoRifaVendedor
+);
+rifaVendedorRouter.post(
+  '/:id/abonos/:abonoId/anular',
+  requireRole(RolUsuario.ADMIN),
+  postAnularAbono
+);
 rifaVendedorRouter.get('/:id', getRifaVendedor);
-rifaVendedorRouter.post('/', postRifaVendedor);
-rifaVendedorRouter.put('/:id', putRifaVendedor);
-rifaVendedorRouter.delete('/:id', removeRifaVendedor);
+rifaVendedorRouter.post('/', requireRole(RolUsuario.ADMIN), postRifaVendedor);
+rifaVendedorRouter.put('/:id', requireRole(RolUsuario.ADMIN), putRifaVendedor);
+rifaVendedorRouter.delete('/:id', requireRole(RolUsuario.ADMIN), removeRifaVendedor);

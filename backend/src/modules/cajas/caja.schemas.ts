@@ -10,6 +10,10 @@ export type CreateSubCajaPayload = {
   nombre: string;
 };
 
+export type PrepareWebChannelPayload = {
+  rifaId: string;
+};
+
 function parseRequiredString(value: unknown, fieldName: string) {
   if (typeof value !== 'string' || value.trim().length === 0) {
     throw new AppError(`El campo "${fieldName}" es obligatorio.`);
@@ -22,5 +26,11 @@ export function parseCreateSubCajaPayload(input: SubCajaInput): CreateSubCajaPay
   return {
     rifaId: parseRequiredString(input.rifaId, 'rifaId'),
     nombre: parseRequiredString(input.nombre, 'nombre'),
+  };
+}
+
+export function parsePrepareWebChannelPayload(input: { rifaId?: unknown }): PrepareWebChannelPayload {
+  return {
+    rifaId: parseRequiredString(input.rifaId, 'rifaId'),
   };
 }

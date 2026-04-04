@@ -1,6 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.getAllBoletas = getAllBoletas;
+exports.getPublicBoletas = getPublicBoletas;
 exports.getBoleta = getBoleta;
 exports.putBoleta = putBoleta;
 const boleta_service_1 = require("./boleta.service");
@@ -12,6 +13,15 @@ async function getAllBoletas(req, res, next) {
     try {
         const filters = (0, boleta_schemas_1.parseBoletaListFilters)(req.query);
         res.json(await (0, boleta_service_1.listBoletas)(filters));
+    }
+    catch (error) {
+        next(error);
+    }
+}
+async function getPublicBoletas(req, res, next) {
+    try {
+        const filters = (0, boleta_schemas_1.parsePublicBoletaListFilters)(req.query);
+        res.json(await (0, boleta_service_1.listPublicBoletas)(filters));
     }
     catch (error) {
         next(error);

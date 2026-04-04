@@ -1,7 +1,9 @@
 import { Router } from 'express';
 
+import { authRouter, usuarioRouter } from '../modules/auth/auth.routes';
 import { boletaRouter } from '../modules/boletas/boleta.routes';
 import { cajaRouter, subCajaRouter } from '../modules/cajas/caja.routes';
+import { checkoutPublicoRouter } from '../modules/checkout-publico/checkout-publico.routes';
 import { configuracionRouter } from '../modules/configuracion/configuracion.routes';
 import { gastoReciboRouter } from '../modules/gasto-recibos/gasto-recibo.routes';
 import { gastoRouter } from '../modules/gastos/gasto.routes';
@@ -16,11 +18,14 @@ import { vendedorRouter } from '../modules/vendedores/vendedor.routes';
 export const apiRouter = Router();
 
 apiRouter.use('/health', healthRouter);
+apiRouter.use('/auth', authRouter);
+apiRouter.use('/usuarios', usuarioRouter);
 apiRouter.use('/juego', juegoRouter);
 apiRouter.use('/premios', premioRouter);
 apiRouter.use('/configuracion', configuracionRouter);
 apiRouter.use('/boletas', boletaRouter);
 apiRouter.use('/cajas', cajaRouter);
+apiRouter.use('/checkout-publico', checkoutPublicoRouter);
 apiRouter.use('/subcajas', subCajaRouter);
 apiRouter.use('/gasto-recibos', gastoReciboRouter);
 apiRouter.use('/gastos', gastoRouter);

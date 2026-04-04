@@ -5,6 +5,14 @@ import { getPrisma } from '../../lib/prisma';
 import type { AnularAbonoPayload, CreateAbonoPayload } from './abono.schemas';
 
 const abonoInclude = {
+  usuario: {
+    select: {
+      id: true,
+      nombre: true,
+      email: true,
+      rol: true,
+    },
+  },
   recibo: true,
   subCaja: {
     select: {
@@ -146,12 +154,16 @@ async function getRifaVendedorOrFail(rifaVendedorId: string) {
   return relation;
 }
 
-export async function listAbonosByRifaVendedor(rifaVendedorId: string) {
+export async function listAbonosByRifaVendedor(
+  rifaVendedorId: string,
+  filters?: { usuarioId?: string }
+) {
   await getRifaVendedorOrFail(rifaVendedorId);
 
   return prismaClient().abonoVendedor.findMany({
     where: {
       rifaVendedorId,
+      ...(filters?.usuarioId ? { usuarioId: filters.usuarioId } : {}),
     },
     include: abonoInclude,
     orderBy: {
@@ -162,7 +174,8 @@ export async function listAbonosByRifaVendedor(rifaVendedorId: string) {
 
 export async function createAbono(
   rifaVendedorId: string,
-  payload: CreateAbonoPayload
+  payload: CreateAbonoPayload,
+  usuarioId?: string
 ) {
   const prisma = prismaClient();
   const relation = await getRifaVendedorOrFail(rifaVendedorId);
@@ -223,6 +236,7 @@ export async function createAbono(
       data: {
         rifaVendedorId,
         subCajaId: payload.subCajaId,
+        usuarioId,
         valor: payload.valor,
         fecha: payload.fecha || new Date(),
         descripcion: payload.descripcion,
@@ -273,6 +287,7 @@ export async function createAbono(
         rifaId: relation.rifa.id,
         vendedorId: relation.vendedor.id,
         abonoVendedorId: abono.id,
+        usuarioId,
       },
     });
 
@@ -323,7 +338,11 @@ export async function getReciboByCodigo(codigo: string) {
   return recibo;
 }
 
-export async function anularAbono(abonoId: string, payload: AnularAbonoPayload) {
+export async function anularAbono(
+  abonoId: string,
+  payload: AnularAbonoPayload,
+  usuarioId?: string
+) {
   const prisma = prismaClient();
   const abono = (await prisma.abonoVendedor.findUnique({
     where: { id: abonoId },
@@ -436,6 +455,7 @@ export async function anularAbono(abonoId: string, payload: AnularAbonoPayload) 
         rifaId: abono.rifaVendedor.rifa.id,
         vendedorId: abono.rifaVendedor.vendedor.id,
         abonoVendedorId: abono.id,
+        usuarioId,
       },
     });
 

@@ -21,6 +21,7 @@ export async function getAllGastos(
     const data = await listGastos({
       rifaId: getStringParam(req.query.rifaId as string | string[] | undefined),
       categoria: getStringParam(req.query.categoria as string | string[] | undefined),
+      usuarioId: getStringParam(req.query.usuarioId as string | string[] | undefined),
     });
 
     res.json(data);
@@ -49,7 +50,7 @@ export async function postGasto(
 ) {
   try {
     const payload = parseCreateGastoPayload(req.body);
-    const data = await createGasto(payload);
+    const data = await createGasto(payload, req.authUser?.id);
     res.status(201).json(data);
   } catch (error) {
     next(error);
@@ -63,7 +64,7 @@ export async function postAnularGasto(
 ) {
   try {
     const payload = parseAnularGastoPayload(req.body);
-    await anularGasto(getStringParam(req.params.id), payload);
+    await anularGasto(getStringParam(req.params.id), payload, req.authUser?.id);
     res.status(204).send();
   } catch (error) {
     next(error);

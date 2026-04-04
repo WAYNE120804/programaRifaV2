@@ -2,8 +2,10 @@ import { EstadoBoleta, Prisma } from '../../lib/prisma-client';
 
 import { AppError } from '../../lib/app-error';
 import { getPrisma } from '../../lib/prisma';
+import { releaseExpiredPublicReservations } from '../checkout-publico/checkout-publico.service';
 import type {
   BoletaListFilters,
+  PublicBoletaListFilters,
   UpdateBoletaPayload,
 } from './boleta.schemas';
 
@@ -81,6 +83,64 @@ export async function listBoletas(filters: BoletaListFilters) {
     include: boletaInclude,
     orderBy: [{ numero: 'asc' }],
   });
+}
+
+export async function listPublicBoletas(filters: PublicBoletaListFilters) {
+  await releaseExpiredPublicReservations();
+
+  const prisma = prismaClient();
+  const relation = await prisma.rifaVendedor.findFirst({
+    where: {
+      rifaId: filters.rifaId,
+      vendedor: {
+        nombre: 'PAGINA WEB',
+      },
+    },
+    select: {
+      id: true,
+      vendedor: {
+        select: {
+          id: true,
+          nombre: true,
+        },
+      },
+    },
+  });
+
+  if (!relation) {
+    return {
+      relation: null,
+      boletas: [],
+    };
+  }
+
+  const boletas = await prisma.boleta.findMany({
+    where: {
+      rifaId: filters.rifaId,
+      rifaVendedorId: relation.id,
+      estado: {
+        in: [
+          EstadoBoleta.ASIGNADA,
+          EstadoBoleta.RESERVADA,
+          EstadoBoleta.VENDIDA,
+          EstadoBoleta.PAGADA,
+        ],
+      },
+    },
+    select: {
+      id: true,
+      numero: true,
+      estado: true,
+      reservadaHasta: true,
+      precio: true,
+    },
+    orderBy: [{ numero: 'asc' }],
+  });
+
+  return {
+    relation,
+    boletas,
+  };
 }
 
 export async function getBoletaById(id: string) {

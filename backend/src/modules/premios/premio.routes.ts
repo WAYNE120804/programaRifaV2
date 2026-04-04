@@ -1,4 +1,6 @@
 import { Router } from 'express';
+import { RolUsuario } from '../../lib/prisma-client';
+import { requireRole } from '../../middlewares/auth';
 import {
   getPremio,
   getPremiosByRifa,
@@ -12,7 +14,7 @@ export const premioRouter = Router();
 
 premioRouter.get('/', getPremiosByRifa);
 premioRouter.get('/:id', getPremio);
-premioRouter.post('/', postPremio);
-premioRouter.put('/:id', putPremio);
-premioRouter.put('/:id/boletas', putPremioBoletas);
-premioRouter.delete('/:id', removePremio);
+premioRouter.post('/', requireRole(RolUsuario.ADMIN), postPremio);
+premioRouter.put('/:id', requireRole(RolUsuario.ADMIN), putPremio);
+premioRouter.put('/:id/boletas', requireRole(RolUsuario.ADMIN), putPremioBoletas);
+premioRouter.delete('/:id', requireRole(RolUsuario.ADMIN), removePremio);

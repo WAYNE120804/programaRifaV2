@@ -57,49 +57,72 @@ export async function listJuego(filters: JuegoListFilters) {
     throw new AppError('El premio no pertenece a la rifa seleccionada.', 409);
   }
 
-  const relaciones = await prisma.rifaVendedor.findMany({
-    where: {
-      rifaId: filters.rifaId,
-      ...(filters.rifaVendedorId ? { id: filters.rifaVendedorId } : {}),
-    },
-    select: {
-      id: true,
-      comisionPct: true,
-      precioCasa: true,
-      vendedor: {
-        select: {
-          id: true,
-          nombre: true,
-          documento: true,
-          telefono: true,
-          direccion: true,
-        },
+  const [relaciones, registros] = await Promise.all([
+    prisma.rifaVendedor.findMany({
+      where: {
+        rifaId: filters.rifaId,
+        ...(filters.rifaVendedorId ? { id: filters.rifaVendedorId } : {}),
       },
-      boletas: {
-        where: {
-          premios: {
-            some: {
-              premioId: filters.premioId,
-            },
+      select: {
+        id: true,
+        comisionPct: true,
+        precioCasa: true,
+        vendedor: {
+          select: {
+            id: true,
+            nombre: true,
+            documento: true,
+            telefono: true,
+            direccion: true,
           },
-          ...(filters.numero ? { numero: { contains: filters.numero } } : {}),
         },
-        select: {
-          id: true,
-          numero: true,
-          estado: true,
-        },
-        orderBy: {
-          numero: 'asc',
+        boletas: {
+          where: {
+            premios: {
+              some: {
+                premioId: filters.premioId,
+              },
+            },
+            ...(filters.numero ? { numero: { contains: filters.numero } } : {}),
+          },
+          select: {
+            id: true,
+            numero: true,
+            estado: true,
+          },
+          orderBy: {
+            numero: 'asc',
+          },
         },
       },
-    },
-    orderBy: {
-      vendedor: {
-        nombre: 'asc',
+      orderBy: {
+        vendedor: {
+          nombre: 'asc',
+        },
       },
-    },
-  });
+    }),
+    prisma.juegoRegistro.findMany({
+      where: {
+        premioId: filters.premioId,
+        rifaVendedor: {
+          rifaId: filters.rifaId,
+          ...(filters.rifaVendedorId ? { id: filters.rifaVendedorId } : {}),
+        },
+      },
+      include: {
+        usuario: {
+          select: {
+            id: true,
+            nombre: true,
+            email: true,
+            rol: true,
+          },
+        },
+      },
+    }),
+  ]);
+
+  const registroMap = new Map(registros.map((item) => [item.rifaVendedorId, item]));
 
   const grupos = relaciones
     .map((relation) => ({
@@ -108,6 +131,7 @@ export async function listJuego(filters: JuegoListFilters) {
       precioCasa: relation.precioCasa,
       totalBoletas: relation.boletas.length,
       boletas: relation.boletas,
+      registro: registroMap.get(relation.id) || null,
     }))
     .filter((relation) =>
       filters.rifaVendedorId ? true : relation.totalBoletas > 0
@@ -132,13 +156,16 @@ export async function listJuego(filters: JuegoListFilters) {
 
 export async function actualizarJuegoRifaVendedor(
   rifaVendedorId: string,
-  payload: ActualizarJuegoPayload
+  payload: ActualizarJuegoPayload,
+  usuarioId?: string
 ) {
   const prisma = prismaClient();
   const premio = await getPremioConRifa(payload.premioId);
 
   const relation = await prisma.rifaVendedor.findUnique({
-    where: { id: rifaVendedorId },
+    where: {
+      id: rifaVendedorId,
+    },
     include: {
       rifa: {
         select: {
@@ -205,7 +232,7 @@ export async function actualizarJuegoRifaVendedor(
     selectedIds = boletasElegibles.map((boleta) => boleta.id);
   }
 
-  await prisma.$transaction(async (tx) => {
+    await prisma.$transaction(async (tx) => {
     await tx.boletaPremio.deleteMany({
       where: {
         premioId: payload.premioId,
@@ -215,16 +242,37 @@ export async function actualizarJuegoRifaVendedor(
       },
     });
 
-    if (selectedIds.length > 0) {
-      await tx.boletaPremio.createMany({
+      if (selectedIds.length > 0) {
+        await tx.boletaPremio.createMany({
         data: selectedIds.map((boletaId) => ({
           premioId: payload.premioId,
           boletaId,
         })),
         skipDuplicates: true,
+        });
+      }
+
+      await tx.juegoRegistro.upsert({
+        where: {
+          rifaVendedorId_premioId: {
+            rifaVendedorId,
+            premioId: payload.premioId,
+          },
+        },
+        update: {
+          usuarioId,
+          fecha: new Date(),
+          totalBoletas: selectedIds.length,
+        },
+        create: {
+          rifaVendedorId,
+          premioId: payload.premioId,
+          usuarioId,
+          fecha: new Date(),
+          totalBoletas: selectedIds.length,
+        },
       });
-    }
-  });
+    });
 
   return listJuego({
     rifaId: relation.rifa.id,

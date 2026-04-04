@@ -2,6 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.parseBoletaListFilters = parseBoletaListFilters;
 exports.parseUpdateBoletaPayload = parseUpdateBoletaPayload;
+exports.parsePublicBoletaListFilters = parsePublicBoletaListFilters;
 const prisma_client_1 = require("../../lib/prisma-client");
 const app_error_1 = require("../../lib/app-error");
 function parseOptionalString(value) {
@@ -61,5 +62,14 @@ function parseUpdateBoletaPayload(input) {
     return {
         estado,
         rifaVendedorId,
+    };
+}
+function parsePublicBoletaListFilters(input) {
+    const rifaId = parseOptionalString(input.rifaId);
+    if (!rifaId) {
+        throw new app_error_1.AppError('El filtro "rifaId" es obligatorio.', 400);
+    }
+    return {
+        rifaId,
     };
 }

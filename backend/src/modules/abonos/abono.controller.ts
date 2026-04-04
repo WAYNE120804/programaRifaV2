@@ -17,7 +17,9 @@ export async function getAbonosRifaVendedor(
   next: NextFunction
 ) {
   try {
-    const data = await listAbonosByRifaVendedor(getStringParam(req.params.id));
+    const data = await listAbonosByRifaVendedor(getStringParam(req.params.id), {
+      usuarioId: getStringParam(req.query.usuarioId as string | string[] | undefined),
+    });
     res.json(data);
   } catch (error) {
     next(error);
@@ -31,7 +33,11 @@ export async function postAbonoRifaVendedor(
 ) {
   try {
     const payload = parseCreateAbonoPayload(req.body);
-    const data = await createAbono(getStringParam(req.params.id), payload);
+    const data = await createAbono(
+      getStringParam(req.params.id),
+      payload,
+      req.authUser?.id
+    );
     res.status(201).json(data);
   } catch (error) {
     next(error);
@@ -45,7 +51,7 @@ export async function postAnularAbono(
 ) {
   try {
     const payload = parseAnularAbonoPayload(req.body);
-    await anularAbono(getStringParam(req.params.abonoId), payload);
+    await anularAbono(getStringParam(req.params.abonoId), payload, req.authUser?.id);
     res.status(204).send();
   } catch (error) {
     next(error);

@@ -20,8 +20,10 @@ const GastoList = () => {
   const { config } = useAppConfig();
   const [gastos, setGastos] = useState<any[]>([]);
   const [rifas, setRifas] = useState<any[]>([]);
+  const [usuarios, setUsuarios] = useState<any[]>([]);
   const [selectedRifaId, setSelectedRifaId] = useState('');
   const [selectedCategoria, setSelectedCategoria] = useState('');
+  const [selectedUsuarioId, setSelectedUsuarioId] = useState('');
   const [searchTerm, setSearchTerm] = useState('');
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -29,13 +31,15 @@ const GastoList = () => {
   useEffect(() => {
     const loadData = async () => {
       try {
-        const [gastosResponse, rifasResponse] = await Promise.all([
+        const [gastosResponse, rifasResponse, usuariosResponse] = await Promise.all([
           client.get(endpoints.gastos()),
           client.get(endpoints.rifas()),
+          client.get(endpoints.usuarios()),
         ]);
 
         setGastos(gastosResponse.data);
         setRifas(rifasResponse.data);
+        setUsuarios(usuariosResponse.data);
       } catch (requestError) {
         setError((requestError as Error).message);
       } finally {
@@ -55,14 +59,24 @@ const GastoList = () => {
     [rifas]
   );
 
+  const usuarioOptions = useMemo(
+    () =>
+      usuarios.map((usuario) => ({
+        value: usuario.id,
+        label: `${usuario.nombre} - ${usuario.rol}`,
+      })),
+    [usuarios]
+  );
+
   const filteredGastos = useMemo(() => {
     const normalized = searchTerm.trim().toLowerCase();
 
     return gastos.filter((gasto) => {
       const matchesRifa = selectedRifaId ? gasto.rifaId === selectedRifaId : true;
       const matchesCategoria = selectedCategoria ? gasto.categoria === selectedCategoria : true;
+      const matchesUsuario = selectedUsuarioId ? gasto.usuarioId === selectedUsuarioId : true;
 
-      if (!matchesRifa || !matchesCategoria) {
+      if (!matchesRifa || !matchesCategoria || !matchesUsuario) {
         return false;
       }
 
@@ -82,7 +96,7 @@ const GastoList = () => {
         consecutivo.includes(normalized)
       );
     });
-  }, [gastos, searchTerm, selectedCategoria, selectedRifaId]);
+  }, [gastos, searchTerm, selectedCategoria, selectedRifaId, selectedUsuarioId]);
 
   const activeFilteredGastos = useMemo(
     () => filteredGastos.filter((gasto) => !gasto.anuladoAt),
@@ -111,6 +125,11 @@ const GastoList = () => {
       key: 'valor',
       header: 'VALOR',
       render: (row: any) => formatCOP(row.valor),
+    },
+    {
+      key: 'usuario',
+      header: 'USUARIO',
+      render: (row: any) => row.usuario?.nombre || 'SISTEMA',
     },
     {
       key: 'categoria',
@@ -218,7 +237,7 @@ const GastoList = () => {
             Filtra por rifa o categoria y luego busca por descripcion, codigo unico o consecutivo del recibo.
           </p>
 
-          <div className="mt-6 grid gap-4 lg:grid-cols-[minmax(0,320px)_minmax(0,280px)_auto]">
+          <div className="mt-6 grid gap-4 lg:grid-cols-[minmax(0,280px)_minmax(0,240px)_minmax(0,280px)_auto]">
             <div>
               <SearchableSelect
                 options={rifaOptions}
@@ -244,6 +263,19 @@ const GastoList = () => {
                 ))}
               </select>
             </label>
+            <div>
+              <span className="text-sm text-slate-600">Trabajador</span>
+              <div className="mt-1">
+                <SearchableSelect
+                  options={usuarioOptions}
+                  value={selectedUsuarioId}
+                  onChange={setSelectedUsuarioId}
+                  placeholder="Todos los trabajadores"
+                  clearable
+                  clearLabel="Quitar filtro de trabajador"
+                />
+              </div>
+            </div>
             <div className="flex items-end">
               <div className="flex gap-3">
                 <button

@@ -70,7 +70,9 @@ async function putRifaVendedor(req, res, next) {
 }
 async function getAsignacionesRifaVendedor(req, res, next) {
     try {
-        const data = await (0, rifa_vendedor_service_1.listAsignacionesByRifaVendedor)(getStringParam(req.params.id));
+        const data = await (0, rifa_vendedor_service_1.listAsignacionesByRifaVendedor)(getStringParam(req.params.id), {
+            usuarioId: getStringParam(req.query.usuarioId),
+        });
         res.json(data);
     }
     catch (error) {
@@ -80,7 +82,7 @@ async function getAsignacionesRifaVendedor(req, res, next) {
 async function postAsignacionRifaVendedor(req, res, next) {
     try {
         const payload = (0, rifa_vendedor_schemas_1.parseCreateAsignacionPayload)(req.body);
-        const data = await (0, rifa_vendedor_service_1.createAsignacion)(getStringParam(req.params.id), payload);
+        const data = await (0, rifa_vendedor_service_1.createAsignacion)(getStringParam(req.params.id), payload, req.authUser?.id);
         res.status(201).json(data);
     }
     catch (error) {
@@ -89,7 +91,9 @@ async function postAsignacionRifaVendedor(req, res, next) {
 }
 async function getDevolucionesRifaVendedor(req, res, next) {
     try {
-        const data = await (0, rifa_vendedor_service_1.listDevolucionesByRifaVendedor)(getStringParam(req.params.id));
+        const data = await (0, rifa_vendedor_service_1.listDevolucionesByRifaVendedor)(getStringParam(req.params.id), {
+            usuarioId: getStringParam(req.query.usuarioId),
+        });
         res.json(data);
     }
     catch (error) {
@@ -99,7 +103,7 @@ async function getDevolucionesRifaVendedor(req, res, next) {
 async function postDevolucionRifaVendedor(req, res, next) {
     try {
         const payload = (0, rifa_vendedor_schemas_1.parseCreateDevolucionPayload)(req.body);
-        const data = await (0, rifa_vendedor_service_1.createDevolucion)(getStringParam(req.params.id), payload);
+        const data = await (0, rifa_vendedor_service_1.createDevolucion)(getStringParam(req.params.id), payload, req.authUser?.id);
         res.status(201).json(data);
     }
     catch (error) {

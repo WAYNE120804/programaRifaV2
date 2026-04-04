@@ -227,6 +227,12 @@ const ReciboView = () => {
                   </dt>
                   <dd className="mt-2 break-all text-base text-slate-900">{receipt.codigoUnico}</dd>
                 </div>
+                <div className="rounded-2xl border border-slate-200 bg-white p-4">
+                  <dt className="text-xs font-semibold uppercase tracking-[0.12em] text-slate-500">
+                    Registrado por
+                  </dt>
+                  <dd className="mt-2 text-base text-slate-900">{abono.usuario?.nombre || 'SISTEMA'}</dd>
+                </div>
               </dl>
 
               <div className="mt-4 rounded-2xl border border-slate-200 bg-white p-4">

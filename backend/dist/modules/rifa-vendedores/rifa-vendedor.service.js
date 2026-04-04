@@ -40,6 +40,14 @@ const rifaVendedorInclude = {
     },
 };
 const asignacionInclude = {
+    usuario: {
+        select: {
+            id: true,
+            nombre: true,
+            email: true,
+            rol: true,
+        },
+    },
     rifaVendedor: {
         select: {
             id: true,
@@ -90,6 +98,14 @@ const asignacionInclude = {
     },
 };
 const devolucionInclude = {
+    usuario: {
+        select: {
+            id: true,
+            nombre: true,
+            email: true,
+            rol: true,
+        },
+    },
     rifaVendedor: {
         select: {
             id: true,
@@ -298,11 +314,12 @@ async function updateRifaVendedor(id, payload) {
         include: rifaVendedorInclude,
     });
 }
-async function listAsignacionesByRifaVendedor(id) {
+async function listAsignacionesByRifaVendedor(id, filters) {
     await getRifaVendedorById(id);
     const rows = await prismaClient().asignacionBoletas.findMany({
         where: {
             rifaVendedorId: id,
+            ...(filters?.usuarioId ? { usuarioId: filters.usuarioId } : {}),
         },
         include: asignacionInclude,
         orderBy: {
@@ -316,7 +333,7 @@ async function listAsignacionesByRifaVendedor(id) {
         rifaVendedor: withTotalAbonado(row.rifaVendedor),
     }));
 }
-async function createAsignacion(rifaVendedorId, payload) {
+async function createAsignacion(rifaVendedorId, payload, usuarioId) {
     const prisma = prismaClient();
     const relation = await prisma.rifaVendedor.findUnique({
         where: { id: rifaVendedorId },
@@ -488,6 +505,7 @@ async function createAsignacion(rifaVendedorId, payload) {
         const asignacion = await tx.asignacionBoletas.create({
             data: {
                 rifaVendedorId,
+                usuarioId,
                 cantidad: selectedBoletas.length,
                 detalle: {
                     create: selectedBoletas.map((item) => ({
@@ -500,11 +518,12 @@ async function createAsignacion(rifaVendedorId, payload) {
         return asignacion;
     });
 }
-async function listDevolucionesByRifaVendedor(id) {
+async function listDevolucionesByRifaVendedor(id, filters) {
     await getRifaVendedorById(id);
     const rows = await prismaClient().devolucionBoletas.findMany({
         where: {
             rifaVendedorId: id,
+            ...(filters?.usuarioId ? { usuarioId: filters.usuarioId } : {}),
         },
         include: devolucionInclude,
         orderBy: {
@@ -520,7 +539,7 @@ async function listDevolucionesByRifaVendedor(id) {
         rifaVendedor: withTotalAbonado(row.rifaVendedor),
     }));
 }
-async function createDevolucion(rifaVendedorId, payload) {
+async function createDevolucion(rifaVendedorId, payload, usuarioId) {
     const prisma = prismaClient();
     const relation = await prisma.rifaVendedor.findUnique({
         where: { id: rifaVendedorId },
@@ -639,6 +658,7 @@ async function createDevolucion(rifaVendedorId, payload) {
         return tx.devolucionBoletas.create({
             data: {
                 rifaVendedorId,
+                usuarioId,
                 destino: payload.destino,
                 detalle: {
                     create: boletas.map((item) => ({

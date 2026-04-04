@@ -22,6 +22,30 @@ type AppConfig = {
   responsableDepartamento: string | null;
   numeroResolucionAutorizacion: string | null;
   entidadAutoriza: string | null;
+  publicHeroTitle: string | null;
+  publicHeroSubtitle: string | null;
+  publicWhoWeAre: string | null;
+  publicContactPhone: string | null;
+  publicContactWhatsapp: string | null;
+  publicContactEmail: string | null;
+  publicAddress: string | null;
+  publicCity: string | null;
+  publicDepartment: string | null;
+  publicFacebookUrl: string | null;
+  publicInstagramUrl: string | null;
+  publicTiktokUrl: string | null;
+  publicPrimaryCtaText: string | null;
+  publicSecondaryCtaText: string | null;
+  publicSupportText: string | null;
+  publicTermsText: string | null;
+  publicHeroImageDataUrl: string | null;
+  publicTicketBackgroundDataUrl: string | null;
+  publicPrizeGallery: Array<{
+    id: string;
+    nombre: string | null;
+    descripcion: string | null;
+    dataUrl: string;
+  }>;
   themeColors: {
     sidebarBg: string;
     sidebarButtonBg: string;
@@ -58,6 +82,25 @@ const defaultConfig: AppConfig = {
   responsableDepartamento: null,
   numeroResolucionAutorizacion: null,
   entidadAutoriza: null,
+  publicHeroTitle: 'Juega y gana con nosotros',
+  publicHeroSubtitle: null,
+  publicWhoWeAre: null,
+  publicContactPhone: null,
+  publicContactWhatsapp: null,
+  publicContactEmail: null,
+  publicAddress: null,
+  publicCity: null,
+  publicDepartment: null,
+  publicFacebookUrl: null,
+  publicInstagramUrl: null,
+  publicTiktokUrl: null,
+  publicPrimaryCtaText: 'Comprar boletas',
+  publicSecondaryCtaText: 'Verificar compra',
+  publicSupportText: null,
+  publicTermsText: null,
+  publicHeroImageDataUrl: null,
+  publicTicketBackgroundDataUrl: null,
+  publicPrizeGallery: [],
   themeColors: {
     sidebarBg: '#ffffff',
     sidebarButtonBg: '#ffffff',
@@ -96,6 +139,28 @@ export const AppConfigProvider = ({ children }: { children: ReactNode }) => {
       responsableDepartamento: data.responsableDepartamento || null,
       numeroResolucionAutorizacion: data.numeroResolucionAutorizacion || null,
       entidadAutoriza: data.entidadAutoriza || null,
+      publicHeroTitle: data.publicHeroTitle || defaultConfig.publicHeroTitle,
+      publicHeroSubtitle: data.publicHeroSubtitle || null,
+      publicWhoWeAre: data.publicWhoWeAre || null,
+      publicContactPhone: data.publicContactPhone || null,
+      publicContactWhatsapp: data.publicContactWhatsapp || null,
+      publicContactEmail: data.publicContactEmail || null,
+      publicAddress: data.publicAddress || null,
+      publicCity: data.publicCity || null,
+      publicDepartment: data.publicDepartment || null,
+      publicFacebookUrl: data.publicFacebookUrl || null,
+      publicInstagramUrl: data.publicInstagramUrl || null,
+      publicTiktokUrl: data.publicTiktokUrl || null,
+      publicPrimaryCtaText: data.publicPrimaryCtaText || defaultConfig.publicPrimaryCtaText,
+      publicSecondaryCtaText:
+        data.publicSecondaryCtaText || defaultConfig.publicSecondaryCtaText,
+      publicSupportText: data.publicSupportText || null,
+      publicTermsText: data.publicTermsText || null,
+      publicHeroImageDataUrl: data.publicHeroImageDataUrl || null,
+      publicTicketBackgroundDataUrl: data.publicTicketBackgroundDataUrl || null,
+      publicPrizeGallery: Array.isArray(data.publicPrizeGallery)
+        ? data.publicPrizeGallery
+        : [],
       themeColors: {
         ...defaultConfig.themeColors,
         ...(data.themeColors || {}),
@@ -130,6 +195,28 @@ export const AppConfigProvider = ({ children }: { children: ReactNode }) => {
       responsableDepartamento: data.responsableDepartamento || null,
       numeroResolucionAutorizacion: data.numeroResolucionAutorizacion || null,
       entidadAutoriza: data.entidadAutoriza || null,
+      publicHeroTitle: data.publicHeroTitle || defaultConfig.publicHeroTitle,
+      publicHeroSubtitle: data.publicHeroSubtitle || null,
+      publicWhoWeAre: data.publicWhoWeAre || null,
+      publicContactPhone: data.publicContactPhone || null,
+      publicContactWhatsapp: data.publicContactWhatsapp || null,
+      publicContactEmail: data.publicContactEmail || null,
+      publicAddress: data.publicAddress || null,
+      publicCity: data.publicCity || null,
+      publicDepartment: data.publicDepartment || null,
+      publicFacebookUrl: data.publicFacebookUrl || null,
+      publicInstagramUrl: data.publicInstagramUrl || null,
+      publicTiktokUrl: data.publicTiktokUrl || null,
+      publicPrimaryCtaText: data.publicPrimaryCtaText || defaultConfig.publicPrimaryCtaText,
+      publicSecondaryCtaText:
+        data.publicSecondaryCtaText || defaultConfig.publicSecondaryCtaText,
+      publicSupportText: data.publicSupportText || null,
+      publicTermsText: data.publicTermsText || null,
+      publicHeroImageDataUrl: data.publicHeroImageDataUrl || null,
+      publicTicketBackgroundDataUrl: data.publicTicketBackgroundDataUrl || null,
+      publicPrizeGallery: Array.isArray(data.publicPrizeGallery)
+        ? data.publicPrizeGallery
+        : [],
       themeColors: {
         ...defaultConfig.themeColors,
         ...(data.themeColors || {}),

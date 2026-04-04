@@ -3,10 +3,12 @@ import type { NextFunction, Request, Response } from 'express';
 import {
   getBoletaById,
   listBoletas,
+  listPublicBoletas,
   updateBoleta,
 } from './boleta.service';
 import {
   parseBoletaListFilters,
+  parsePublicBoletaListFilters,
   parseUpdateBoletaPayload,
 } from './boleta.schemas';
 
@@ -22,6 +24,19 @@ export async function getAllBoletas(
   try {
     const filters = parseBoletaListFilters(req.query);
     res.json(await listBoletas(filters));
+  } catch (error) {
+    next(error);
+  }
+}
+
+export async function getPublicBoletas(
+  req: Request,
+  res: Response,
+  next: NextFunction
+) {
+  try {
+    const filters = parsePublicBoletaListFilters(req.query);
+    res.json(await listPublicBoletas(filters));
   } catch (error) {
     next(error);
   }

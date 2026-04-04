@@ -2,9 +2,11 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.gastoRouter = void 0;
 const express_1 = require("express");
+const prisma_client_1 = require("../../lib/prisma-client");
+const auth_1 = require("../../middlewares/auth");
 const gasto_controller_1 = require("./gasto.controller");
 exports.gastoRouter = (0, express_1.Router)();
-exports.gastoRouter.get('/', gasto_controller_1.getAllGastos);
-exports.gastoRouter.get('/:id', gasto_controller_1.getGasto);
-exports.gastoRouter.post('/', gasto_controller_1.postGasto);
-exports.gastoRouter.post('/:id/anular', gasto_controller_1.postAnularGasto);
+exports.gastoRouter.get('/', (0, auth_1.requireRole)(prisma_client_1.RolUsuario.ADMIN), gasto_controller_1.getAllGastos);
+exports.gastoRouter.get('/:id', (0, auth_1.requireRole)(prisma_client_1.RolUsuario.ADMIN), gasto_controller_1.getGasto);
+exports.gastoRouter.post('/', (0, auth_1.requireRole)(prisma_client_1.RolUsuario.ADMIN), gasto_controller_1.postGasto);
+exports.gastoRouter.post('/:id/anular', (0, auth_1.requireRole)(prisma_client_1.RolUsuario.ADMIN), gasto_controller_1.postAnularGasto);

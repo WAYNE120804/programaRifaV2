@@ -162,25 +162,25 @@ const CajaReportView = () => {
                   <div className="mt-4 grid gap-4 md:grid-cols-2 xl:grid-cols-4">
                     <div className="theme-summary-card rounded-2xl p-4">
                       <p className="theme-summary-label">RIFA</p>
-                      <p className="theme-summary-value mt-2 text-lg font-semibold">
+                      <p className="theme-fit-value mt-2 font-semibold">
                         {summary.rifa?.nombre || 'SIN RIFA'}
                       </p>
                     </div>
                     <div className="theme-summary-card rounded-2xl p-4">
                       <p className="theme-summary-label">CAJA GENERAL</p>
-                      <p className="theme-summary-value mt-2 text-lg font-semibold">
+                      <p className="theme-fit-value mt-2 font-semibold">
                         {formatCOP(summary.cajaGeneral?.saldo || 0)}
                       </p>
                     </div>
                     <div className="theme-summary-card rounded-2xl p-4">
                       <p className="theme-summary-label">INGRESOS</p>
-                      <p className="theme-summary-value mt-2 text-lg font-semibold">
+                      <p className="theme-fit-value mt-2 font-semibold">
                         {formatCOP(summary.metricas?.totalIngresos || 0)}
                       </p>
                     </div>
                     <div className="theme-summary-card rounded-2xl p-4">
                       <p className="theme-summary-label">EGRESOS</p>
-                      <p className="theme-summary-value mt-2 text-lg font-semibold">
+                      <p className="theme-fit-value mt-2 font-semibold">
                         {formatCOP(summary.metricas?.totalGastos || 0)}
                       </p>
                     </div>
@@ -195,33 +195,33 @@ const CajaReportView = () => {
                   Estado financiero general
                 </h3>
                 <div className="mt-6 grid gap-4 md:grid-cols-2 xl:grid-cols-5">
-                  <div className="theme-summary-card rounded-2xl p-4">
-                    <p className="theme-summary-label">A RECOGER</p>
-                    <p className="theme-summary-value mt-2 text-lg font-semibold">
+                  <div className="theme-summary-card theme-summary-money-card theme-summary-money-card-collect rounded-2xl p-4">
+                    <p className="theme-summary-label text-orange-700">A RECOGER</p>
+                    <p className="theme-fit-value mt-2 font-semibold text-orange-900">
                       {formatCOP(summary.metricas?.dineroPorRecoger || 0)}
                     </p>
                   </div>
-                  <div className="theme-summary-card rounded-2xl p-4">
-                    <p className="theme-summary-label">RECOGIDO</p>
-                    <p className="theme-summary-value mt-2 text-lg font-semibold">
+                  <div className="theme-summary-card theme-summary-money-card theme-summary-money-card-collected rounded-2xl p-4">
+                    <p className="theme-summary-label text-emerald-700">RECOGIDO</p>
+                    <p className="theme-fit-value mt-2 font-semibold text-emerald-900">
                       {formatCOP(summary.metricas?.dineroRecogido || 0)}
                     </p>
                   </div>
-                  <div className="theme-summary-card rounded-2xl p-4">
-                    <p className="theme-summary-label">FALTANTE</p>
-                    <p className="theme-summary-value mt-2 text-lg font-semibold">
+                  <div className="theme-summary-card theme-summary-money-card theme-summary-money-card-missing rounded-2xl p-4">
+                    <p className="theme-summary-label text-rose-700">FALTANTE</p>
+                    <p className="theme-fit-value mt-2 font-semibold text-rose-900">
                       {formatCOP(summary.metricas?.dineroFaltante || 0)}
                     </p>
                   </div>
                   <div className="theme-summary-card rounded-2xl p-4">
                     <p className="theme-summary-label">SUBCAJAS</p>
-                    <p className="theme-summary-value mt-2 text-lg font-semibold">
+                    <p className="theme-fit-value mt-2 font-semibold">
                       {summary.subcajas?.length || 0}
                     </p>
                   </div>
                   <div className="theme-summary-card rounded-2xl p-4">
                     <p className="theme-summary-label">VENDEDORES</p>
-                    <p className="theme-summary-value mt-2 text-lg font-semibold">
+                    <p className="theme-fit-value mt-2 font-semibold">
                       {summary.vendedores?.length || 0}
                     </p>
                   </div>
@@ -265,21 +265,21 @@ const CajaReportView = () => {
                 {summary.subcajas?.map((subCaja: any) => (
                   <div key={subCaja.id} className="theme-summary-card rounded-2xl p-5">
                     <p className="theme-summary-label">SUBCAJA</p>
-                    <p className="theme-summary-value mt-2 text-2xl font-semibold">
+                    <p className="theme-fit-value mt-2 font-semibold">
                       {subCaja.nombre}
                     </p>
                     <div className="mt-4 space-y-2 text-sm text-slate-700">
                       <div className="flex items-center justify-between">
                         <span>Saldo</span>
-                        <strong>{formatCOP(subCaja.saldo)}</strong>
+                        <strong className="theme-fit-value-sm text-right">{formatCOP(subCaja.saldo)}</strong>
                       </div>
                       <div className="flex items-center justify-between">
                         <span>Abonos</span>
-                        <strong>{formatCOP(subCaja.ingresosAbonos)}</strong>
+                        <strong className="theme-fit-value-sm text-right">{formatCOP(subCaja.ingresosAbonos)}</strong>
                       </div>
                       <div className="flex items-center justify-between">
                         <span>Gastos</span>
-                        <strong>{formatCOP(subCaja.egresosGastos)}</strong>
+                        <strong className="theme-fit-value-sm text-right">{formatCOP(subCaja.egresosGastos)}</strong>
                       </div>
                     </div>
                   </div>

@@ -156,6 +156,7 @@ const GastoReciboView = () => {
                 <div className="flex justify-between gap-3"><span className="font-semibold">Categoria</span><span className="text-right">{getGastoCategoryLabel(receipt.gasto.categoria)}</span></div>
                 <div className="flex justify-between gap-3"><span className="font-semibold">Subcaja</span><span className="text-right">{receipt.gasto.subCaja?.nombre || 'SIN SUBCAJA'}</span></div>
                 <div className="flex justify-between gap-3"><span className="font-semibold">Valor</span><span>{formatCOP(receipt.gasto.valor)}</span></div>
+                <div className="flex justify-between gap-3"><span className="font-semibold">Registrado por</span><span className="text-right">{receipt.gasto.usuario?.nombre || 'SISTEMA'}</span></div>
               </div>
 
               <div className="my-4 border-t border-dashed border-slate-300" />
@@ -202,6 +203,12 @@ const GastoReciboView = () => {
                   <p className="theme-summary-label">CODIGO</p>
                   <p className="theme-summary-value mt-3 text-xl font-semibold">
                     {receipt.codigoUnico}
+                  </p>
+                </div>
+                <div className="theme-summary-card rounded-2xl p-5">
+                  <p className="theme-summary-label">REGISTRADO POR</p>
+                  <p className="theme-summary-value mt-3 text-xl font-semibold">
+                    {receipt.gasto.usuario?.nombre || 'SISTEMA'}
                   </p>
                 </div>
               </div>

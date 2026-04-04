@@ -19,7 +19,7 @@ async function getJuego(req, res, next) {
 async function putJuegoRifaVendedor(req, res, next) {
     try {
         const payload = (0, juego_schemas_1.parseActualizarJuegoPayload)(req.body);
-        res.json(await (0, juego_service_1.actualizarJuegoRifaVendedor)(getStringParam(req.params.id), payload));
+        res.json(await (0, juego_service_1.actualizarJuegoRifaVendedor)(getStringParam(req.params.id), payload, req.authUser?.id));
     }
     catch (error) {
         next(error);

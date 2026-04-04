@@ -8,6 +8,14 @@ exports.anularAbono = anularAbono;
 const app_error_1 = require("../../lib/app-error");
 const prisma_1 = require("../../lib/prisma");
 const abonoInclude = {
+    usuario: {
+        select: {
+            id: true,
+            nombre: true,
+            email: true,
+            rol: true,
+        },
+    },
     recibo: true,
     subCaja: {
         select: {
@@ -126,11 +134,12 @@ async function getRifaVendedorOrFail(rifaVendedorId) {
     }
     return relation;
 }
-async function listAbonosByRifaVendedor(rifaVendedorId) {
+async function listAbonosByRifaVendedor(rifaVendedorId, filters) {
     await getRifaVendedorOrFail(rifaVendedorId);
     return prismaClient().abonoVendedor.findMany({
         where: {
             rifaVendedorId,
+            ...(filters?.usuarioId ? { usuarioId: filters.usuarioId } : {}),
         },
         include: abonoInclude,
         orderBy: {
@@ -138,7 +147,7 @@ async function listAbonosByRifaVendedor(rifaVendedorId) {
         },
     });
 }
-async function createAbono(rifaVendedorId, payload) {
+async function createAbono(rifaVendedorId, payload, usuarioId) {
     const prisma = prismaClient();
     const relation = await getRifaVendedorOrFail(rifaVendedorId);
     const saldoAnterior = decimalToNumber(relation.saldoActual);
@@ -188,6 +197,7 @@ async function createAbono(rifaVendedorId, payload) {
             data: {
                 rifaVendedorId,
                 subCajaId: payload.subCajaId,
+                usuarioId,
                 valor: payload.valor,
                 fecha: payload.fecha || new Date(),
                 descripcion: payload.descripcion,
@@ -234,6 +244,7 @@ async function createAbono(rifaVendedorId, payload) {
                 rifaId: relation.rifa.id,
                 vendedorId: relation.vendedor.id,
                 abonoVendedorId: abono.id,
+                usuarioId,
             },
         });
         const recibo = await tx.recibo.create({
@@ -275,7 +286,7 @@ async function getReciboByCodigo(codigo) {
     }
     return recibo;
 }
-async function anularAbono(abonoId, payload) {
+async function anularAbono(abonoId, payload, usuarioId) {
     const prisma = prismaClient();
     const abono = (await prisma.abonoVendedor.findUnique({
         where: { id: abonoId },
@@ -353,6 +364,7 @@ async function anularAbono(abonoId, payload) {
                 rifaId: abono.rifaVendedor.rifa.id,
                 vendedorId: abono.rifaVendedor.vendedor.id,
                 abonoVendedorId: abono.id,
+                usuarioId,
             },
         });
         const updateData = {

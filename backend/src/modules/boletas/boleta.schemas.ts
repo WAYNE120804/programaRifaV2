@@ -11,6 +11,10 @@ type BoletaListQueryInput = {
   juega?: unknown;
 };
 
+type PublicBoletaListQueryInput = {
+  rifaId?: unknown;
+};
+
 type UpdateBoletaInput = {
   estado?: unknown;
   rifaVendedorId?: unknown;
@@ -28,6 +32,10 @@ export type BoletaListFilters = {
 export type UpdateBoletaPayload = {
   estado: EstadoBoleta;
   rifaVendedorId: string | null;
+};
+
+export type PublicBoletaListFilters = {
+  rifaId: string;
 };
 
 function parseOptionalString(value: unknown) {
@@ -109,5 +117,19 @@ export function parseUpdateBoletaPayload(
   return {
     estado,
     rifaVendedorId,
+  };
+}
+
+export function parsePublicBoletaListFilters(
+  input: PublicBoletaListQueryInput
+): PublicBoletaListFilters {
+  const rifaId = parseOptionalString(input.rifaId);
+
+  if (!rifaId) {
+    throw new AppError('El filtro "rifaId" es obligatorio.', 400);
+  }
+
+  return {
+    rifaId,
   };
 }

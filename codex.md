@@ -914,3 +914,645 @@
   - nombre del premio;
   - descripcion;
   - fecha/hora de juego.
+
+## Plan funcional-tecnico 2026-03-31 - Modulo pagina publica y seguridad
+
+### Objetivo general
+
+- construir la experiencia publica de la casa rifera y de las rifas activas;
+- permitir compra web de boletas sin romper la logica administrativa actual;
+- dejar preparado el flujo real para integracion posterior con Wompi;
+- proteger el panel administrativo con autenticacion, roles y endurecimiento basico de seguridad.
+
+### Decisiones funcionales aprobadas
+
+- la venta publica no trabajara sobre boletas libres del sistema de forma directa;
+- se crea una entidad operativa especial tipo vendedor llamada:
+  - `PAGINA WEB`
+- solo las boletas asignadas al vendedor `PAGINA WEB` seran visibles como comprables en la pagina publica;
+- si el admin quiere vender boletas devueltas por web:
+  - primero las deja `DISPONIBLE`;
+  - luego las asigna a `PAGINA WEB`;
+- si el admin no reactiva una boleta devuelta:
+  - se mantiene `DEVUELTA` y amarrada al historial operativo;
+- la venta web tendra su propia subcaja operativa:
+  - `WOMPI WEB`
+- si una boleta queda pagada en su totalidad:
+  - queda elegible para `JUEGO`;
+  - el control final del premio se mantiene desde el modulo administrativo.
+
+### Requisitos funcionales del panel publico
+
+#### Home publico
+
+- mostrar identidad de la casa rifera;
+- barra superior de navegacion:
+  - `Rifas`
+  - `Quienes somos`
+  - `Reglamento`
+  - `Verificar`
+  - `Contacto`
+- hero principal con rifa activa o rifas destacadas;
+- acceso a rifas activas;
+- informacion de confianza:
+  - responsable;
+  - entidad autorizadora;
+  - resolucion;
+  - reglamento.
+
+#### Detalle publico de rifa
+
+- hero con foto principal del premio;
+- carrusel de imagenes del premio;
+- nombre de la rifa;
+- loteria con la que juega;
+- fecha del premio mayor;
+- lista de premios anticipados y premio mayor;
+- descripcion comercial clara;
+- reglamento visible o descargable;
+- boton fijo de accion:
+  - `Comprar boletas`
+
+#### Selector publico de boletas
+
+- mostrar solo boletas del vendedor `PAGINA WEB`;
+- navegacion por rangos:
+  - `0000 - 0999`, etc.;
+- buscador por numero;
+- seleccion multiple;
+- resumen de seleccion fijo;
+- estados claros por boleta:
+  - disponible;
+  - reservada;
+  - pagada;
+  - no disponible.
+
+#### Checkout publico
+
+- datos minimos obligatorios del cliente:
+  - nombre;
+  - telefono;
+  - cedula;
+- email opcional;
+- resumen de boletas seleccionadas;
+- total a pagar;
+- aceptacion de terminos;
+- boton visual de pago preparado para Wompi.
+
+#### Verificacion publica
+
+- consulta por telefono como criterio principal;
+- opcionalmente por cedula o codigo de compra;
+- debe mostrar:
+  - boletas compradas o reservadas;
+  - estado del pago;
+  - datos basicos de la rifa;
+  - informacion suficiente para soporte al cliente.
+
+#### Verificacion publica por boleta y QR
+
+- cada boleta debe tener un QR unico;
+- al escanearlo debe abrir una ficha publica de la boleta;
+- esa ficha debe mostrar:
+  - nombre de la casa rifera;
+  - imagen/fondo de boleta cargado por admin;
+  - numero de boleta;
+  - nombre de la rifa;
+  - loteria;
+  - premio al que juega;
+  - estado:
+    - `DISPONIBLE`
+    - `RESERVADA`
+    - `PAGADA`
+    - `JUGANDO`
+    - `DEVUELTA`
+    - `FUERA DE CIRCULACION`
+  - datos del comprador si existen;
+  - si no existen datos:
+    - mostrar `Disponible` o `Sin datos`.
+
+### Consistencia visual
+
+- el panel publico debe reutilizar el sistema de colores y direccion visual del panel administrativo;
+- el admin debe poder configurar colores base desde un modulo dedicado;
+- se debe mantener coherencia entre:
+  - panel admin;
+  - home publica;
+  - detalle de rifa;
+  - selector de boletas;
+  - ficha publica de boleta;
+  - CTA y mensajes de estado.
+
+### Nuevo modulo administrativo requerido
+
+#### Configuracion pagina web
+
+- se agregara un nuevo menu dentro del panel administrativo:
+  - `Configuracion pagina web`
+- este modulo debe permitir administrar:
+  - logo publico;
+  - portada/hero;
+  - imagenes del carrusel del premio;
+  - imagen/fondo de ficha publica de boleta;
+  - texto `Quienes somos`;
+  - texto de contacto;
+  - direccion publica;
+  - telefonos publicos;
+  - redes sociales;
+  - reglamento publico;
+  - textos de terminos y condiciones;
+  - textos promocionales de la rifa activa;
+  - configuracion de CTA y botones;
+  - datos visibles de soporte al comprador.
+
+### Seguridad y endurecimiento del panel administrativo
+
+#### Objetivos
+
+- evitar que el panel administrativo quede publico;
+- exigir autenticacion para toda ruta administrativa;
+- manejar usuarios, sesiones y roles;
+- endurecer backend frente a malas entradas, abuso e intentos basicos de ataque;
+- reducir el riesgo de SQL injection y exposicion accidental de informacion.
+
+#### Usuarios y acceso
+
+- crear modulo `usuarios` y `auth`;
+- login administrativo obligatorio;
+- rutas administrativas protegidas;
+- roles iniciales recomendados:
+  - `SUPERADMIN`
+  - `ADMIN`
+  - `CAJERO`
+  - `OPERADOR`
+- permisos posteriores por modulo si se requiere.
+
+#### Seguridad tecnica minima
+
+- `Prisma` ya reduce fuertemente el riesgo de SQL injection al trabajar con consultas parametrizadas;
+- aun asi se debe endurecer:
+  - validacion estricta de payloads;
+  - sanitizacion de query params y filtros;
+  - rate limiting para auth y rutas publicas sensibles;
+  - headers de seguridad;
+  - CORS controlado;
+  - manejo de archivos subidos;
+  - tokens o sesiones seguras;
+  - hashing de contrasenas;
+  - expiracion de sesion;
+  - logs de acceso y errores.
+
+#### Reglas de seguridad funcional
+
+- no exponer rutas admin en modo anonimo;
+- no exponer datos financieros en la pagina publica;
+- no exponer datos completos del cliente salvo en verificacion controlada;
+- el QR de boleta debe usar token publico seguro, no ids internos;
+- las operaciones criticas deben registrar usuario responsable.
+
+### Modelo operativo recomendado para ventas web
+
+#### Canal de venta
+
+- `PAGINA WEB` sera un `Vendedor` real del sistema;
+- tendra relacion `RifaVendedor` como cualquier otro vendedor;
+- el admin podra:
+  - asignarle boletas aleatorias;
+  - asignarle boletas especificas;
+  - moverle boletas desde devoluciones activadas;
+  - retirarle boletas para pasarlas a otro vendedor.
+
+#### Cliente
+
+- datos minimos:
+  - `nombre`
+  - `telefono`
+  - `cedula`
+- opcional:
+  - `email`
+- el telefono sera la llave operativa principal para verificacion publica.
+
+#### Reserva y venta web
+
+- se recomienda crear entidad `ReservaWeb` o `VentaWeb`;
+- estados recomendados:
+  - `CREADA`
+  - `RESERVADA`
+  - `PENDIENTE_PAGO`
+  - `PAGADA`
+  - `EXPIRADA`
+  - `CANCELADA`
+- la venta web debe quedar ligada a:
+  - cliente;
+  - rifa;
+  - vendedor `PAGINA WEB`;
+  - boletas;
+  - subcaja `WOMPI WEB`.
+
+#### Pago Wompi
+
+- aunque aun no haya credenciales, desde ya debe prepararse:
+  - `paymentProvider = WOMPI`
+  - `externalTransactionId`
+  - `externalReference`
+  - `paymentStatus`
+  - endpoint de webhook;
+  - flujo de confirmacion.
+
+### Integracion con juego
+
+- boleta pagada totalmente:
+  - queda elegible para juego;
+- la participacion efectiva debe seguir respetando:
+  - `rifa`
+  - `premio`
+  - control administrativo del modulo `JUEGO`.
+
+### Integracion con caja y subcajas
+
+- la venta web impactara `Caja general`;
+- la subcaja por defecto sera:
+  - `WOMPI WEB`
+- ingresos web confirmados deben alimentar:
+  - dashboard de caja;
+  - informe de caja;
+  - estado de recaudo por canal;
+  - conciliacion posterior con Wompi.
+
+### Entidades nuevas o ampliadas a contemplar
+
+- `Usuario`
+- `Sesion` o token de acceso
+- `Cliente`
+- `ReservaWeb` o `VentaWeb`
+- `VentaWebBoleta`
+- `PagoWeb`
+- `BoletaQrToken`
+- `ConfiguracionPaginaWeb`
+- posible galeria multimedia para rifas y premios.
+
+### Rutas publicas recomendadas
+
+- `/`
+  - home de la casa rifera;
+- `/rifas`
+  - listado de rifas activas;
+- `/rifas/:slug`
+  - detalle publico de rifa;
+- `/rifas/:slug/boletas`
+  - selector visual de boletas;
+- `/checkout/:reservaId`
+  - resumen y pago;
+- `/verificar`
+  - verificacion por telefono;
+- `/boletas/:token`
+  - ficha publica por QR de boleta.
+
+### APIs nuevas recomendadas
+
+- `GET /api/public/configuracion-web`
+- `GET /api/public/rifas`
+- `GET /api/public/rifas/:id`
+- `GET /api/public/rifas/:id/boletas`
+- `POST /api/public/reservas`
+- `POST /api/public/reservas/:id/pago-intent`
+- `POST /api/public/wompi/webhook`
+- `GET /api/public/verificacion?telefono=...`
+- `GET /api/public/boletas/:token`
+
+### Fases de ejecucion recomendadas
+
+#### Fase publica 0 - Base operativa
+
+- crear vendedor especial `PAGINA WEB`;
+- crear subcaja `WOMPI WEB`;
+- definir estados operativos de reserva/venta web;
+- definir reglas de stock web;
+- definir reglas de paso a juego;
+- definir token QR de boleta;
+- crear modulo de usuarios/autenticacion base para cerrar admin.
+
+#### Fase publica 1 - Branding y estructura
+
+- layout publico;
+- navbar;
+- home de casa rifera;
+- detalle de rifa;
+- premios;
+- loteria;
+- reglamento;
+- carrusel de imagenes;
+- configuracion pagina web.
+
+#### Fase publica 2 - Stock y seleccion de boletas
+
+- cuadrilla visual por rangos;
+- filtros y buscador;
+- seleccion multiple;
+- estados visuales;
+- resumen flotante de seleccion;
+- trabajar solo sobre boletas del vendedor `PAGINA WEB`.
+
+#### Fase publica 3 - Cliente y reserva
+
+- formulario de datos del comprador;
+- creacion de cliente;
+- reserva temporal de boletas;
+- expiracion de reserva;
+- confirmacion visual.
+
+#### Fase publica 4 - Preparacion de pago Wompi
+
+- flujo UI listo para Wompi;
+- almacenamiento de referencia externa;
+- subcaja `WOMPI WEB`;
+- webhook preparado;
+- cambio de estado a `PAGADA` al confirmar.
+
+#### Fase publica 5 - Verificacion y QR
+
+- verificacion por telefono;
+- ficha publica de boleta por QR;
+- consulta de estado de compra;
+- mostrar si la boleta esta disponible, reservada, pagada o jugando.
+
+### Orden de trabajo recomendado a partir de aqui
+
+1. seguridad del panel administrativo:
+   - usuarios;
+   - autenticacion;
+   - proteccion de rutas;
+2. `Configuracion pagina web`;
+3. `PAGINA WEB` como vendedor especial + `WOMPI WEB` como subcaja;
+4. home publico y detalle publico de rifa;
+5. seleccion de boletas;
+6. reserva/cliente;
+7. integracion Wompi;
+8. verificacion y QR por boleta.
+
+### Criterio de exito del proximo gran modulo
+
+- el admin puede controlar totalmente la presencia publica desde configuracion;
+- la rifa publica hereda estilo y colores del sistema;
+- las boletas web salen de un canal controlado;
+- el checkout queda listo para Wompi;
+- el panel admin deja de ser publico;
+- la verificacion publica genera confianza operativa y comercial.
+
+## Avance 2026-03-31 - Punto 1 usuarios, auth y proteccion del panel
+
+- backend:
+  - se creo modulo `auth` con:
+    - `POST /api/auth/login`
+    - `GET /api/auth/me`
+  - se creo modulo basico `usuarios` con:
+    - `GET /api/usuarios`
+    - `POST /api/usuarios`
+    - `PATCH /api/usuarios/:id/activo`
+  - se implemento autenticacion por token firmado con `crypto` nativo;
+  - se implemento hash de contrasenas con `scrypt`;
+  - se agrego middleware global de proteccion para todas las rutas administrativas;
+  - quedaron publicas solo las rutas necesarias:
+    - `GET /api/health`
+    - `POST /api/auth/login`
+    - `GET /api/configuracion`
+    - `GET /api/recibos/codigo/:codigo`
+  - si la base no tiene usuarios, el sistema crea automaticamente un admin inicial usando:
+    - `BOOTSTRAP_ADMIN_NAME`
+    - `BOOTSTRAP_ADMIN_EMAIL`
+    - `BOOTSTRAP_ADMIN_PASSWORD`
+    o valores por defecto de desarrollo.
+- frontend:
+  - se creo `AuthProvider` con persistencia de token en `localStorage`;
+  - se creo pantalla `Login`;
+  - se creo `ProtectedRoute` para cerrar todo el panel administrativo;
+  - se integro envio automatico de `Authorization: Bearer ...` en `axios`;
+  - al recibir `401`, el frontend limpia sesion y obliga reingreso;
+  - se agrego pantalla `Usuarios` para administracion basica de accesos;
+  - el menu lateral ahora muestra:
+    - usuario actual;
+    - rol;
+    - boton `Cerrar sesion`;
+    - opcion `Usuarios` solo para administradores.
+- seguridad base lograda:
+  - el panel administrativo ya no queda publico;
+  - existe primer corte real de autenticacion y control de acceso;
+  - la verificacion publica de recibos no se rompio.
+
+## Ajuste 2026-03-31 - Roles operativos y trazabilidad por usuario
+
+- se confirma criterio de acceso:
+  - `ADMIN` entra a todo el panel;
+  - `CAJERO` puede operar:
+    - `Abonos`
+    - `Asignaciones`
+    - `Devoluciones`
+    - `Juego`
+    - edicion operativa de `Boletas`
+  - `CAJERO` no debe ver:
+    - `Dashboard`
+    - `Gastos`
+    - `Caja`
+    - `Configuracion`
+    - `Usuarios`
+- el permiso de `registrar clientes` queda reservado para la futura fase de clientes/ventas, porque ese modulo aun no existe.
+- toda operacion critica administrativa ahora registra el usuario autenticado que la realizo:
+  - `AbonoVendedor`
+  - `Gasto`
+  - `AsignacionBoletas`
+  - `DevolucionBoletas`
+  - `JuegoRegistro`
+- ese usuario responsable ya se expone en:
+  - tablas de historial;
+  - recibos;
+  - filtros por trabajador en abonos, gastos, asignaciones y devoluciones.
+- criterio de auditoria:
+  - la operacion debe reflejar quien la ejecuto desde la sesion activa;
+  - las anulaciones siguen siendo de control administrativo y no se eliminan del historial.
+
+## Avance 2026-03-31 - Punto 2 configuracion pagina web
+
+- se decide reutilizar el modulo `configuracion` existente como fuente unica de verdad para:
+  - configuracion administrativa;
+  - configuracion visual del panel;
+  - configuracion del futuro panel publico.
+- se crea una nueva pantalla administrativa separada:
+  - `Configuracion pagina web`
+- esta pantalla queda pensada para preparar el modulo publico sin depender aun de Wompi ni de las vistas finales.
+
+### Datos nuevos agregados a configuracion
+
+- portada publica:
+  - `publicHeroTitle`
+  - `publicHeroSubtitle`
+  - `publicHeroImageDataUrl`
+  - `publicPrimaryCtaText`
+  - `publicSecondaryCtaText`
+- contenido institucional:
+  - `publicWhoWeAre`
+  - `publicSupportText`
+  - `publicTermsText`
+- contacto publico:
+  - `publicContactPhone`
+  - `publicContactWhatsapp`
+  - `publicContactEmail`
+  - `publicAddress`
+  - `publicCity`
+  - `publicDepartment`
+- redes:
+  - `publicFacebookUrl`
+  - `publicInstagramUrl`
+  - `publicTiktokUrl`
+- activos visuales:
+  - `publicTicketBackgroundDataUrl`
+  - `publicPrizeGallery[]`
+
+### Alcance del nuevo modulo
+
+- permite definir textos del home publico;
+- permite preparar CTA principales de compra y verificacion;
+- permite cargar imagen destacada para hero;
+- permite cargar fondo de ficha publica de boleta por QR;
+- permite construir galeria/carrusel de premios;
+- permite preparar contacto y ubicacion publica;
+- deja los textos legales y de soporte listos para el panel publico futuro.
+
+### Integracion administrativa
+
+- se agrega nuevo menu lateral:
+  - `Configuracion pagina web`
+- la ruta queda protegida solo para `ADMIN`.
+- la persistencia sigue siendo:
+  - `backend/storage/configuracion.json`
+
+### Estado tecnico
+
+- backend compila;
+- frontend compila;
+- el siguiente paso natural queda listo para comenzar:
+  - `PAGINA WEB` como vendedor especial;
+  - `WOMPI WEB` como subcaja;
+  - home publico y detalle publico de rifa.
+
+## Ajuste 2026-03-31 - Galerias publicas separadas por responsabilidad
+
+- se corrige la distribucion del contenido visual del panel publico:
+  - las fotos del carrusel del premio ya no deben vivir en `Configuracion pagina web`;
+  - ahora deben vivir dentro del modulo `Premios` de cada rifa.
+- `Premio` agrega:
+  - `imagenesJson`
+- cada imagen de premio puede guardar:
+  - `nombre`
+  - `descripcion`
+  - `dataUrl`
+- objetivo:
+  - que cada rifa/premio tenga su propio carrusel visual real y no una galeria global reutilizada por error.
+- `Configuracion pagina web` mantiene solo la galeria institucional de la casa rifera:
+  - fotos de entrega de premios;
+  - ubicacion;
+  - confianza comercial;
+  - soporte y presencia institucional.
+- la galeria institucional tambien admite descripcion por foto.
+- estado:
+  - schema sincronizado;
+  - backend compila;
+  - frontend compila.
+
+## Avance 2026-03-31 - Punto 3 base operativa del canal web
+
+- se crea una preparacion idempotente por rifa para dejar listo el futuro canal publico.
+- criterio operativo implementado:
+  - vendedor especial:
+    - `PAGINA WEB`
+  - subcaja especial:
+    - `WOMPI WEB`
+- backend:
+  - nuevo endpoint administrativo:
+    - `POST /api/cajas/preparar-canal-web`
+  - comportamiento:
+    - valida que la rifa exista;
+    - asegura `Caja principal`;
+    - crea el vendedor `PAGINA WEB` si no existe;
+    - crea la relacion `RifaVendedor` para esa rifa si no existe;
+    - usa `comisionPct = 0`;
+    - usa `precioCasa = precioBoleta` de la rifa;
+    - crea la subcaja `WOMPI WEB` si no existe en la caja principal.
+- `Caja resumen` ahora expone bloque `canalWeb` con:
+  - estado del vendedor web;
+  - estado de la subcaja web;
+  - boletas actuales del canal;
+  - total abonado del canal web.
+- frontend:
+  - `Caja` agrega bloque `Canal web de la rifa`;
+  - desde ahi el admin puede preparar el canal web en un clic;
+  - el bloque informa si ya existen:
+    - vendedor `PAGINA WEB`;
+    - subcaja `WOMPI WEB`;
+    - boletas actuales asignadas al canal;
+    - total abonado del canal.
+- objetivo logrado:
+  - dejar lista la base operativa del modulo publico sin vender aun boletas por web;
+  - evitar creacion manual dispersa de vendedor y subcaja;
+  - mantener trazabilidad y reutilizar la logica administrativa existente.
+
+## Avance 2026-03-31 - Punto 4 home publico y detalle de rifa
+
+- se crean rutas publicas iniciales sin romper el panel administrativo actual:
+  - `/publico`
+  - `/publico/rifas/:id`
+- el panel publico reutiliza:
+  - logo de `Configuracion`;
+  - nombre de la casa rifera;
+  - colores principales del panel administrativo;
+  - `Configuracion pagina web` como fuente de textos y activos visuales.
+
+### Home publico
+
+- muestra:
+  - hero principal;
+  - rifa activa destacada;
+  - navegacion simple:
+    - `Rifas`
+    - `Quienes somos`
+    - `Reglamento`
+    - `Contacto`
+  - bloque institucional de confianza;
+  - galeria institucional configurada desde `Configuracion pagina web`;
+  - datos de contacto publico;
+  - CTA principal hacia la rifa activa.
+
+### Detalle publico de rifa
+
+- muestra:
+  - foto principal del premio;
+  - carrusel de imagenes del premio;
+  - datos de la rifa:
+    - nombre;
+    - loteria;
+    - precio;
+    - fecha de cierre;
+    - numero de cifras;
+  - cronograma de premios;
+  - descripcion y fecha de cada premio;
+  - valor solo si el premio tiene `mostrarValor = true`;
+  - bloque de soporte y reglamento;
+  - CTA visual preparado para el futuro selector de boletas.
+
+### Backend ajustado para el punto publico
+
+- `Rifa detail` ahora incluye en premios:
+  - `imagenesJson`
+  - `mostrarValor`
+  - `valor`
+- esto permite construir el carrusel publico usando directamente las fotos cargadas desde el modulo `Premios`.
+
+### Estado actual del flujo publico
+
+- ya existe:
+  - home publico;
+  - detalle publico de rifa;
+  - identidad visual compartida con admin;
+  - bloque legal y de confianza;
+  - carrusel visual del premio.
+- el siguiente punto natural ya es:
+  - selector publico de boletas del canal `PAGINA WEB`.

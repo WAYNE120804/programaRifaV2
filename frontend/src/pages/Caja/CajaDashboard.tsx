@@ -21,6 +21,7 @@ const CajaDashboard = () => {
   const [error, setError] = useState<string | null>(null);
   const [subCajaNombre, setSubCajaNombre] = useState('');
   const [savingSubCaja, setSavingSubCaja] = useState(false);
+  const [preparingWebChannel, setPreparingWebChannel] = useState(false);
 
   useEffect(() => {
     const loadRifas = async () => {
@@ -126,6 +127,33 @@ const CajaDashboard = () => {
     navigate(`/caja/informe?rifaId=${encodeURIComponent(selectedRifaId)}`);
   };
 
+  const refreshSummary = async () => {
+    const { data } = await client.get(endpoints.cajasResumen(), {
+      params: { rifaId: selectedRifaId },
+    });
+    setSummary(data);
+  };
+
+  const handlePrepareWebChannel = async () => {
+    if (!selectedRifaId) {
+      setError('Selecciona una rifa para preparar el canal web.');
+      return;
+    }
+
+    try {
+      setPreparingWebChannel(true);
+      setError(null);
+      await client.post(endpoints.prepararCanalWeb(), {
+        rifaId: selectedRifaId,
+      });
+      await refreshSummary();
+    } catch (requestError) {
+      setError((requestError as Error).message);
+    } finally {
+      setPreparingWebChannel(false);
+    }
+  };
+
   return (
     <div>
       <Topbar
@@ -208,6 +236,59 @@ const CajaDashboard = () => {
             </div>
 
             <section className="theme-section-card rounded-2xl p-6 shadow-sm">
+              <div className="mb-6 flex flex-wrap items-start justify-between gap-4 rounded-2xl border border-slate-200 bg-slate-50 px-5 py-4">
+                <div>
+                  <h3 className="theme-main-title theme-content-title text-lg font-semibold">
+                    Canal web de la rifa
+                  </h3>
+                  <p className="theme-content-subtitle mt-1 text-sm">
+                    Prepara el vendedor especial <strong>PAGINA WEB</strong> y la subcaja <strong>WOMPI WEB</strong> para la futura venta publica.
+                  </p>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => void handlePrepareWebChannel()}
+                  disabled={!selectedRifaId || preparingWebChannel}
+                  className="rounded-md bg-slate-900 px-4 py-2 text-sm text-white disabled:cursor-not-allowed disabled:opacity-50"
+                >
+                  {preparingWebChannel ? 'PREPARANDO...' : 'PREPARAR CANAL WEB'}
+                </button>
+              </div>
+
+              <div className="mb-6 grid gap-4 md:grid-cols-3">
+                <div className="theme-summary-card rounded-2xl p-5">
+                  <p className="theme-summary-label">VENDEDOR WEB</p>
+                  <p className="theme-summary-value mt-2 text-xl font-semibold">
+                    {summary.canalWeb?.vendedorConfigurado ? 'PAGINA WEB' : 'SIN PREPARAR'}
+                  </p>
+                  <p className="mt-2 text-sm text-slate-600">
+                    {summary.canalWeb?.vendedorConfigurado
+                      ? `${summary.canalWeb?.boletasActuales || 0} boletas actualmente asignadas`
+                      : 'Todavia no existe la relacion web para esta rifa.'}
+                  </p>
+                </div>
+                <div className="theme-summary-card rounded-2xl p-5">
+                  <p className="theme-summary-label">SUBCAJA WEB</p>
+                  <p className="theme-summary-value mt-2 text-xl font-semibold">
+                    {summary.canalWeb?.subCajaConfigurada ? summary.canalWeb?.subCajaNombre : 'SIN PREPARAR'}
+                  </p>
+                  <p className="mt-2 text-sm text-slate-600">
+                    {summary.canalWeb?.subCajaConfigurada
+                      ? 'Lista para recibir pagos Wompi cuando se integre el canal publico.'
+                      : 'No existe todavia la subcaja de cobros web.'}
+                  </p>
+                </div>
+                <div className="theme-summary-card rounded-2xl p-5">
+                  <p className="theme-summary-label">TOTAL ABONADO WEB</p>
+                  <p className="theme-summary-value mt-2 text-xl font-semibold">
+                    {formatCOP(summary.canalWeb?.totalAbonado || 0)}
+                  </p>
+                  <p className="mt-2 text-sm text-slate-600">
+                    Se actualizara cuando existan ventas publicas registradas en la subcaja web.
+                  </p>
+                </div>
+              </div>
+
               <div className="flex flex-wrap items-start justify-between gap-6">
                 <div>
                   <h3 className="theme-main-title theme-content-title text-2xl font-semibold">

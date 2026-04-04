@@ -44,6 +44,9 @@ type PrintableReceiptInput = {
       boletasActuales: number;
       metodoPago: string;
       descripcion?: string | null;
+      usuario?: {
+        nombre?: string | null;
+      } | null;
       rifaVendedor: {
         rifa: {
           nombre: string;
@@ -98,6 +101,9 @@ type PrintableGastoReceiptInput = {
       categoria?: string;
       valor: number | string;
       descripcion: string;
+      usuario?: {
+        nombre?: string | null;
+      } | null;
       rifa: {
         nombre: string;
       };
@@ -715,6 +721,9 @@ export async function printReceiptTicket({
         <div class="row"><span>METODO</span><strong>${escapeHtml(
           receipt.abono.metodoPago
         )}</strong></div>
+        <div class="row"><span>REGISTRO</span><strong>${escapeHtml(
+          receipt.abono.usuario?.nombre || 'SISTEMA'
+        )}</strong></div>
 
         <div class="divider"></div>
 
@@ -1151,6 +1160,9 @@ export function printGastoReceiptTicket({
 
         <div class="row"><span>VALOR</span><strong>${escapeHtml(
           formatReceiptMoney(receipt.gasto.valor)
+        )}</strong></div>
+        <div class="row"><span>REGISTRO</span><strong>${escapeHtml(
+          receipt.gasto.usuario?.nombre || 'SISTEMA'
         )}</strong></div>
 
         <div class="divider"></div>
@@ -1943,9 +1955,29 @@ export function printCajaLetterReport({
         .meta-card { border:1px solid #dbeafe; border-radius:14px; padding:12px; background:#f8fafc; }
         .meta-label { font-size:10px; font-weight:700; letter-spacing:.12em; color:#64748b; text-transform:uppercase; }
         .meta-value { margin-top:8px; font-size:14px; font-weight:700; line-height:1.3; }
-        .summary-grid { margin-top:16px; display:grid; grid-template-columns:repeat(5,minmax(0,1fr)); gap:10px; }
-        .summary-card { border:1px solid #cbd5e1; border-radius:14px; padding:14px; background:#fff; }
-        .summary-value { margin-top:8px; font-size:22px; font-weight:800; }
+        .summary-grid { margin-top:16px; display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:10px; }
+        .summary-card { border:1px solid #cbd5e1; border-radius:14px; padding:14px; background:#fff; min-height:102px; }
+        .summary-card-collect { background:#fff7ed; border-color:#fdba74; }
+        .summary-card-collected { background:#ecfdf5; border-color:#86efac; }
+        .summary-card-missing { background:#fef2f2; border-color:#fca5a5; }
+        .summary-value {
+          margin-top:10px;
+          font-size:18px;
+          font-weight:800;
+          line-height:1.1;
+          letter-spacing:-0.03em;
+          white-space:nowrap;
+          font-variant-numeric: tabular-nums;
+        }
+        .summary-value-money {
+          font-size:17px;
+        }
+        .meta-value-print {
+          margin-top:8px;
+          font-size:13px;
+          font-weight:700;
+          line-height:1.25;
+        }
         .section { margin-top:18px; border:1px solid #cbd5e1; border-radius:16px; padding:16px; page-break-inside:avoid; }
         .section h2 { margin:0; font-size:18px; font-weight:800; text-transform:uppercase; }
         .section p { margin:6px 0 0; color:#64748b; font-size:12px; }
@@ -1978,11 +2010,11 @@ export function printCajaLetterReport({
         </section>
 
         <section class="summary-grid">
-          <div class="summary-card"><div class="meta-label">Caja general</div><div class="summary-value">${escapeHtml(formatReceiptMoney(summary.cajaGeneral.saldo))}</div></div>
-          <div class="summary-card"><div class="meta-label">Dinero a recoger</div><div class="summary-value">${escapeHtml(formatReceiptMoney(summary.metricas.dineroPorRecoger))}</div></div>
-          <div class="summary-card"><div class="meta-label">Dinero recogido</div><div class="summary-value">${escapeHtml(formatReceiptMoney(summary.metricas.dineroRecogido))}</div></div>
-          <div class="summary-card"><div class="meta-label">Faltante</div><div class="summary-value">${escapeHtml(formatReceiptMoney(summary.metricas.dineroFaltante))}</div></div>
-          <div class="summary-card"><div class="meta-label">Impreso</div><div class="meta-value">${escapeHtml(printedAt)}</div></div>
+          <div class="summary-card"><div class="meta-label">Caja general</div><div class="summary-value summary-value-money">${escapeHtml(formatReceiptMoney(summary.cajaGeneral.saldo))}</div></div>
+          <div class="summary-card summary-card-collect"><div class="meta-label">Dinero a recoger</div><div class="summary-value summary-value-money">${escapeHtml(formatReceiptMoney(summary.metricas.dineroPorRecoger))}</div></div>
+          <div class="summary-card summary-card-collected"><div class="meta-label">Dinero recogido</div><div class="summary-value summary-value-money">${escapeHtml(formatReceiptMoney(summary.metricas.dineroRecogido))}</div></div>
+          <div class="summary-card summary-card-missing"><div class="meta-label">Faltante</div><div class="summary-value summary-value-money">${escapeHtml(formatReceiptMoney(summary.metricas.dineroFaltante))}</div></div>
+          <div class="summary-card"><div class="meta-label">Impreso</div><div class="meta-value-print">${escapeHtml(printedAt)}</div></div>
         </section>
 
         <section class="section">

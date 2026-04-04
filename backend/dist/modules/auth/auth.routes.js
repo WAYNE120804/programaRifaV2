@@ -1,0 +1,15 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.usuarioRouter = exports.authRouter = void 0;
+const express_1 = require("express");
+const prisma_client_1 = require("../../lib/prisma-client");
+const auth_1 = require("../../middlewares/auth");
+const auth_controller_1 = require("./auth.controller");
+exports.authRouter = (0, express_1.Router)();
+exports.usuarioRouter = (0, express_1.Router)();
+exports.authRouter.post('/login', auth_controller_1.postLogin);
+exports.authRouter.get('/me', auth_1.authenticateRequest, auth_controller_1.getMe);
+exports.usuarioRouter.use(auth_1.authenticateRequest);
+exports.usuarioRouter.get('/', (0, auth_1.requireRole)(prisma_client_1.RolUsuario.ADMIN, prisma_client_1.RolUsuario.CAJERO), auth_controller_1.getUsuarios);
+exports.usuarioRouter.post('/', (0, auth_1.requireRole)(prisma_client_1.RolUsuario.ADMIN), auth_controller_1.postUsuario);
+exports.usuarioRouter.patch('/:id/activo', (0, auth_1.requireRole)(prisma_client_1.RolUsuario.ADMIN), auth_controller_1.patchUsuarioActivo);

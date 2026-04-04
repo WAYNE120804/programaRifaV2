@@ -7,8 +7,9 @@ import {
   getCajaResumenByRifa,
   listCajas,
   listSubCajasByRifa,
+  prepareWebChannelByRifa,
 } from './caja.service';
-import { parseCreateSubCajaPayload } from './caja.schemas';
+import { parseCreateSubCajaPayload, parsePrepareWebChannelPayload } from './caja.schemas';
 
 function getStringParam(value: string | string[] | undefined) {
   return Array.isArray(value) ? value[0] : value || '';
@@ -66,6 +67,20 @@ export async function removeSubCaja(req: Request, res: Response, next: NextFunct
   try {
     await deleteSubCaja(getStringParam(req.params.id));
     res.status(204).send();
+  } catch (error) {
+    next(error);
+  }
+}
+
+export async function postPrepareWebChannel(
+  req: Request,
+  res: Response,
+  next: NextFunction
+) {
+  try {
+    const payload = parsePrepareWebChannelPayload(req.body);
+    const data = await prepareWebChannelByRifa(payload.rifaId);
+    res.status(201).json(data);
   } catch (error) {
     next(error);
   }

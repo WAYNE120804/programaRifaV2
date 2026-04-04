@@ -168,6 +168,10 @@ const ReceiptTicket = ({
           <span>Metodo de pago</span>
           <span>{abono.metodoPago}</span>
         </div>
+        <div className="flex justify-between gap-3">
+          <span>Registrado por</span>
+          <span>{abono.usuario?.nombre || 'SISTEMA'}</span>
+        </div>
         <div className="rounded-xl bg-slate-50 p-3 text-left">
           <p className="text-[10px] font-semibold uppercase tracking-[0.14em] text-slate-500">
             Descripcion

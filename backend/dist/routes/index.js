@@ -2,8 +2,10 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.apiRouter = void 0;
 const express_1 = require("express");
+const auth_routes_1 = require("../modules/auth/auth.routes");
 const boleta_routes_1 = require("../modules/boletas/boleta.routes");
 const caja_routes_1 = require("../modules/cajas/caja.routes");
+const checkout_publico_routes_1 = require("../modules/checkout-publico/checkout-publico.routes");
 const configuracion_routes_1 = require("../modules/configuracion/configuracion.routes");
 const gasto_recibo_routes_1 = require("../modules/gasto-recibos/gasto-recibo.routes");
 const gasto_routes_1 = require("../modules/gastos/gasto.routes");
@@ -16,11 +18,14 @@ const rifa_vendedor_routes_1 = require("../modules/rifa-vendedores/rifa-vendedor
 const vendedor_routes_1 = require("../modules/vendedores/vendedor.routes");
 exports.apiRouter = (0, express_1.Router)();
 exports.apiRouter.use('/health', health_routes_1.healthRouter);
+exports.apiRouter.use('/auth', auth_routes_1.authRouter);
+exports.apiRouter.use('/usuarios', auth_routes_1.usuarioRouter);
 exports.apiRouter.use('/juego', juego_routes_1.juegoRouter);
 exports.apiRouter.use('/premios', premio_routes_1.premioRouter);
 exports.apiRouter.use('/configuracion', configuracion_routes_1.configuracionRouter);
 exports.apiRouter.use('/boletas', boleta_routes_1.boletaRouter);
 exports.apiRouter.use('/cajas', caja_routes_1.cajaRouter);
+exports.apiRouter.use('/checkout-publico', checkout_publico_routes_1.checkoutPublicoRouter);
 exports.apiRouter.use('/subcajas', caja_routes_1.subCajaRouter);
 exports.apiRouter.use('/gasto-recibos', gasto_recibo_routes_1.gastoReciboRouter);
 exports.apiRouter.use('/gastos', gasto_routes_1.gastoRouter);

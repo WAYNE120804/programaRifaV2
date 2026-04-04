@@ -9,6 +9,14 @@ exports.anularGasto = anularGasto;
 const app_error_1 = require("../../lib/app-error");
 const prisma_1 = require("../../lib/prisma");
 const gastoInclude = {
+    usuario: {
+        select: {
+            id: true,
+            nombre: true,
+            email: true,
+            rol: true,
+        },
+    },
     rifa: {
         select: {
             id: true,
@@ -77,6 +85,7 @@ async function listGastos(filters) {
         where: {
             ...(filters?.rifaId ? { rifaId: filters.rifaId } : {}),
             ...(filters?.categoria ? { categoria: filters.categoria } : {}),
+            ...(filters?.usuarioId ? { usuarioId: filters.usuarioId } : {}),
         },
         include: gastoInclude,
         orderBy: {
@@ -94,7 +103,7 @@ async function getGastoById(id) {
     }
     return gasto;
 }
-async function createGasto(payload) {
+async function createGasto(payload, usuarioId) {
     const prisma = prismaClient();
     const rifa = await prisma.rifa.findUnique({
         where: { id: payload.rifaId },
@@ -143,6 +152,7 @@ async function createGasto(payload) {
             data: {
                 rifaId: payload.rifaId,
                 subCajaId: payload.subCajaId,
+                usuarioId,
                 categoria: payload.categoria,
                 valor: payload.valor,
                 fecha,
@@ -178,6 +188,7 @@ async function createGasto(payload) {
                     subCajaId: subCaja.id,
                     rifaId: payload.rifaId,
                     gastoId: gasto.id,
+                    usuarioId,
                 },
             });
         }
@@ -217,7 +228,7 @@ async function getGastoReciboByCodigo(codigo) {
     }
     return recibo;
 }
-async function anularGasto(gastoId, payload) {
+async function anularGasto(gastoId, payload, usuarioId) {
     const prisma = prismaClient();
     const gasto = (await prisma.gasto.findUnique({
         where: { id: gastoId },
@@ -269,6 +280,7 @@ async function anularGasto(gastoId, payload) {
                     subCajaId: gasto.subCajaId,
                     rifaId: gasto.rifaId,
                     gastoId: gasto.id,
+                    usuarioId,
                 },
             });
         }

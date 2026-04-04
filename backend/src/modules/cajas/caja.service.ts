@@ -4,6 +4,9 @@ import { getPrisma } from '../../lib/prisma';
 
 import type { CreateSubCajaPayload } from './caja.schemas';
 
+const WEB_VENDOR_NAME = 'PAGINA WEB';
+const WOMPI_WEB_SUBCAJA = 'WOMPI WEB';
+
 const cajaInclude = {
   rifa: {
     select: {
@@ -46,6 +49,35 @@ const movimientoInclude = {
     },
   },
 } satisfies Prisma.MovimientoCajaInclude;
+
+const webChannelRelationInclude = {
+  vendedor: {
+    select: {
+      id: true,
+      nombre: true,
+      telefono: true,
+      documento: true,
+      direccion: true,
+    },
+  },
+  rifa: {
+    select: {
+      id: true,
+      nombre: true,
+      estado: true,
+      precioBoleta: true,
+      numeroCifras: true,
+    },
+  },
+  _count: {
+    select: {
+      boletas: true,
+      asignaciones: true,
+      devoluciones: true,
+      abonos: true,
+    },
+  },
+} satisfies Prisma.RifaVendedorInclude;
 
 function prismaClient() {
   const prisma = getPrisma();
@@ -137,6 +169,98 @@ export async function createSubCaja(payload: CreateSubCajaPayload) {
       saldo: 0,
     },
   });
+}
+
+async function ensureWebVendorForRifa(rifaId: string) {
+  const prisma = prismaClient();
+  const caja = await getCajaPrincipalByRifaId(rifaId);
+
+  return prisma.$transaction(async (tx) => {
+    const rifa = await tx.rifa.findUnique({
+      where: { id: rifaId },
+      select: {
+        id: true,
+        nombre: true,
+        precioBoleta: true,
+      },
+    });
+
+    if (!rifa) {
+      throw new AppError('La rifa seleccionada no existe.', 404);
+    }
+
+    let vendedor = await tx.vendedor.findFirst({
+      where: {
+        nombre: WEB_VENDOR_NAME,
+      },
+    });
+
+    if (!vendedor) {
+      vendedor = await tx.vendedor.create({
+        data: {
+          nombre: WEB_VENDOR_NAME,
+          direccion: 'Canal digital administrado por el sistema',
+        },
+      });
+    }
+
+    let relacion = await tx.rifaVendedor.findUnique({
+      where: {
+        rifaId_vendedorId: {
+          rifaId,
+          vendedorId: vendedor.id,
+        },
+      },
+      include: webChannelRelationInclude,
+    });
+
+    if (!relacion) {
+      relacion = await tx.rifaVendedor.create({
+        data: {
+          rifaId,
+          vendedorId: vendedor.id,
+          comisionPct: 0,
+          precioCasa: rifa.precioBoleta,
+          saldoActual: 0,
+        },
+        include: webChannelRelationInclude,
+      });
+    }
+
+    let subCaja = await tx.subCaja.findFirst({
+      where: {
+        cajaId: caja.id,
+        nombre: WOMPI_WEB_SUBCAJA,
+      },
+    });
+
+    if (!subCaja) {
+      subCaja = await tx.subCaja.create({
+        data: {
+          cajaId: caja.id,
+          nombre: WOMPI_WEB_SUBCAJA,
+          saldo: 0,
+        },
+      });
+    }
+
+    return {
+      vendedor,
+      relacion,
+      subCaja,
+    };
+  });
+}
+
+export async function prepareWebChannelByRifa(rifaId: string) {
+  const result = await ensureWebVendorForRifa(rifaId);
+
+  return {
+    vendedorNombre: result.vendedor.nombre,
+    rifaVendedorId: result.relacion.id,
+    subCajaId: result.subCaja.id,
+    subCajaNombre: result.subCaja.nombre,
+  };
 }
 
 export async function deleteSubCaja(id: string) {
@@ -309,6 +433,12 @@ export async function getCajaResumenByRifa(rifaId: string) {
   const dineroFaltante = vendorResumen.reduce((sum, item) => sum + item.faltante, 0);
   const totalGastos = gastosActivos.reduce((sum, gasto) => sum + toNumber(gasto.valor), 0);
   const totalIngresos = abonosActivos.reduce((sum, abono) => sum + toNumber(abono.valor), 0);
+  const canalWebVendedor = relaciones.find(
+    (item) => item.vendedor?.nombre?.toUpperCase() === WEB_VENDOR_NAME
+  );
+  const wompiWebSubCaja = caja.subcajas.find(
+    (item) => item.nombre?.toUpperCase() === WOMPI_WEB_SUBCAJA
+  );
 
   return {
     rifa: caja.rifa,
@@ -323,6 +453,17 @@ export async function getCajaResumenByRifa(rifaId: string) {
       dineroFaltante: Number(dineroFaltante.toFixed(2)),
       totalIngresos: Number(totalIngresos.toFixed(2)),
       totalGastos: Number(totalGastos.toFixed(2)),
+    },
+    canalWeb: {
+      vendorName: WEB_VENDOR_NAME,
+      subCajaNombre: WOMPI_WEB_SUBCAJA,
+      vendedorConfigurado: Boolean(canalWebVendedor),
+      subCajaConfigurada: Boolean(wompiWebSubCaja),
+      rifaVendedorId: canalWebVendedor?.id || null,
+      vendedorId: canalWebVendedor?.vendedor?.id || null,
+      subCajaId: wompiWebSubCaja?.id || null,
+      boletasActuales: canalWebVendedor?._count?.boletas || 0,
+      totalAbonado: canalWebVendedor ? Number(canalWebVendedor.abonos.reduce((sum, item) => sum + toNumber(item.valor), 0).toFixed(2)) : 0,
     },
     subcajas: subCajaResumen,
     vendedores: vendorResumen,

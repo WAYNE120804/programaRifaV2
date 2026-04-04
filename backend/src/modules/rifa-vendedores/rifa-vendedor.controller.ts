@@ -105,7 +105,9 @@ export async function getAsignacionesRifaVendedor(
   next: NextFunction
 ) {
   try {
-    const data = await listAsignacionesByRifaVendedor(getStringParam(req.params.id));
+    const data = await listAsignacionesByRifaVendedor(getStringParam(req.params.id), {
+      usuarioId: getStringParam(req.query.usuarioId as string | string[] | undefined),
+    });
     res.json(data);
   } catch (error) {
     next(error);
@@ -119,7 +121,11 @@ export async function postAsignacionRifaVendedor(
 ) {
   try {
     const payload = parseCreateAsignacionPayload(req.body);
-    const data = await createAsignacion(getStringParam(req.params.id), payload);
+    const data = await createAsignacion(
+      getStringParam(req.params.id),
+      payload,
+      req.authUser?.id
+    );
     res.status(201).json(data);
   } catch (error) {
     next(error);
@@ -132,7 +138,9 @@ export async function getDevolucionesRifaVendedor(
   next: NextFunction
 ) {
   try {
-    const data = await listDevolucionesByRifaVendedor(getStringParam(req.params.id));
+    const data = await listDevolucionesByRifaVendedor(getStringParam(req.params.id), {
+      usuarioId: getStringParam(req.query.usuarioId as string | string[] | undefined),
+    });
     res.json(data);
   } catch (error) {
     next(error);
@@ -146,7 +154,11 @@ export async function postDevolucionRifaVendedor(
 ) {
   try {
     const payload = parseCreateDevolucionPayload(req.body);
-    const data = await createDevolucion(getStringParam(req.params.id), payload);
+    const data = await createDevolucion(
+      getStringParam(req.params.id),
+      payload,
+      req.authUser?.id
+    );
     res.status(201).json(data);
   } catch (error) {
     next(error);

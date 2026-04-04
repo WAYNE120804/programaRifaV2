@@ -85,15 +85,39 @@ async function createPremio(payload) {
         throw new app_error_1.AppError('La rifa seleccionada no existe.', 404);
     }
     return prisma.premio.create({
-        data: payload,
+        data: {
+            nombre: payload.nombre,
+            descripcion: payload.descripcion,
+            imagenesJson: payload.imagenes,
+            tipo: payload.tipo,
+            mostrarValor: payload.mostrarValor,
+            valor: payload.valor,
+            fecha: payload.fecha,
+            rifa: {
+                connect: {
+                    id: payload.rifaId,
+                },
+            },
+        },
         include: premioInclude,
     });
 }
 async function updatePremio(id, payload) {
-    await getPremioById(id);
+    const premio = await getPremioById(id);
+    if (premio.rifaId !== payload.rifaId) {
+        throw new app_error_1.AppError('No se puede mover un premio a otra rifa desde esta edicion.', 409);
+    }
     return prismaClient().premio.update({
         where: { id },
-        data: payload,
+        data: {
+            nombre: payload.nombre,
+            descripcion: payload.descripcion,
+            imagenesJson: payload.imagenes,
+            tipo: payload.tipo,
+            mostrarValor: payload.mostrarValor,
+            valor: payload.valor,
+            fecha: payload.fecha,
+        },
         include: premioInclude,
     });
 }

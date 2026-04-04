@@ -54,6 +54,7 @@ enum MetodoPago {
   NEQUI
   DAVIPLATA
   TRANSFERENCIA
+  WOMPI
 }
 
 enum EstadoPago {
@@ -122,8 +123,12 @@ model Usuario {
   rifasCreadas  Rifa[] @relation("RifaCreatedBy")
   rifasEditadas Rifa[] @relation("RifaUpdatedBy")
 
-  asignaciones AsignacionBoletas[]
-  movimientos  MovimientoCaja[]
+  asignaciones          AsignacionBoletas[]
+  devoluciones         DevolucionBoletas[]
+  abonosRegistrados    AbonoVendedor[]
+  gastosRegistrados    Gasto[]
+  juegosRegistrados    JuegoRegistro[]
+  movimientos          MovimientoCaja[]
 }
 
 //////////////////////////////////////
@@ -169,6 +174,7 @@ model Premio {
   rifaId    String
   nombre    String
   descripcion String?
+  imagenesJson Json?
   tipo      TipoPremio
   mostrarValor Boolean  @default(false)
   valor     Decimal?    @db.Decimal(12,2)
@@ -179,6 +185,7 @@ model Premio {
   rifa Rifa @relation(fields: [rifaId], references: [id])
 
   boletas BoletaPremio[]
+  juegos  JuegoRegistro[]
 
   @@index([rifaId])
 }
@@ -269,6 +276,7 @@ model RifaVendedor {
   devoluciones DevolucionBoletas[]
   abonos       AbonoVendedor[]
   boletas      Boleta[]
+  juegos       JuegoRegistro[]
 
   @@index([rifaId])
   @@unique([rifaId, vendedorId])
@@ -310,8 +318,10 @@ model DevolucionBoletas {
   rifaVendedorId String
   destino        DestinoDevolucion @default(DISPONIBLE)
   fecha          DateTime @default(now())
+  usuarioId      String?
 
   rifaVendedor RifaVendedor @relation(fields: [rifaVendedorId], references: [id])
+  usuario      Usuario?     @relation(fields: [usuarioId], references: [id])
   detalle      DevolucionDetalle[]
 }
 
@@ -333,6 +343,7 @@ model Cliente {
   nombre   String
   email    String?
   telefono String?
+  documento String?
 
   ventas      Venta[]
   boletas     Boleta[]
@@ -351,6 +362,12 @@ model Venta {
   estado         EstadoVenta @default(PENDIENTE)
   total          Decimal     @db.Decimal(12,2)
   saldoPendiente Decimal     @db.Decimal(12,2)
+  referenciaPago String?     @unique
+  pasarelaPago   String?
+  pasarelaEstado String?
+  pasarelaTransaccionId String?
+  createdAt      DateTime    @default(now())
+  updatedAt      DateTime    @updatedAt
 
   cliente Cliente @relation(fields: [clienteId], references: [id])
   rifa    Rifa    @relation(fields: [rifaId], references: [id])
@@ -385,6 +402,7 @@ model AbonoVendedor {
   id             String      @id @default(cuid())
   rifaVendedorId String
   subCajaId      String?
+  usuarioId      String?
   valor          Decimal     @db.Decimal(12,2)
   fecha          DateTime    @default(now())
   descripcion    String?     @db.Text
@@ -398,6 +416,7 @@ model AbonoVendedor {
 
   rifaVendedor RifaVendedor @relation(fields: [rifaVendedorId], references: [id])
   subCaja      SubCaja?     @relation(fields: [subCajaId], references: [id])
+  usuario      Usuario?     @relation(fields: [usuarioId], references: [id])
   recibo       Recibo?
 
   movimientos MovimientoCaja[]
@@ -504,6 +523,7 @@ model Gasto {
   id          String   @id @default(cuid())
   rifaId      String
   subCajaId   String?
+  usuarioId   String?
   categoria   CategoriaGasto @default(OTROS)
   descripcion String
   valor       Decimal  @db.Decimal(12,2)
@@ -513,8 +533,24 @@ model Gasto {
 
   rifa         Rifa              @relation(fields: [rifaId], references: [id])
   subCaja      SubCaja?          @relation(fields: [subCajaId], references: [id])
+  usuario      Usuario?          @relation(fields: [usuarioId], references: [id])
   movimientos  MovimientoCaja[]
   recibo       GastoRecibo?
+}
+
+model JuegoRegistro {
+  id             String   @id @default(cuid())
+  rifaVendedorId String
+  premioId       String
+  usuarioId      String?
+  fecha          DateTime @default(now())
+  totalBoletas   Int       @default(0)
+
+  rifaVendedor RifaVendedor @relation(fields: [rifaVendedorId], references: [id])
+  premio       Premio       @relation(fields: [premioId], references: [id])
+  usuario      Usuario?     @relation(fields: [usuarioId], references: [id])
+
+  @@unique([rifaVendedorId, premioId])
 }
 
 model GastoRecibo {

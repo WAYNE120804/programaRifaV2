@@ -39,6 +39,14 @@ const rifaVendedorInclude = {
 } satisfies Prisma.RifaVendedorInclude;
 
 const asignacionInclude = {
+  usuario: {
+    select: {
+      id: true,
+      nombre: true,
+      email: true,
+      rol: true,
+    },
+  },
   rifaVendedor: {
     select: {
       id: true,
@@ -90,6 +98,14 @@ const asignacionInclude = {
 } satisfies Prisma.AsignacionBoletasInclude;
 
 const devolucionInclude = {
+  usuario: {
+    select: {
+      id: true,
+      nombre: true,
+      email: true,
+      rol: true,
+    },
+  },
   rifaVendedor: {
     select: {
       id: true,
@@ -382,12 +398,16 @@ export async function updateRifaVendedor(
   });
 }
 
-export async function listAsignacionesByRifaVendedor(id: string) {
+export async function listAsignacionesByRifaVendedor(
+  id: string,
+  filters?: { usuarioId?: string }
+) {
   await getRifaVendedorById(id);
 
   const rows = await prismaClient().asignacionBoletas.findMany({
     where: {
       rifaVendedorId: id,
+      ...(filters?.usuarioId ? { usuarioId: filters.usuarioId } : {}),
     },
     include: asignacionInclude,
     orderBy: {
@@ -405,7 +425,8 @@ export async function listAsignacionesByRifaVendedor(id: string) {
 
 export async function createAsignacion(
   rifaVendedorId: string,
-  payload: CreateAsignacionPayload
+  payload: CreateAsignacionPayload,
+  usuarioId?: string
 ) {
   const prisma = prismaClient();
   const relation = await prisma.rifaVendedor.findUnique({
@@ -635,6 +656,7 @@ export async function createAsignacion(
     const asignacion = await tx.asignacionBoletas.create({
       data: {
         rifaVendedorId,
+        usuarioId,
         cantidad: selectedBoletas.length,
         detalle: {
           create: selectedBoletas.map((item) => ({
@@ -649,12 +671,16 @@ export async function createAsignacion(
   });
 }
 
-export async function listDevolucionesByRifaVendedor(id: string) {
+export async function listDevolucionesByRifaVendedor(
+  id: string,
+  filters?: { usuarioId?: string }
+) {
   await getRifaVendedorById(id);
 
   const rows = await prismaClient().devolucionBoletas.findMany({
     where: {
       rifaVendedorId: id,
+      ...(filters?.usuarioId ? { usuarioId: filters.usuarioId } : {}),
     },
     include: devolucionInclude,
     orderBy: {
@@ -675,7 +701,8 @@ export async function listDevolucionesByRifaVendedor(id: string) {
 
 export async function createDevolucion(
   rifaVendedorId: string,
-  payload: CreateDevolucionPayload
+  payload: CreateDevolucionPayload,
+  usuarioId?: string
 ) {
   const prisma = prismaClient();
   const relation = await prisma.rifaVendedor.findUnique({
@@ -831,6 +858,7 @@ export async function createDevolucion(
     return tx.devolucionBoletas.create({
       data: {
         rifaVendedorId,
+        usuarioId,
         destino: payload.destino,
         detalle: {
           create: boletas.map((item) => ({
