@@ -462,12 +462,12 @@ const PublicRifaPage = () => {
         <section className="border-b" style={{ borderColor: `${config.themeColors.sidebarActiveBg}22` }}>
           <div className="mx-auto max-w-7xl px-6 py-10">
             <ErrorBanner message={error} />
-            <div className="grid gap-8 lg:grid-cols-[1.22fr_0.78fr]">
+            <div className="grid items-start gap-8 lg:grid-cols-[1.22fr_0.78fr]">
               <article className="overflow-hidden rounded-[2.3rem] border bg-white shadow-sm" style={{ borderColor: `${config.themeColors.sidebarActiveBg}22` }}>
-                <div className="overflow-hidden border-b bg-slate-100" style={{ borderColor: `${config.themeColors.sidebarActiveBg}22` }}>
+                <div className="overflow-hidden border-b bg-white" style={{ borderColor: `${config.themeColors.sidebarActiveBg}22` }}>
                   {activeImageSrc ? (
                     <button type="button" onClick={() => setIsImageModalOpen(true)} className="block w-full cursor-zoom-in" title="Ampliar imagen">
-                      <img src={activeImageSrc} alt={activeImageAlt} className="h-[620px] w-full object-cover object-top" />
+                      <img src={activeImageSrc} alt={activeImageAlt} className="max-h-[720px] w-full object-contain object-top" />
                     </button>
                   ) : (
                     <div className="flex h-[620px] items-center justify-center bg-slate-100 text-slate-500">Sin imagen principal</div>
@@ -493,7 +493,6 @@ const PublicRifaPage = () => {
                 <div className="mt-4 grid gap-6 lg:grid-cols-[1fr_240px] lg:items-start">
                   <div>
                     <h1 className="text-4xl font-black leading-tight">{premioMayor?.nombre || rifa.nombre}</h1>
-                    {premioMayor?.descripcion ? <p className="mt-4 whitespace-pre-line text-lg leading-8 text-slate-700">{premioMayor.descripcion}</p> : null}
                   </div>
                   <div className="flex h-full min-h-[14rem] items-start">
                     <a
@@ -524,6 +523,11 @@ const PublicRifaPage = () => {
                     </a>
                   </div>
                 </div>
+                {premioMayor?.descripcion ? (
+                  <div className="mt-6 rounded-[1.6rem] border bg-white px-6 py-5" style={{ borderColor: `${config.themeColors.sidebarActiveBg}18` }}>
+                    <p className="whitespace-pre-line text-lg leading-8 text-slate-700">{premioMayor.descripcion}</p>
+                  </div>
+                ) : null}
                 <div className="mt-6 space-y-4 rounded-[1.8rem] border p-5" style={{ borderColor: `${config.themeColors.sidebarActiveBg}20`, background: `${config.themeColors.sidebarActiveBg}08` }}>
                   <div className="flex items-start justify-between gap-4">
                     <p className="text-xs uppercase tracking-[0.24em]" style={{ color: config.themeColors.summaryLabelText }}>Fecha de juego</p>
