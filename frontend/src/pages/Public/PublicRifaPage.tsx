@@ -490,10 +490,38 @@ const PublicRifaPage = () => {
 
               <article className="rounded-[2.3rem] border bg-white/95 p-8 shadow-sm" style={{ borderColor: `${config.themeColors.sidebarActiveBg}22` }}>
                 <p className="text-xs uppercase tracking-[0.32em]" style={{ color: config.themeColors.summaryLabelText }}>Premio destacado</p>
-                <div className="mt-4 grid gap-6">
+                <div className="mt-4 grid gap-6 lg:grid-cols-[1fr_240px] lg:items-start">
                   <div>
                     <h1 className="text-4xl font-black leading-tight">{premioMayor?.nombre || rifa.nombre}</h1>
                     {premioMayor?.descripcion ? <p className="mt-4 whitespace-pre-line text-lg leading-8 text-slate-700">{premioMayor.descripcion}</p> : null}
+                  </div>
+                  <div className="flex h-full min-h-[14rem] items-start">
+                    <a
+                      href="#comprar-boletas"
+                      onClick={(event) => {
+                        event.preventDefault();
+                        focusCompraSection();
+                      }}
+                      className="relative flex w-full flex-col items-center justify-center overflow-hidden rounded-[1.9rem] border px-6 py-7 text-center text-white shadow-xl transition duration-300 hover:-translate-y-1"
+                      style={{
+                        borderColor: `${config.themeColors.sidebarActiveBg}66`,
+                        background: `linear-gradient(135deg, ${config.themeColors.sidebarActiveBg}, ${config.themeColors.topbarBg})`,
+                        boxShadow: `0 0 0 4px ${config.themeColors.sidebarActiveBg}18, 0 0 34px ${config.themeColors.sidebarActiveBg}77, 0 0 58px ${config.themeColors.sidebarActiveBg}55`,
+                      }}
+                    >
+                      <span className="absolute inset-0 rounded-[1.9rem] animate-pulse" style={{ boxShadow: `inset 0 0 0 2px ${config.themeColors.sidebarActiveBg}22, 0 0 38px ${config.themeColors.sidebarActiveBg}bb` }} />
+                      <span className="absolute -left-1/4 top-0 h-full w-20 -skew-x-12 animate-pulse bg-white/25 blur-lg" />
+                      <span className="absolute left-3 top-3 h-5 w-5 rounded-full bg-white/55 shadow-[0_0_22px_rgba(255,255,255,0.95)] animate-ping" />
+                      <span className="absolute right-5 top-5 h-4 w-4 rounded-full bg-white/80 shadow-[0_0_22px_rgba(255,255,255,0.95)] animate-bounce" />
+                      <span className="absolute left-6 bottom-6 h-3 w-3 rounded-full bg-white/80 shadow-[0_0_18px_rgba(255,255,255,0.95)] animate-ping" />
+                      <span className="absolute right-7 bottom-7 h-6 w-6 rounded-full border border-white/20 bg-white/10 animate-pulse" />
+                      <span className="relative z-10 text-xs font-black uppercase tracking-[0.28em] text-white/75 animate-pulse">Tu numero te espera</span>
+                      <span className="relative z-10 mt-3 text-3xl font-black uppercase leading-none animate-bounce">Comprar boletas</span>
+                      <span className="relative z-10 mt-3 inline-flex items-center gap-2 rounded-full bg-white/20 px-3 py-2 text-sm font-semibold text-white animate-pulse">
+                        Ir a seleccion
+                        <span aria-hidden="true">↓</span>
+                      </span>
+                    </a>
                   </div>
                 </div>
                 <div className="mt-6 space-y-4 rounded-[1.8rem] border p-5" style={{ borderColor: `${config.themeColors.sidebarActiveBg}20`, background: `${config.themeColors.sidebarActiveBg}08` }}>
@@ -543,12 +571,6 @@ const PublicRifaPage = () => {
                     </div>
                   </div>
                 ) : null}
-                <div className="mt-6">
-                  <a href="#comprar-boletas" onClick={(event) => { event.preventDefault(); focusCompraSection(); }} className="relative inline-flex min-h-[4.25rem] w-full items-center justify-center overflow-hidden rounded-[1.4rem] px-6 py-4 text-base font-semibold text-white shadow-xl transition hover:-translate-y-0.5" style={{ background: `linear-gradient(135deg, ${config.themeColors.sidebarActiveBg}, ${config.themeColors.topbarBg})`, boxShadow: `0 0 0 3px ${config.themeColors.sidebarActiveBg}18, 0 0 26px ${config.themeColors.sidebarActiveBg}55` }}>
-                    <span className="absolute -left-1/4 top-0 h-full w-20 -skew-x-12 bg-white/20 blur-lg" />
-                    <span className="relative z-10">Comprar boletas</span>
-                  </a>
-                </div>
               </article>
             </div>
           </div>
