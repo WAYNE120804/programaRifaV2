@@ -10,7 +10,7 @@ import Loading from '../../components/common/Loading';
 import MoneyInput from '../../components/common/MoneyInput';
 import Toast from '../../components/common/Toast';
 import Topbar from '../../components/Layout/Topbar';
-import { formatDateTime } from '../../utils/dates';
+import { formatDateTime, fromDateTimeLocalValue, toDateTimeLocalValue } from '../../utils/dates';
 import { formatCOP } from '../../utils/money';
 
 const initialForm = {
@@ -115,7 +115,7 @@ const RifaPremiosPage = () => {
       tipo: state.editing.tipo || 'ANTICIPADO',
       mostrarValor: Boolean(state.editing.mostrarValor),
       valor: state.editing.valor ? String(Number(state.editing.valor || 0)) : '',
-      fecha: state.editing.fecha ? String(state.editing.fecha).slice(0, 16) : '',
+      fecha: toDateTimeLocalValue(state.editing.fecha),
     });
   }, [state.editing]);
 
@@ -147,7 +147,7 @@ const RifaPremiosPage = () => {
         tipo: form.tipo,
         mostrarValor: form.mostrarValor,
         valor: form.mostrarValor ? Number(form.valor || 0) : null,
-        fecha: form.fecha,
+        fecha: fromDateTimeLocalValue(form.fecha),
       };
 
       if (state.editing?.id) {
