@@ -52,7 +52,7 @@ services:
       - rifas_net
 
   n8n:
-    image: n8nio/n8n:1.89.2
+    image: n8nio/n8n:2.11.2
     command: start
     restart: unless-stopped
     environment:
