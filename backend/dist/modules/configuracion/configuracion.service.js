@@ -12,36 +12,14 @@ const configFile = node_path_1.default.join(configDir, 'configuracion.json');
 const defaultConfig = {
     id: 'principal',
     clave: 'principal',
-    nombreCasaRifera: 'Rifas Admin',
+    nombreNegocio: 'Almacen Admin',
     logoDataUrl: null,
-    reglamentoDataUrl: null,
-    reglamentoNombreArchivo: null,
-    responsableNombre: null,
-    responsableTelefono: null,
-    responsableDireccion: null,
-    responsableCiudad: null,
-    responsableDepartamento: null,
-    numeroResolucionAutorizacion: null,
-    entidadAutoriza: null,
-    publicHeroTitle: 'Juega y gana con nosotros',
-    publicHeroSubtitle: null,
-    publicWhoWeAre: null,
-    publicContactPhone: null,
-    publicContactWhatsapp: null,
-    publicContactEmail: null,
-    publicAddress: null,
-    publicCity: null,
-    publicDepartment: null,
-    publicFacebookUrl: null,
-    publicInstagramUrl: null,
-    publicTiktokUrl: null,
-    publicPrimaryCtaText: 'Comprar boletas',
-    publicSecondaryCtaText: 'Verificar compra',
-    publicSupportText: null,
-    publicTermsText: null,
-    publicHeroImageDataUrl: null,
-    publicTicketBackgroundDataUrl: null,
-    publicPrizeGallery: [],
+    propietarioNombre: null,
+    propietarioTelefono: null,
+    direccion: null,
+    ciudad: null,
+    departamento: null,
+    notasRecibo: null,
     themeColors: {
         sidebarBg: '#ffffff',
         sidebarButtonBg: '#ffffff',
@@ -66,6 +44,10 @@ async function ensureConfigFile() {
         return {
             ...defaultConfig,
             ...parsed,
+            themeColors: {
+                ...defaultConfig.themeColors,
+                ...(parsed.themeColors || {}),
+            },
         };
     }
     catch (_error) {
@@ -80,6 +62,10 @@ async function updateConfiguracionSistema(payload) {
     const nextConfig = {
         ...(await ensureConfigFile()),
         ...payload,
+        themeColors: {
+            ...defaultConfig.themeColors,
+            ...(payload.themeColors || {}),
+        },
     };
     await (0, promises_1.writeFile)(configFile, JSON.stringify(nextConfig, null, 2), 'utf-8');
     return nextConfig;

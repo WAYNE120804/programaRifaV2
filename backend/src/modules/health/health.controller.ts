@@ -27,7 +27,7 @@ export async function getHealth(
     res.json({
       status: 'ok',
       timestamp: now,
-      phase: 'fase-0',
+      phase: 'base-limpia',
       checks,
     });
   } catch (error) {

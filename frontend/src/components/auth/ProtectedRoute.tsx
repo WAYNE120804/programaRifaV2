@@ -23,7 +23,7 @@ const ProtectedRoute = ({
   }
 
   if (allowedRoles?.length && !allowedRoles.includes(user?.rol || '')) {
-    return <Navigate to="/abonos" replace />;
+    return <Navigate to="/" replace />;
   }
 
   return children;

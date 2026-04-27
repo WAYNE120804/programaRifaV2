@@ -10,18 +10,6 @@ import { apiRouter } from './routes';
 const publicApiRules = [
   { method: 'GET', pattern: /^\/api\/health(?:\/.*)?$/ },
   { method: 'POST', pattern: /^\/api\/auth\/login$/ },
-  { method: 'GET', pattern: /^\/api\/auth\/me$/ },
-  { method: 'GET', pattern: /^\/api\/configuracion$/ },
-  { method: 'GET', pattern: /^\/api\/boletas\/publicas$/ },
-  { method: 'GET', pattern: /^\/api\/boletas\/publicas\/ficha\/[^/]+$/ },
-  { method: 'GET', pattern: /^\/api\/rifas\/publicas$/ },
-  { method: 'GET', pattern: /^\/api\/rifas\/[^/]+$/ },
-  { method: 'GET', pattern: /^\/api\/checkout-publico\/reservas\/[^/]+$/ },
-  { method: 'POST', pattern: /^\/api\/checkout-publico\/reservas$/ },
-  { method: 'POST', pattern: /^\/api\/checkout-publico\/reservas\/[^/]+\/wompi$/ },
-  { method: 'POST', pattern: /^\/api\/checkout-publico\/reservas\/[^/]+\/wompi\/reconcile$/ },
-  { method: 'POST', pattern: /^\/api\/checkout-publico\/wompi\/webhook$/ },
-  { method: 'GET', pattern: /^\/api\/recibos\/codigo\/[^/]+$/ },
 ];
 
 function isPublicApiRoute(method: string, path: string) {
@@ -40,9 +28,9 @@ export function createApp() {
 
   app.get('/', (_req, res) => {
     res.json({
-      name: 'Sistema de Rifas API',
+      name: 'Sistema Administrativo de Almacen API',
       status: 'ok',
-      phase: 'fase-0',
+      phase: 'base-limpia',
     });
   });
 

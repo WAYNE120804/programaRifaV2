@@ -12,8 +12,6 @@ type UsuarioInput = {
   email?: unknown;
   password?: unknown;
   rol?: unknown;
-  vendedorIds?: unknown;
-  rifaVendedorIds?: unknown;
 };
 
 export type LoginPayload = {
@@ -26,13 +24,6 @@ export type UsuarioPayload = {
   email: string;
   password: string;
   rol: RolUsuario;
-  vendedorIds: string[];
-  rifaVendedorIds: string[];
-};
-
-export type UsuarioScopesPayload = {
-  vendedorIds: string[];
-  rifaVendedorIds: string[];
 };
 
 function parseRequiredString(value: unknown, fieldName: string) {
@@ -41,10 +32,6 @@ function parseRequiredString(value: unknown, fieldName: string) {
   }
 
   return value.trim();
-}
-
-function parseIdentifier(value: unknown, fieldName: string) {
-  return parseRequiredString(value, fieldName);
 }
 
 function parsePassword(value: unknown) {
@@ -65,30 +52,9 @@ function parseRol(value: unknown) {
   return value as RolUsuario;
 }
 
-function parseIdList(value: unknown, fieldName: string) {
-  if (typeof value === 'undefined' || value === null || value === '') {
-    return [];
-  }
-
-  if (!Array.isArray(value)) {
-    throw new AppError(`El campo "${fieldName}" debe ser una lista valida.`);
-  }
-
-  const values = value
-    .map((item) => {
-      if (typeof item !== 'string' || item.trim().length === 0) {
-        throw new AppError(`El campo "${fieldName}" contiene un identificador invalido.`);
-      }
-
-      return item.trim();
-    });
-
-  return [...new Set(values)];
-}
-
 export function parseLoginPayload(input: LoginInput): LoginPayload {
   return {
-    identifier: parseIdentifier(input.identificador ?? input.email, 'identificador'),
+    identifier: parseRequiredString(input.identificador ?? input.email, 'identificador'),
     password: parseRequiredString(input.password, 'password'),
   };
 }
@@ -96,19 +62,8 @@ export function parseLoginPayload(input: LoginInput): LoginPayload {
 export function parseUsuarioPayload(input: UsuarioInput): UsuarioPayload {
   return {
     nombre: parseRequiredString(input.nombre, 'nombre'),
-    email: parseIdentifier(input.email, 'email'),
+    email: parseRequiredString(input.email, 'email'),
     password: parsePassword(input.password),
     rol: parseRol(input.rol),
-    vendedorIds: parseIdList(input.vendedorIds, 'vendedorIds'),
-    rifaVendedorIds: parseIdList(input.rifaVendedorIds, 'rifaVendedorIds'),
-  };
-}
-
-export function parseUsuarioScopesPayload(
-  input: Pick<UsuarioInput, 'vendedorIds' | 'rifaVendedorIds'>
-): UsuarioScopesPayload {
-  return {
-    vendedorIds: parseIdList(input.vendedorIds, 'vendedorIds'),
-    rifaVendedorIds: parseIdList(input.rifaVendedorIds, 'rifaVendedorIds'),
   };
 }

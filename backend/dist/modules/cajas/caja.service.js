@@ -1,88 +1,15 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.listCajas = listCajas;
-exports.getCajaById = getCajaById;
-exports.listSubCajasByRifa = listSubCajasByRifa;
-exports.createSubCaja = createSubCaja;
-exports.prepareWebChannelByRifa = prepareWebChannelByRifa;
-exports.prepareBotChannelByRifa = prepareBotChannelByRifa;
-exports.deleteSubCaja = deleteSubCaja;
-exports.getCajaResumenByRifa = getCajaResumenByRifa;
+exports.ensureOpenDailyCaja = ensureOpenDailyCaja;
+exports.getCajaGeneral = getCajaGeneral;
+exports.getCajaDiaria = getCajaDiaria;
+exports.abrirCajaDiaria = abrirCajaDiaria;
+exports.trasladarDesdeCajaDiaria = trasladarDesdeCajaDiaria;
+exports.registrarSalidaCajaGeneral = registrarSalidaCajaGeneral;
+exports.cerrarCajaDiaria = cerrarCajaDiaria;
+const prisma_client_1 = require("../../lib/prisma-client");
 const app_error_1 = require("../../lib/app-error");
 const prisma_1 = require("../../lib/prisma");
-const auth_scope_1 = require("../auth/auth.scope");
-const WEB_VENDOR_NAME = 'PAGINA WEB';
-const BOT_VENDOR_NAME = 'BOT';
-const WOMPI_WEB_SUBCAJA = 'WOMPI WEB';
-const cajaInclude = {
-    rifa: {
-        select: {
-            id: true,
-            nombre: true,
-            precioBoleta: true,
-        },
-    },
-    subcajas: {
-        orderBy: {
-            nombre: 'asc',
-        },
-    },
-};
-const movimientoInclude = {
-    subCaja: {
-        select: {
-            id: true,
-            nombre: true,
-        },
-    },
-    vendedor: {
-        select: {
-            id: true,
-            nombre: true,
-        },
-    },
-    gasto: {
-        select: {
-            id: true,
-            descripcion: true,
-            categoria: true,
-        },
-    },
-    abonoVendedor: {
-        select: {
-            id: true,
-            valor: true,
-        },
-    },
-};
-const webChannelRelationInclude = {
-    vendedor: {
-        select: {
-            id: true,
-            nombre: true,
-            telefono: true,
-            documento: true,
-            direccion: true,
-        },
-    },
-    rifa: {
-        select: {
-            id: true,
-            nombre: true,
-            estado: true,
-            precioBoleta: true,
-            numeroCifras: true,
-        },
-    },
-    _count: {
-        select: {
-            boletas: true,
-            asignaciones: true,
-            devoluciones: true,
-            abonos: true,
-        },
-    },
-};
 function prismaClient() {
     const prisma = (0, prisma_1.getPrisma)();
     if (!prisma) {
@@ -90,395 +17,627 @@ function prismaClient() {
     }
     return prisma;
 }
-function toNumber(value) {
-    return Number(value || 0);
+function formatDateKey(date = new Date()) {
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
 }
-async function getCajaPrincipalByRifaId(rifaId) {
-    const caja = await prismaClient().caja.findFirst({
-        where: { rifaId },
-        include: cajaInclude,
-    });
-    if (!caja) {
-        throw new app_error_1.AppError('La rifa seleccionada no tiene caja principal creada.', 404);
-    }
-    return caja;
+function getDateRange(dateKey = formatDateKey()) {
+    const [year, month, day] = dateKey.split('-').map(Number);
+    const start = new Date(year, month - 1, day, 0, 0, 0, 0);
+    const end = new Date(year, month - 1, day + 1, 0, 0, 0, 0);
+    return { start, end };
 }
-async function listCajas(rifaId) {
-    return prismaClient().caja.findMany({
+function dailyCajaName(dateKey = formatDateKey()) {
+    return `Caja diaria ${dateKey}`;
+}
+function generalCajaName() {
+    return 'Caja general';
+}
+async function findDailyCaja(tx, dateKey = formatDateKey()) {
+    const { start, end } = getDateRange(dateKey);
+    return tx.caja.findFirst({
         where: {
-            ...(rifaId ? { rifaId } : {}),
-        },
-        include: cajaInclude,
-        orderBy: {
-            rifa: {
-                nombre: 'asc',
+            tipo: prisma_client_1.TipoCaja.DIARIA,
+            createdAt: {
+                gte: start,
+                lt: end,
             },
         },
+        orderBy: [{ createdAt: 'desc' }],
     });
 }
-async function getCajaById(id) {
-    const caja = await prismaClient().caja.findUnique({
-        where: { id },
-        include: {
-            ...cajaInclude,
-            movimientos: {
-                include: movimientoInclude,
-                orderBy: {
-                    fecha: 'desc',
-                },
-                take: 100,
-            },
-        },
-    });
-    if (!caja) {
-        throw new app_error_1.AppError('La caja no existe.', 404);
-    }
-    return caja;
-}
-async function listSubCajasByRifa(rifaId, authUser) {
-    await (0, auth_scope_1.assertVendorCanAccessRifa)(authUser, rifaId);
-    const caja = await getCajaPrincipalByRifaId(rifaId);
-    return caja.subcajas;
-}
-async function createSubCaja(payload) {
-    const prisma = prismaClient();
-    const caja = await getCajaPrincipalByRifaId(payload.rifaId);
-    const existing = await prisma.subCaja.findFirst({
-        where: {
-            cajaId: caja.id,
-            nombre: payload.nombre,
-        },
+async function findOrCreateGeneralCaja(tx) {
+    const existing = await tx.caja.findFirst({
+        where: { tipo: prisma_client_1.TipoCaja.MAYOR },
+        orderBy: [{ createdAt: 'asc' }],
     });
     if (existing) {
-        throw new app_error_1.AppError('Ya existe una subcaja con ese nombre en la rifa seleccionada.', 409);
+        return existing;
     }
-    return prisma.subCaja.create({
+    const caja = await tx.caja.create({
+        data: {
+            nombre: generalCajaName(),
+            tipo: prisma_client_1.TipoCaja.MAYOR,
+            estado: prisma_client_1.EstadoCaja.ABIERTA,
+            saldoActual: 0,
+            descripcion: 'Caja general para consolidar dinero fuera de la operacion diaria.',
+            permiteVenta: false,
+        },
+    });
+    await tx.movimientoCaja.create({
         data: {
             cajaId: caja.id,
-            nombre: payload.nombre,
-            saldo: 0,
+            tipo: prisma_client_1.TipoMovimientoCaja.APERTURA,
+            valor: 0,
+            saldoAnterior: 0,
+            saldoPosterior: 0,
+            descripcion: 'Creacion de caja general',
+            referenciaTipo: 'CAJA',
+            referenciaId: caja.id,
         },
     });
+    return caja;
 }
-async function ensureWebVendorForRifa(rifaId) {
-    const prisma = prismaClient();
-    const caja = await getCajaPrincipalByRifaId(rifaId);
-    return prisma.$transaction(async (tx) => {
-        const rifa = await tx.rifa.findUnique({
-            where: { id: rifaId },
-            select: {
-                id: true,
-                nombre: true,
-                precioBoleta: true,
-            },
-        });
-        if (!rifa) {
-            throw new app_error_1.AppError('La rifa seleccionada no existe.', 404);
+async function ensureOpenDailyCaja(tx, usuarioId, dateKey = formatDateKey()) {
+    const existing = await findDailyCaja(tx, dateKey);
+    if (existing) {
+        if (existing.estado !== prisma_client_1.EstadoCaja.ABIERTA) {
+            throw new app_error_1.AppError('La caja diaria de hoy ya esta cerrada. No se pueden registrar ventas.', 409);
         }
-        let vendedor = await tx.vendedor.findFirst({
-            where: {
-                nombre: WEB_VENDOR_NAME,
-            },
-        });
-        if (!vendedor) {
-            vendedor = await tx.vendedor.create({
-                data: {
-                    nombre: WEB_VENDOR_NAME,
-                    direccion: 'Canal digital administrado por el sistema',
-                },
-            });
-        }
-        let relacion = await tx.rifaVendedor.findUnique({
-            where: {
-                rifaId_vendedorId: {
-                    rifaId,
-                    vendedorId: vendedor.id,
-                },
-            },
-            include: webChannelRelationInclude,
-        });
-        if (!relacion) {
-            relacion = await tx.rifaVendedor.create({
-                data: {
-                    rifaId,
-                    vendedorId: vendedor.id,
-                    comisionPct: 0,
-                    precioCasa: rifa.precioBoleta,
-                    saldoActual: 0,
-                },
-                include: webChannelRelationInclude,
-            });
-        }
-        let subCaja = await tx.subCaja.findFirst({
-            where: {
-                cajaId: caja.id,
-                nombre: WOMPI_WEB_SUBCAJA,
-            },
-        });
-        if (!subCaja) {
-            subCaja = await tx.subCaja.create({
-                data: {
-                    cajaId: caja.id,
-                    nombre: WOMPI_WEB_SUBCAJA,
-                    saldo: 0,
-                },
-            });
-        }
-        return {
-            vendedor,
-            relacion,
-            subCaja,
-        };
-    });
-}
-async function ensureBotVendorForRifa(rifaId) {
-    const prisma = prismaClient();
-    return prisma.$transaction(async (tx) => {
-        const rifa = await tx.rifa.findUnique({
-            where: { id: rifaId },
-            select: {
-                id: true,
-                nombre: true,
-                precioBoleta: true,
-            },
-        });
-        if (!rifa) {
-            throw new app_error_1.AppError('La rifa seleccionada no existe.', 404);
-        }
-        let vendedor = await tx.vendedor.findFirst({
-            where: {
-                nombre: BOT_VENDOR_NAME,
-            },
-        });
-        if (!vendedor) {
-            vendedor = await tx.vendedor.create({
-                data: {
-                    nombre: BOT_VENDOR_NAME,
-                    direccion: 'Canal automatizado administrado por el sistema',
-                },
-            });
-        }
-        let relacion = await tx.rifaVendedor.findUnique({
-            where: {
-                rifaId_vendedorId: {
-                    rifaId,
-                    vendedorId: vendedor.id,
-                },
-            },
-            include: webChannelRelationInclude,
-        });
-        if (!relacion) {
-            relacion = await tx.rifaVendedor.create({
-                data: {
-                    rifaId,
-                    vendedorId: vendedor.id,
-                    comisionPct: 0,
-                    precioCasa: rifa.precioBoleta,
-                    saldoActual: 0,
-                },
-                include: webChannelRelationInclude,
-            });
-        }
-        return {
-            vendedor,
-            relacion,
-        };
-    });
-}
-async function prepareWebChannelByRifa(rifaId) {
-    const result = await ensureWebVendorForRifa(rifaId);
-    return {
-        vendedorNombre: result.vendedor.nombre,
-        rifaVendedorId: result.relacion.id,
-        subCajaId: result.subCaja.id,
-        subCajaNombre: result.subCaja.nombre,
-    };
-}
-async function prepareBotChannelByRifa(rifaId) {
-    const result = await ensureBotVendorForRifa(rifaId);
-    return {
-        vendedorNombre: result.vendedor.nombre,
-        rifaVendedorId: result.relacion.id,
-    };
-}
-async function deleteSubCaja(id) {
-    const prisma = prismaClient();
-    const subCaja = await prisma.subCaja.findUnique({
-        where: { id },
-        include: {
-            _count: {
-                select: {
-                    movimientos: true,
-                    abonos: true,
-                    gastos: true,
-                },
-            },
+        return existing;
+    }
+    const caja = await tx.caja.create({
+        data: {
+            nombre: dailyCajaName(dateKey),
+            tipo: prisma_client_1.TipoCaja.DIARIA,
+            estado: prisma_client_1.EstadoCaja.ABIERTA,
+            saldoActual: 0,
+            descripcion: 'Caja diaria creada automaticamente al registrar la primera venta.',
+            permiteVenta: true,
         },
     });
-    if (!subCaja) {
-        throw new app_error_1.AppError('La subcaja no existe.', 404);
-    }
-    if (toNumber(subCaja.saldo) !== 0 ||
-        subCaja._count.movimientos > 0 ||
-        subCaja._count.abonos > 0 ||
-        subCaja._count.gastos > 0) {
-        throw new app_error_1.AppError('La subcaja no se puede eliminar porque ya tiene saldo, abonos, gastos o movimientos asociados.', 409);
-    }
-    await prisma.subCaja.delete({
-        where: { id },
+    await tx.movimientoCaja.create({
+        data: {
+            cajaId: caja.id,
+            usuarioId,
+            tipo: prisma_client_1.TipoMovimientoCaja.APERTURA,
+            valor: 0,
+            saldoAnterior: 0,
+            saldoPosterior: 0,
+            descripcion: `Apertura automatica de ${caja.nombre}`,
+            referenciaTipo: 'CAJA',
+            referenciaId: caja.id,
+        },
     });
+    return caja;
 }
-async function getCajaResumenByRifa(rifaId) {
-    const prisma = prismaClient();
-    const caja = await getCajaPrincipalByRifaId(rifaId);
-    const [movimientos, relaciones, gastosActivos] = await Promise.all([
-        prisma.movimientoCaja.findMany({
+async function buildDailySummary(cajaId) {
+    if (!cajaId) {
+        return {
+            ingresosVentas: 0,
+            egresos: 0,
+            ventasCount: 0,
+            utilidadVentas: 0,
+            pagosPorMetodo: [],
+        };
+    }
+    const [ventasAgg, egresosAgg, pagosGroup] = await Promise.all([
+        prismaClient().venta.aggregate({
             where: {
-                cajaId: caja.id,
+                cajaId,
+                estado: prisma_client_1.EstadoVenta.PAGADA,
             },
-            include: movimientoInclude,
-            orderBy: {
-                fecha: 'desc',
+            _count: { _all: true },
+            _sum: {
+                total: true,
+                utilidadTotal: true,
             },
         }),
-        prisma.rifaVendedor.findMany({
+        prismaClient().movimientoCaja.aggregate({
             where: {
-                rifaId,
-            },
-            include: {
-                vendedor: {
-                    select: {
-                        id: true,
-                        nombre: true,
-                        telefono: true,
-                        documento: true,
-                    },
-                },
-                _count: {
-                    select: {
-                        boletas: true,
-                        abonos: true,
-                    },
-                },
-                abonos: {
-                    where: {
-                        estado: 'CONFIRMADO',
-                        anuladoAt: null,
-                    },
-                    select: {
-                        id: true,
-                        valor: true,
-                        fecha: true,
-                        subCaja: {
-                            select: {
-                                id: true,
-                                nombre: true,
-                            },
-                        },
-                    },
-                    orderBy: {
-                        fecha: 'desc',
-                    },
-                },
-                rifa: {
-                    select: {
-                        id: true,
-                        nombre: true,
-                        precioBoleta: true,
-                    },
+                cajaId,
+                tipo: {
+                    in: [prisma_client_1.TipoMovimientoCaja.EGRESO, prisma_client_1.TipoMovimientoCaja.TRASLADO_SALIDA],
                 },
             },
-            orderBy: {
-                vendedor: {
-                    nombre: 'asc',
-                },
-            },
+            _sum: { valor: true },
         }),
-        prisma.gasto.findMany({
+        prismaClient().pagoVenta.groupBy({
+            by: ['metodo'],
             where: {
-                rifaId,
-                anuladoAt: null,
+                cajaId,
+                estado: prisma_client_1.EstadoPagoVenta.CONFIRMADO,
             },
-            select: {
-                id: true,
-                valor: true,
-                categoria: true,
-                subCajaId: true,
-            },
+            _sum: { valor: true },
+            _count: { _all: true },
         }),
     ]);
-    const abonosActivos = relaciones.flatMap((relation) => relation.abonos.map((abono) => ({
-        ...abono,
-        rifaVendedorId: relation.id,
-    })));
-    const vendorResumen = relaciones.map((relation) => {
-        const totalBoletas = relation._count.boletas;
-        const dineroARecoger = Number((totalBoletas * toNumber(relation.precioCasa)).toFixed(2));
-        const dineroRecogido = Number(relation.abonos.reduce((sum, item) => sum + toNumber(item.valor), 0).toFixed(2));
-        const faltante = Number((dineroARecoger - dineroRecogido).toFixed(2));
-        return {
-            id: relation.id,
-            vendedor: relation.vendedor,
-            totalBoletas,
-            dineroARecoger,
-            dineroRecogido,
-            faltante,
-            saldoActual: toNumber(relation.saldoActual),
-            precioCasa: toNumber(relation.precioCasa),
-            precioBoleta: toNumber(relation.rifa.precioBoleta),
-            estadoCuenta: faltante < 0 ? 'SALDO_A_FAVOR' : faltante > 0 ? 'PENDIENTE' : 'AL_DIA',
-        };
-    });
-    const subCajaResumen = caja.subcajas.map((subCaja) => {
-        const ingresos = abonosActivos
-            .filter((abono) => abono.subCaja?.id === subCaja.id)
-            .reduce((sum, abono) => sum + toNumber(abono.valor), 0);
-        const egresos = gastosActivos
-            .filter((gasto) => gasto.subCajaId === subCaja.id)
-            .reduce((sum, gasto) => sum + toNumber(gasto.valor), 0);
-        return {
-            id: subCaja.id,
-            nombre: subCaja.nombre,
-            saldo: toNumber(subCaja.saldo),
-            ingresosAbonos: Number(ingresos.toFixed(2)),
-            egresosGastos: Number(egresos.toFixed(2)),
-            movimientos: movimientos.filter((movimiento) => movimiento.subCajaId === subCaja.id).length,
-        };
-    });
-    const dineroPorRecoger = vendorResumen.reduce((sum, item) => sum + item.dineroARecoger, 0);
-    const dineroRecogido = vendorResumen.reduce((sum, item) => sum + item.dineroRecogido, 0);
-    const dineroFaltante = vendorResumen.reduce((sum, item) => sum + item.faltante, 0);
-    const totalGastos = gastosActivos.reduce((sum, gasto) => sum + toNumber(gasto.valor), 0);
-    const totalIngresos = abonosActivos.reduce((sum, abono) => sum + toNumber(abono.valor), 0);
-    const canalWebVendedor = relaciones.find((item) => item.vendedor?.nombre?.toUpperCase() === WEB_VENDOR_NAME);
-    const wompiWebSubCaja = caja.subcajas.find((item) => item.nombre?.toUpperCase() === WOMPI_WEB_SUBCAJA);
     return {
-        rifa: caja.rifa,
-        cajaGeneral: {
-            id: caja.id,
-            nombre: caja.nombre,
-            saldo: toNumber(caja.saldo),
-        },
-        metricas: {
-            dineroPorRecoger: Number(dineroPorRecoger.toFixed(2)),
-            dineroRecogido: Number(dineroRecogido.toFixed(2)),
-            dineroFaltante: Number(dineroFaltante.toFixed(2)),
-            totalIngresos: Number(totalIngresos.toFixed(2)),
-            totalGastos: Number(totalGastos.toFixed(2)),
-        },
-        canalWeb: {
-            vendorName: WEB_VENDOR_NAME,
-            subCajaNombre: WOMPI_WEB_SUBCAJA,
-            vendedorConfigurado: Boolean(canalWebVendedor),
-            subCajaConfigurada: Boolean(wompiWebSubCaja),
-            rifaVendedorId: canalWebVendedor?.id || null,
-            vendedorId: canalWebVendedor?.vendedor?.id || null,
-            subCajaId: wompiWebSubCaja?.id || null,
-            boletasActuales: canalWebVendedor?._count?.boletas || 0,
-            totalAbonado: canalWebVendedor ? Number(canalWebVendedor.abonos.reduce((sum, item) => sum + toNumber(item.valor), 0).toFixed(2)) : 0,
-        },
-        subcajas: subCajaResumen,
-        vendedores: vendorResumen,
-        movimientosRecientes: movimientos.slice(0, 20),
+        ingresosVentas: Number(ventasAgg._sum.total || 0),
+        egresos: Number(egresosAgg._sum.valor || 0),
+        ventasCount: ventasAgg._count._all,
+        utilidadVentas: Number(ventasAgg._sum.utilidadTotal || 0),
+        pagosPorMetodo: pagosGroup.map((item) => ({
+            metodo: item.metodo,
+            total: Number(item._sum.valor || 0),
+            cantidad: item._count._all,
+        })),
     };
+}
+async function getCajaGeneral() {
+    const prisma = prismaClient();
+    const caja = await prisma.$transaction((tx) => findOrCreateGeneralCaja(tx));
+    const [movimientos, retiros] = await Promise.all([
+        prisma.movimientoCaja.findMany({
+            where: { cajaId: caja.id },
+            include: {
+                usuario: {
+                    select: {
+                        id: true,
+                        nombre: true,
+                        email: true,
+                        rol: true,
+                    },
+                },
+            },
+            orderBy: [{ createdAt: 'desc' }],
+            take: 100,
+        }),
+        prisma.retiroCajaMayor.findMany({
+            where: {
+                OR: [{ cajaOrigenId: caja.id }, { cajaDestinoId: caja.id }],
+            },
+            include: {
+                usuario: {
+                    select: {
+                        id: true,
+                        nombre: true,
+                        email: true,
+                        rol: true,
+                    },
+                },
+                cajaOrigen: {
+                    select: {
+                        id: true,
+                        nombre: true,
+                        tipo: true,
+                    },
+                },
+                cajaDestino: {
+                    select: {
+                        id: true,
+                        nombre: true,
+                        tipo: true,
+                    },
+                },
+            },
+            orderBy: [{ createdAt: 'desc' }],
+            take: 100,
+        }),
+    ]);
+    return {
+        caja,
+        movimientos,
+        retiros,
+    };
+}
+async function getCajaDiaria(dateKey = formatDateKey()) {
+    const prisma = prismaClient();
+    const caja = await findDailyCaja(prisma, dateKey);
+    const movimientos = caja
+        ? await prisma.movimientoCaja.findMany({
+            where: { cajaId: caja.id },
+            include: {
+                usuario: {
+                    select: {
+                        id: true,
+                        nombre: true,
+                        email: true,
+                        rol: true,
+                    },
+                },
+                venta: {
+                    select: {
+                        id: true,
+                        numero: true,
+                        total: true,
+                    },
+                },
+                pagoVenta: {
+                    select: {
+                        id: true,
+                        metodo: true,
+                        valor: true,
+                    },
+                },
+            },
+            orderBy: [{ createdAt: 'desc' }],
+            take: 100,
+        })
+        : [];
+    const ultimoCierre = caja
+        ? await prisma.cierreCaja.findFirst({
+            where: { cajaId: caja.id },
+            include: {
+                usuario: {
+                    select: {
+                        id: true,
+                        nombre: true,
+                        email: true,
+                        rol: true,
+                    },
+                },
+            },
+            orderBy: [{ createdAt: 'desc' }],
+        })
+        : null;
+    return {
+        fecha: dateKey,
+        caja,
+        resumen: await buildDailySummary(caja?.id),
+        movimientos,
+        ultimoCierre,
+        metodosPago: Object.values(prisma_client_1.MetodoPago),
+    };
+}
+async function abrirCajaDiaria(payload, usuarioId) {
+    const prisma = prismaClient();
+    const dateKey = formatDateKey();
+    await prisma.$transaction(async (tx) => {
+        const existing = await findDailyCaja(tx, dateKey);
+        if (existing) {
+            if (existing.estado === prisma_client_1.EstadoCaja.CERRADA) {
+                const saldoDiariaAnterior = Number(existing.saldoActual || 0);
+                await tx.caja.update({
+                    where: { id: existing.id },
+                    data: {
+                        estado: prisma_client_1.EstadoCaja.ABIERTA,
+                        permiteVenta: true,
+                        descripcion: payload.descripcion || existing.descripcion,
+                    },
+                });
+                await tx.movimientoCaja.create({
+                    data: {
+                        cajaId: existing.id,
+                        usuarioId,
+                        tipo: prisma_client_1.TipoMovimientoCaja.APERTURA,
+                        valor: saldoDiariaAnterior,
+                        saldoAnterior: saldoDiariaAnterior,
+                        saldoPosterior: saldoDiariaAnterior,
+                        descripcion: 'Reapertura de caja diaria',
+                        referenciaTipo: 'CAJA',
+                        referenciaId: existing.id,
+                    },
+                });
+                if (payload.saldoInicial > 0) {
+                    const cajaGeneral = await findOrCreateGeneralCaja(tx);
+                    const saldoGeneralAnterior = Number(cajaGeneral.saldoActual || 0);
+                    const saldoGeneralPosterior = saldoGeneralAnterior - payload.saldoInicial;
+                    const saldoDiariaPosterior = saldoDiariaAnterior + payload.saldoInicial;
+                    const traslado = await tx.retiroCajaMayor.create({
+                        data: {
+                            usuarioId,
+                            cajaOrigenId: cajaGeneral.id,
+                            cajaDestinoId: existing.id,
+                            valor: payload.saldoInicial,
+                            motivo: 'Base inicial de caja diaria',
+                            observacion: payload.descripcion,
+                        },
+                    });
+                    await tx.caja.update({
+                        where: { id: cajaGeneral.id },
+                        data: { saldoActual: saldoGeneralPosterior },
+                    });
+                    await tx.caja.update({
+                        where: { id: existing.id },
+                        data: { saldoActual: saldoDiariaPosterior },
+                    });
+                    await tx.movimientoCaja.create({
+                        data: {
+                            cajaId: cajaGeneral.id,
+                            usuarioId,
+                            tipo: prisma_client_1.TipoMovimientoCaja.TRASLADO_SALIDA,
+                            valor: payload.saldoInicial,
+                            saldoAnterior: saldoGeneralAnterior,
+                            saldoPosterior: saldoGeneralPosterior,
+                            descripcion: `Base inicial enviada a ${existing.nombre}`,
+                            referenciaTipo: 'RETIRO_CAJA_MAYOR',
+                            referenciaId: traslado.id,
+                        },
+                    });
+                    await tx.movimientoCaja.create({
+                        data: {
+                            cajaId: existing.id,
+                            usuarioId,
+                            tipo: prisma_client_1.TipoMovimientoCaja.TRASLADO_ENTRADA,
+                            valor: payload.saldoInicial,
+                            saldoAnterior: saldoDiariaAnterior,
+                            saldoPosterior: saldoDiariaPosterior,
+                            descripcion: 'Base inicial recibida desde caja general',
+                            referenciaTipo: 'RETIRO_CAJA_MAYOR',
+                            referenciaId: traslado.id,
+                        },
+                    });
+                }
+            }
+            return;
+        }
+        const caja = await tx.caja.create({
+            data: {
+                nombre: dailyCajaName(dateKey),
+                tipo: prisma_client_1.TipoCaja.DIARIA,
+                estado: prisma_client_1.EstadoCaja.ABIERTA,
+                saldoActual: 0,
+                descripcion: payload.descripcion,
+                permiteVenta: true,
+            },
+        });
+        await tx.movimientoCaja.create({
+            data: {
+                cajaId: caja.id,
+                usuarioId,
+                tipo: prisma_client_1.TipoMovimientoCaja.APERTURA,
+                valor: 0,
+                saldoAnterior: 0,
+                saldoPosterior: 0,
+                descripcion: 'Apertura manual de caja diaria',
+                referenciaTipo: 'CAJA',
+                referenciaId: caja.id,
+            },
+        });
+        if (payload.saldoInicial > 0) {
+            const cajaGeneral = await findOrCreateGeneralCaja(tx);
+            const saldoGeneralAnterior = Number(cajaGeneral.saldoActual || 0);
+            const saldoGeneralPosterior = saldoGeneralAnterior - payload.saldoInicial;
+            const traslado = await tx.retiroCajaMayor.create({
+                data: {
+                    usuarioId,
+                    cajaOrigenId: cajaGeneral.id,
+                    cajaDestinoId: caja.id,
+                    valor: payload.saldoInicial,
+                    motivo: 'Base inicial de caja diaria',
+                    observacion: payload.descripcion,
+                },
+            });
+            await tx.caja.update({
+                where: { id: cajaGeneral.id },
+                data: { saldoActual: saldoGeneralPosterior },
+            });
+            await tx.caja.update({
+                where: { id: caja.id },
+                data: { saldoActual: payload.saldoInicial },
+            });
+            await tx.movimientoCaja.create({
+                data: {
+                    cajaId: cajaGeneral.id,
+                    usuarioId,
+                    tipo: prisma_client_1.TipoMovimientoCaja.TRASLADO_SALIDA,
+                    valor: payload.saldoInicial,
+                    saldoAnterior: saldoGeneralAnterior,
+                    saldoPosterior: saldoGeneralPosterior,
+                    descripcion: `Base inicial enviada a ${caja.nombre}`,
+                    referenciaTipo: 'RETIRO_CAJA_MAYOR',
+                    referenciaId: traslado.id,
+                },
+            });
+            await tx.movimientoCaja.create({
+                data: {
+                    cajaId: caja.id,
+                    usuarioId,
+                    tipo: prisma_client_1.TipoMovimientoCaja.TRASLADO_ENTRADA,
+                    valor: payload.saldoInicial,
+                    saldoAnterior: 0,
+                    saldoPosterior: payload.saldoInicial,
+                    descripcion: 'Base inicial recibida desde caja general',
+                    referenciaTipo: 'RETIRO_CAJA_MAYOR',
+                    referenciaId: traslado.id,
+                },
+            });
+        }
+    });
+    return getCajaDiaria(dateKey);
+}
+async function trasladarDesdeCajaDiaria(payload, usuarioId) {
+    const prisma = prismaClient();
+    await prisma.$transaction(async (tx) => {
+        const cajaDestino = await findOrCreateGeneralCaja(tx);
+        const cajaOrigen = payload.cajaOrigenId
+            ? await tx.caja.findUnique({ where: { id: payload.cajaOrigenId } })
+            : await findDailyCaja(tx);
+        if (!cajaOrigen) {
+            throw new app_error_1.AppError('No hay una caja diaria disponible para trasladar.', 404);
+        }
+        if (cajaOrigen.tipo !== prisma_client_1.TipoCaja.DIARIA) {
+            throw new app_error_1.AppError('La caja origen debe ser una caja diaria.', 409);
+        }
+        if (cajaOrigen.id === cajaDestino.id) {
+            throw new app_error_1.AppError('La caja origen y destino no pueden ser la misma.', 409);
+        }
+        const saldoOrigenAnterior = Number(cajaOrigen.saldoActual || 0);
+        if (saldoOrigenAnterior < payload.valor) {
+            throw new app_error_1.AppError('La caja diaria no tiene saldo suficiente para este traslado.', 409);
+        }
+        const saldoDestinoAnterior = Number(cajaDestino.saldoActual || 0);
+        const saldoOrigenPosterior = saldoOrigenAnterior - payload.valor;
+        const saldoDestinoPosterior = saldoDestinoAnterior + payload.valor;
+        const retiro = await tx.retiroCajaMayor.create({
+            data: {
+                usuarioId,
+                cajaOrigenId: cajaOrigen.id,
+                cajaDestinoId: cajaDestino.id,
+                valor: payload.valor,
+                motivo: payload.motivo,
+                observacion: payload.observacion,
+            },
+        });
+        await tx.caja.update({
+            where: { id: cajaOrigen.id },
+            data: { saldoActual: saldoOrigenPosterior },
+        });
+        await tx.caja.update({
+            where: { id: cajaDestino.id },
+            data: { saldoActual: saldoDestinoPosterior },
+        });
+        await tx.movimientoCaja.create({
+            data: {
+                cajaId: cajaOrigen.id,
+                usuarioId,
+                tipo: prisma_client_1.TipoMovimientoCaja.TRASLADO_SALIDA,
+                valor: payload.valor,
+                saldoAnterior: saldoOrigenAnterior,
+                saldoPosterior: saldoOrigenPosterior,
+                descripcion: `Traslado a caja general: ${payload.motivo}`,
+                referenciaTipo: 'RETIRO_CAJA_MAYOR',
+                referenciaId: retiro.id,
+            },
+        });
+        await tx.movimientoCaja.create({
+            data: {
+                cajaId: cajaDestino.id,
+                usuarioId,
+                tipo: prisma_client_1.TipoMovimientoCaja.TRASLADO_ENTRADA,
+                valor: payload.valor,
+                saldoAnterior: saldoDestinoAnterior,
+                saldoPosterior: saldoDestinoPosterior,
+                descripcion: `Traslado desde ${cajaOrigen.nombre}: ${payload.motivo}`,
+                referenciaTipo: 'RETIRO_CAJA_MAYOR',
+                referenciaId: retiro.id,
+            },
+        });
+    });
+    return getCajaGeneral();
+}
+async function registrarSalidaCajaGeneral(payload, usuarioId) {
+    const prisma = prismaClient();
+    await prisma.$transaction(async (tx) => {
+        const caja = await findOrCreateGeneralCaja(tx);
+        const saldoAnterior = Number(caja.saldoActual || 0);
+        if (saldoAnterior < payload.valor) {
+            throw new app_error_1.AppError('La caja general no tiene saldo suficiente para esta salida.', 409);
+        }
+        const saldoPosterior = saldoAnterior - payload.valor;
+        const retiro = await tx.retiroCajaMayor.create({
+            data: {
+                usuarioId,
+                cajaOrigenId: caja.id,
+                valor: payload.valor,
+                motivo: payload.motivo,
+                observacion: payload.observacion,
+            },
+        });
+        await tx.caja.update({
+            where: { id: caja.id },
+            data: { saldoActual: saldoPosterior },
+        });
+        await tx.movimientoCaja.create({
+            data: {
+                cajaId: caja.id,
+                usuarioId,
+                tipo: prisma_client_1.TipoMovimientoCaja.EGRESO,
+                valor: payload.valor,
+                saldoAnterior,
+                saldoPosterior,
+                descripcion: `Salida de caja general: ${payload.motivo}`,
+                referenciaTipo: 'RETIRO_CAJA_MAYOR',
+                referenciaId: retiro.id,
+            },
+        });
+    });
+    return getCajaGeneral();
+}
+async function cerrarCajaDiaria(payload, usuarioId) {
+    const prisma = prismaClient();
+    const dateKey = formatDateKey();
+    await prisma.$transaction(async (tx) => {
+        const caja = await findDailyCaja(tx, dateKey);
+        if (!caja) {
+            throw new app_error_1.AppError('No hay una caja diaria abierta para cerrar.', 404);
+        }
+        if (caja.estado !== prisma_client_1.EstadoCaja.ABIERTA) {
+            throw new app_error_1.AppError('La caja diaria ya no esta abierta.', 409);
+        }
+        const saldoEsperado = Number(caja.saldoActual || 0);
+        const diferencia = payload.saldoReal - saldoEsperado;
+        await tx.cierreCaja.create({
+            data: {
+                cajaId: caja.id,
+                usuarioId,
+                fechaApertura: caja.createdAt,
+                saldoInicial: 0,
+                saldoEsperado,
+                saldoReal: payload.saldoReal,
+                diferencia,
+                observaciones: payload.observaciones,
+            },
+        });
+        await tx.movimientoCaja.create({
+            data: {
+                cajaId: caja.id,
+                usuarioId,
+                tipo: prisma_client_1.TipoMovimientoCaja.CIERRE,
+                valor: payload.saldoReal,
+                saldoAnterior: saldoEsperado,
+                saldoPosterior: payload.saldoReal,
+                descripcion: 'Cierre de caja diaria',
+                referenciaTipo: 'CAJA',
+                referenciaId: caja.id,
+            },
+        });
+        if (payload.saldoReal > 0) {
+            const cajaGeneral = await findOrCreateGeneralCaja(tx);
+            const saldoGeneralAnterior = Number(cajaGeneral.saldoActual || 0);
+            const saldoGeneralPosterior = saldoGeneralAnterior + payload.saldoReal;
+            const traslado = await tx.retiroCajaMayor.create({
+                data: {
+                    usuarioId,
+                    cajaOrigenId: caja.id,
+                    cajaDestinoId: cajaGeneral.id,
+                    valor: payload.saldoReal,
+                    motivo: 'Cierre de caja diaria',
+                    observacion: payload.observaciones,
+                },
+            });
+            await tx.caja.update({
+                where: { id: cajaGeneral.id },
+                data: { saldoActual: saldoGeneralPosterior },
+            });
+            await tx.movimientoCaja.create({
+                data: {
+                    cajaId: caja.id,
+                    usuarioId,
+                    tipo: prisma_client_1.TipoMovimientoCaja.TRASLADO_SALIDA,
+                    valor: payload.saldoReal,
+                    saldoAnterior: payload.saldoReal,
+                    saldoPosterior: 0,
+                    descripcion: 'Traslado a caja general por cierre diario',
+                    referenciaTipo: 'RETIRO_CAJA_MAYOR',
+                    referenciaId: traslado.id,
+                },
+            });
+            await tx.movimientoCaja.create({
+                data: {
+                    cajaId: cajaGeneral.id,
+                    usuarioId,
+                    tipo: prisma_client_1.TipoMovimientoCaja.TRASLADO_ENTRADA,
+                    valor: payload.saldoReal,
+                    saldoAnterior: saldoGeneralAnterior,
+                    saldoPosterior: saldoGeneralPosterior,
+                    descripcion: `Cierre recibido desde ${caja.nombre}`,
+                    referenciaTipo: 'RETIRO_CAJA_MAYOR',
+                    referenciaId: traslado.id,
+                },
+            });
+        }
+        await tx.caja.update({
+            where: { id: caja.id },
+            data: {
+                estado: prisma_client_1.EstadoCaja.CERRADA,
+                saldoActual: 0,
+                permiteVenta: false,
+            },
+        });
+    });
+    return getCajaDiaria(dateKey);
 }

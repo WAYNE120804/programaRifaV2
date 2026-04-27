@@ -75,7 +75,7 @@ const SearchableSelect = ({
               X
             </button>
           ) : null}
-          <span className="text-xs text-slate-400">▼</span>
+          <span className="text-xs text-slate-400">v</span>
         </div>
       </div>
 

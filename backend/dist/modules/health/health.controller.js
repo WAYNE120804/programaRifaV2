@@ -20,7 +20,7 @@ async function getHealth(_req, res, next) {
         res.json({
             status: 'ok',
             timestamp: now,
-            phase: 'fase-0',
+            phase: 'base-limpia',
             checks,
         });
     }

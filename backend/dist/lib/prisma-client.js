@@ -1,14 +1,17 @@
 "use strict";
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __exportStar = (this && this.__exportStar) || function(m, exports) {
+    for (var p in m) if (p !== "default" && !Object.prototype.hasOwnProperty.call(exports, p)) __createBinding(exports, m, p);
+};
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.TipoMovimientoCaja = exports.RolUsuario = exports.MetodoPago = exports.EstadoVenta = exports.EstadoRifa = exports.EstadoPago = exports.EstadoBoleta = exports.CategoriaGasto = exports.PrismaClient = exports.Prisma = void 0;
-var prisma_client_1 = require("../../generated/prisma-client");
-Object.defineProperty(exports, "Prisma", { enumerable: true, get: function () { return prisma_client_1.Prisma; } });
-Object.defineProperty(exports, "PrismaClient", { enumerable: true, get: function () { return prisma_client_1.PrismaClient; } });
-Object.defineProperty(exports, "CategoriaGasto", { enumerable: true, get: function () { return prisma_client_1.CategoriaGasto; } });
-Object.defineProperty(exports, "EstadoBoleta", { enumerable: true, get: function () { return prisma_client_1.EstadoBoleta; } });
-Object.defineProperty(exports, "EstadoPago", { enumerable: true, get: function () { return prisma_client_1.EstadoPago; } });
-Object.defineProperty(exports, "EstadoRifa", { enumerable: true, get: function () { return prisma_client_1.EstadoRifa; } });
-Object.defineProperty(exports, "EstadoVenta", { enumerable: true, get: function () { return prisma_client_1.EstadoVenta; } });
-Object.defineProperty(exports, "MetodoPago", { enumerable: true, get: function () { return prisma_client_1.MetodoPago; } });
-Object.defineProperty(exports, "RolUsuario", { enumerable: true, get: function () { return prisma_client_1.RolUsuario; } });
-Object.defineProperty(exports, "TipoMovimientoCaja", { enumerable: true, get: function () { return prisma_client_1.TipoMovimientoCaja; } });
+__exportStar(require("@prisma/client"), exports);

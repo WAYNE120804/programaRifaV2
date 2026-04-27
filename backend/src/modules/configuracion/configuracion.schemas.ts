@@ -1,44 +1,15 @@
 import { AppError } from '../../lib/app-error';
 
 type ConfiguracionInput = {
-  nombreCasaRifera?: unknown;
+  nombreNegocio?: unknown;
   logoDataUrl?: unknown;
-  reglamentoDataUrl?: unknown;
-  reglamentoNombreArchivo?: unknown;
-  responsableNombre?: unknown;
-  responsableTelefono?: unknown;
-  responsableDireccion?: unknown;
-  responsableCiudad?: unknown;
-  responsableDepartamento?: unknown;
-  numeroResolucionAutorizacion?: unknown;
-  entidadAutoriza?: unknown;
-  publicHeroTitle?: unknown;
-  publicHeroSubtitle?: unknown;
-  publicWhoWeAre?: unknown;
-  publicContactPhone?: unknown;
-  publicContactWhatsapp?: unknown;
-  publicContactEmail?: unknown;
-  publicAddress?: unknown;
-  publicCity?: unknown;
-  publicDepartment?: unknown;
-  publicFacebookUrl?: unknown;
-  publicInstagramUrl?: unknown;
-  publicTiktokUrl?: unknown;
-  publicPrimaryCtaText?: unknown;
-  publicSecondaryCtaText?: unknown;
-  publicSupportText?: unknown;
-  publicTermsText?: unknown;
-  publicHeroImageDataUrl?: unknown;
-  publicTicketBackgroundDataUrl?: unknown;
-  publicPrizeGallery?: unknown;
+  propietarioNombre?: unknown;
+  propietarioTelefono?: unknown;
+  direccion?: unknown;
+  ciudad?: unknown;
+  departamento?: unknown;
+  notasRecibo?: unknown;
   themeColors?: unknown;
-};
-
-type PrizeGalleryItemPayload = {
-  id: string;
-  nombre: string | null;
-  descripcion: string | null;
-  dataUrl: string;
 };
 
 type ThemeColorsPayload = {
@@ -58,36 +29,14 @@ type ThemeColorsPayload = {
 };
 
 export type ConfiguracionPayload = {
-  nombreCasaRifera: string;
+  nombreNegocio: string;
   logoDataUrl: string | null;
-  reglamentoDataUrl: string | null;
-  reglamentoNombreArchivo: string | null;
-  responsableNombre: string | null;
-  responsableTelefono: string | null;
-  responsableDireccion: string | null;
-  responsableCiudad: string | null;
-  responsableDepartamento: string | null;
-  numeroResolucionAutorizacion: string | null;
-  entidadAutoriza: string | null;
-  publicHeroTitle: string | null;
-  publicHeroSubtitle: string | null;
-  publicWhoWeAre: string | null;
-  publicContactPhone: string | null;
-  publicContactWhatsapp: string | null;
-  publicContactEmail: string | null;
-  publicAddress: string | null;
-  publicCity: string | null;
-  publicDepartment: string | null;
-  publicFacebookUrl: string | null;
-  publicInstagramUrl: string | null;
-  publicTiktokUrl: string | null;
-  publicPrimaryCtaText: string | null;
-  publicSecondaryCtaText: string | null;
-  publicSupportText: string | null;
-  publicTermsText: string | null;
-  publicHeroImageDataUrl: string | null;
-  publicTicketBackgroundDataUrl: string | null;
-  publicPrizeGallery: PrizeGalleryItemPayload[];
+  propietarioNombre: string | null;
+  propietarioTelefono: string | null;
+  direccion: string | null;
+  ciudad: string | null;
+  departamento: string | null;
+  notasRecibo: string | null;
   themeColors: ThemeColorsPayload;
 };
 
@@ -109,7 +58,7 @@ const defaultThemeColors: ThemeColorsPayload = {
 
 function parseRequiredName(value: unknown) {
   if (typeof value !== 'string' || value.trim().length === 0) {
-    throw new AppError('El campo "nombreCasaRifera" es obligatorio.');
+    throw new AppError('El campo "nombreNegocio" es obligatorio.');
   }
 
   return value.trim();
@@ -128,42 +77,6 @@ function parseLogoDataUrl(value: unknown) {
 
   if (!normalizedValue.startsWith('data:image/')) {
     throw new AppError('El logo debe enviarse como imagen en formato base64.');
-  }
-
-  return normalizedValue;
-}
-
-function parseOptionalDataUrl(value: unknown, fieldName: string) {
-  if (value === null || typeof value === 'undefined' || value === '') {
-    return null;
-  }
-
-  if (typeof value !== 'string') {
-    throw new AppError(`El campo "${fieldName}" debe ser una cadena valida o null.`);
-  }
-
-  const normalizedValue = value.trim();
-
-  if (!normalizedValue.startsWith('data:')) {
-    throw new AppError(`El campo "${fieldName}" debe enviarse como archivo en formato base64.`);
-  }
-
-  return normalizedValue;
-}
-
-function parseOptionalImageDataUrl(value: unknown, fieldName: string) {
-  if (value === null || typeof value === 'undefined' || value === '') {
-    return null;
-  }
-
-  if (typeof value !== 'string') {
-    throw new AppError(`El campo "${fieldName}" debe ser una cadena valida o null.`);
-  }
-
-  const normalizedValue = value.trim();
-
-  if (!normalizedValue.startsWith('data:image/')) {
-    throw new AppError(`El campo "${fieldName}" debe enviarse como imagen en formato base64.`);
   }
 
   return normalizedValue;
@@ -215,109 +128,18 @@ function parseThemeColors(value: unknown): ThemeColorsPayload {
   return result;
 }
 
-function parsePrizeGallery(value: unknown): PrizeGalleryItemPayload[] {
-  if (value === null || typeof value === 'undefined') {
-    return [];
-  }
-
-  if (!Array.isArray(value)) {
-    throw new AppError('El campo "publicPrizeGallery" debe ser una lista valida.');
-  }
-
-  return value.map((item, index) => {
-    if (!item || typeof item !== 'object') {
-      throw new AppError(`La imagen ${index + 1} de la galeria no es valida.`);
-    }
-
-    const source = item as Record<string, unknown>;
-    const id =
-      typeof source.id === 'string' && source.id.trim().length
-        ? source.id.trim()
-        : `gallery-${index + 1}`;
-    const nombre =
-      typeof source.nombre === 'string' && source.nombre.trim().length
-        ? source.nombre.trim()
-        : null;
-    const descripcion =
-      typeof source.descripcion === 'string' && source.descripcion.trim().length
-        ? source.descripcion.trim()
-        : null;
-    const dataUrl = parseOptionalImageDataUrl(
-      source.dataUrl,
-      `publicPrizeGallery[${index}].dataUrl`
-    );
-
-    if (!dataUrl) {
-      throw new AppError(`La imagen ${index + 1} de la galeria debe tener archivo.`);
-    }
-
-    return {
-      id,
-      nombre,
-      descripcion,
-      dataUrl,
-    };
-  });
-}
-
 export function parseConfiguracionPayload(
   input: ConfiguracionInput
 ): ConfiguracionPayload {
   return {
-    nombreCasaRifera: parseRequiredName(input.nombreCasaRifera),
+    nombreNegocio: parseRequiredName(input.nombreNegocio),
     logoDataUrl: parseLogoDataUrl(input.logoDataUrl),
-    reglamentoDataUrl: parseOptionalDataUrl(input.reglamentoDataUrl, 'reglamentoDataUrl'),
-    reglamentoNombreArchivo: parseOptionalText(
-      input.reglamentoNombreArchivo,
-      'reglamentoNombreArchivo'
-    ),
-    responsableNombre: parseOptionalText(input.responsableNombre, 'responsableNombre'),
-    responsableTelefono: parseOptionalText(input.responsableTelefono, 'responsableTelefono'),
-    responsableDireccion: parseOptionalText(input.responsableDireccion, 'responsableDireccion'),
-    responsableCiudad: parseOptionalText(input.responsableCiudad, 'responsableCiudad'),
-    responsableDepartamento: parseOptionalText(
-      input.responsableDepartamento,
-      'responsableDepartamento'
-    ),
-    numeroResolucionAutorizacion: parseOptionalText(
-      input.numeroResolucionAutorizacion,
-      'numeroResolucionAutorizacion'
-    ),
-    entidadAutoriza: parseOptionalText(input.entidadAutoriza, 'entidadAutoriza'),
-    publicHeroTitle: parseOptionalText(input.publicHeroTitle, 'publicHeroTitle'),
-    publicHeroSubtitle: parseOptionalText(input.publicHeroSubtitle, 'publicHeroSubtitle'),
-    publicWhoWeAre: parseOptionalText(input.publicWhoWeAre, 'publicWhoWeAre'),
-    publicContactPhone: parseOptionalText(input.publicContactPhone, 'publicContactPhone'),
-    publicContactWhatsapp: parseOptionalText(
-      input.publicContactWhatsapp,
-      'publicContactWhatsapp'
-    ),
-    publicContactEmail: parseOptionalText(input.publicContactEmail, 'publicContactEmail'),
-    publicAddress: parseOptionalText(input.publicAddress, 'publicAddress'),
-    publicCity: parseOptionalText(input.publicCity, 'publicCity'),
-    publicDepartment: parseOptionalText(input.publicDepartment, 'publicDepartment'),
-    publicFacebookUrl: parseOptionalText(input.publicFacebookUrl, 'publicFacebookUrl'),
-    publicInstagramUrl: parseOptionalText(input.publicInstagramUrl, 'publicInstagramUrl'),
-    publicTiktokUrl: parseOptionalText(input.publicTiktokUrl, 'publicTiktokUrl'),
-    publicPrimaryCtaText: parseOptionalText(
-      input.publicPrimaryCtaText,
-      'publicPrimaryCtaText'
-    ),
-    publicSecondaryCtaText: parseOptionalText(
-      input.publicSecondaryCtaText,
-      'publicSecondaryCtaText'
-    ),
-    publicSupportText: parseOptionalText(input.publicSupportText, 'publicSupportText'),
-    publicTermsText: parseOptionalText(input.publicTermsText, 'publicTermsText'),
-    publicHeroImageDataUrl: parseOptionalImageDataUrl(
-      input.publicHeroImageDataUrl,
-      'publicHeroImageDataUrl'
-    ),
-    publicTicketBackgroundDataUrl: parseOptionalImageDataUrl(
-      input.publicTicketBackgroundDataUrl,
-      'publicTicketBackgroundDataUrl'
-    ),
-    publicPrizeGallery: parsePrizeGallery(input.publicPrizeGallery),
+    propietarioNombre: parseOptionalText(input.propietarioNombre, 'propietarioNombre'),
+    propietarioTelefono: parseOptionalText(input.propietarioTelefono, 'propietarioTelefono'),
+    direccion: parseOptionalText(input.direccion, 'direccion'),
+    ciudad: parseOptionalText(input.ciudad, 'ciudad'),
+    departamento: parseOptionalText(input.departamento, 'departamento'),
+    notasRecibo: parseOptionalText(input.notasRecibo, 'notasRecibo'),
     themeColors: parseThemeColors(input.themeColors),
   };
 }

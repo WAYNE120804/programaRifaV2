@@ -11,41 +11,14 @@ import { endpoints } from '../api/endpoints';
 
 type AppConfig = {
   id?: string;
-  nombreCasaRifera: string;
+  nombreNegocio: string;
   logoDataUrl: string | null;
-  reglamentoDataUrl: string | null;
-  reglamentoNombreArchivo: string | null;
-  responsableNombre: string | null;
-  responsableTelefono: string | null;
-  responsableDireccion: string | null;
-  responsableCiudad: string | null;
-  responsableDepartamento: string | null;
-  numeroResolucionAutorizacion: string | null;
-  entidadAutoriza: string | null;
-  publicHeroTitle: string | null;
-  publicHeroSubtitle: string | null;
-  publicWhoWeAre: string | null;
-  publicContactPhone: string | null;
-  publicContactWhatsapp: string | null;
-  publicContactEmail: string | null;
-  publicAddress: string | null;
-  publicCity: string | null;
-  publicDepartment: string | null;
-  publicFacebookUrl: string | null;
-  publicInstagramUrl: string | null;
-  publicTiktokUrl: string | null;
-  publicPrimaryCtaText: string | null;
-  publicSecondaryCtaText: string | null;
-  publicSupportText: string | null;
-  publicTermsText: string | null;
-  publicHeroImageDataUrl: string | null;
-  publicTicketBackgroundDataUrl: string | null;
-  publicPrizeGallery: Array<{
-    id: string;
-    nombre: string | null;
-    descripcion: string | null;
-    dataUrl: string;
-  }>;
+  propietarioNombre: string | null;
+  propietarioTelefono: string | null;
+  direccion: string | null;
+  ciudad: string | null;
+  departamento: string | null;
+  notasRecibo: string | null;
   themeColors: {
     sidebarBg: string;
     sidebarButtonBg: string;
@@ -71,36 +44,14 @@ type AppConfigContextValue = {
 };
 
 const defaultConfig: AppConfig = {
-  nombreCasaRifera: 'Rifas Admin',
+  nombreNegocio: 'Almacen Admin',
   logoDataUrl: null,
-  reglamentoDataUrl: null,
-  reglamentoNombreArchivo: null,
-  responsableNombre: null,
-  responsableTelefono: null,
-  responsableDireccion: null,
-  responsableCiudad: null,
-  responsableDepartamento: null,
-  numeroResolucionAutorizacion: null,
-  entidadAutoriza: null,
-  publicHeroTitle: 'Juega y gana con nosotros',
-  publicHeroSubtitle: null,
-  publicWhoWeAre: null,
-  publicContactPhone: null,
-  publicContactWhatsapp: null,
-  publicContactEmail: null,
-  publicAddress: null,
-  publicCity: null,
-  publicDepartment: null,
-  publicFacebookUrl: null,
-  publicInstagramUrl: null,
-  publicTiktokUrl: null,
-  publicPrimaryCtaText: 'Comprar boletas',
-  publicSecondaryCtaText: 'Verificar compra',
-  publicSupportText: null,
-  publicTermsText: null,
-  publicHeroImageDataUrl: null,
-  publicTicketBackgroundDataUrl: null,
-  publicPrizeGallery: [],
+  propietarioNombre: null,
+  propietarioTelefono: null,
+  direccion: null,
+  ciudad: null,
+  departamento: null,
+  notasRecibo: null,
   themeColors: {
     sidebarBg: '#ffffff',
     sidebarButtonBg: '#ffffff',
@@ -128,39 +79,14 @@ export const AppConfigProvider = ({ children }: { children: ReactNode }) => {
     const { data } = await client.get(endpoints.configuracion());
     setConfig({
       id: data.id,
-      nombreCasaRifera: data.nombreCasaRifera || 'Rifas Admin',
+      nombreNegocio: data.nombreNegocio || 'Almacen Admin',
       logoDataUrl: data.logoDataUrl || null,
-      reglamentoDataUrl: data.reglamentoDataUrl || null,
-      reglamentoNombreArchivo: data.reglamentoNombreArchivo || null,
-      responsableNombre: data.responsableNombre || null,
-      responsableTelefono: data.responsableTelefono || null,
-      responsableDireccion: data.responsableDireccion || null,
-      responsableCiudad: data.responsableCiudad || null,
-      responsableDepartamento: data.responsableDepartamento || null,
-      numeroResolucionAutorizacion: data.numeroResolucionAutorizacion || null,
-      entidadAutoriza: data.entidadAutoriza || null,
-      publicHeroTitle: data.publicHeroTitle || defaultConfig.publicHeroTitle,
-      publicHeroSubtitle: data.publicHeroSubtitle || null,
-      publicWhoWeAre: data.publicWhoWeAre || null,
-      publicContactPhone: data.publicContactPhone || null,
-      publicContactWhatsapp: data.publicContactWhatsapp || null,
-      publicContactEmail: data.publicContactEmail || null,
-      publicAddress: data.publicAddress || null,
-      publicCity: data.publicCity || null,
-      publicDepartment: data.publicDepartment || null,
-      publicFacebookUrl: data.publicFacebookUrl || null,
-      publicInstagramUrl: data.publicInstagramUrl || null,
-      publicTiktokUrl: data.publicTiktokUrl || null,
-      publicPrimaryCtaText: data.publicPrimaryCtaText || defaultConfig.publicPrimaryCtaText,
-      publicSecondaryCtaText:
-        data.publicSecondaryCtaText || defaultConfig.publicSecondaryCtaText,
-      publicSupportText: data.publicSupportText || null,
-      publicTermsText: data.publicTermsText || null,
-      publicHeroImageDataUrl: data.publicHeroImageDataUrl || null,
-      publicTicketBackgroundDataUrl: data.publicTicketBackgroundDataUrl || null,
-      publicPrizeGallery: Array.isArray(data.publicPrizeGallery)
-        ? data.publicPrizeGallery
-        : [],
+      propietarioNombre: data.propietarioNombre || null,
+      propietarioTelefono: data.propietarioTelefono || null,
+      direccion: data.direccion || null,
+      ciudad: data.ciudad || null,
+      departamento: data.departamento || null,
+      notasRecibo: data.notasRecibo || null,
       themeColors: {
         ...defaultConfig.themeColors,
         ...(data.themeColors || {}),
@@ -184,39 +110,14 @@ export const AppConfigProvider = ({ children }: { children: ReactNode }) => {
     const { data } = await client.put(endpoints.configuracion(), payload);
     const nextConfig = {
       id: data.id,
-      nombreCasaRifera: data.nombreCasaRifera || 'Rifas Admin',
+      nombreNegocio: data.nombreNegocio || 'Almacen Admin',
       logoDataUrl: data.logoDataUrl || null,
-      reglamentoDataUrl: data.reglamentoDataUrl || null,
-      reglamentoNombreArchivo: data.reglamentoNombreArchivo || null,
-      responsableNombre: data.responsableNombre || null,
-      responsableTelefono: data.responsableTelefono || null,
-      responsableDireccion: data.responsableDireccion || null,
-      responsableCiudad: data.responsableCiudad || null,
-      responsableDepartamento: data.responsableDepartamento || null,
-      numeroResolucionAutorizacion: data.numeroResolucionAutorizacion || null,
-      entidadAutoriza: data.entidadAutoriza || null,
-      publicHeroTitle: data.publicHeroTitle || defaultConfig.publicHeroTitle,
-      publicHeroSubtitle: data.publicHeroSubtitle || null,
-      publicWhoWeAre: data.publicWhoWeAre || null,
-      publicContactPhone: data.publicContactPhone || null,
-      publicContactWhatsapp: data.publicContactWhatsapp || null,
-      publicContactEmail: data.publicContactEmail || null,
-      publicAddress: data.publicAddress || null,
-      publicCity: data.publicCity || null,
-      publicDepartment: data.publicDepartment || null,
-      publicFacebookUrl: data.publicFacebookUrl || null,
-      publicInstagramUrl: data.publicInstagramUrl || null,
-      publicTiktokUrl: data.publicTiktokUrl || null,
-      publicPrimaryCtaText: data.publicPrimaryCtaText || defaultConfig.publicPrimaryCtaText,
-      publicSecondaryCtaText:
-        data.publicSecondaryCtaText || defaultConfig.publicSecondaryCtaText,
-      publicSupportText: data.publicSupportText || null,
-      publicTermsText: data.publicTermsText || null,
-      publicHeroImageDataUrl: data.publicHeroImageDataUrl || null,
-      publicTicketBackgroundDataUrl: data.publicTicketBackgroundDataUrl || null,
-      publicPrizeGallery: Array.isArray(data.publicPrizeGallery)
-        ? data.publicPrizeGallery
-        : [],
+      propietarioNombre: data.propietarioNombre || null,
+      propietarioTelefono: data.propietarioTelefono || null,
+      direccion: data.direccion || null,
+      ciudad: data.ciudad || null,
+      departamento: data.departamento || null,
+      notasRecibo: data.notasRecibo || null,
       themeColors: {
         ...defaultConfig.themeColors,
         ...(data.themeColors || {}),

@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const apiBaseUrl = import.meta.env.VITE_API_URL || 'http://localhost:3002/api';
-const AUTH_TOKEN_KEY = 'rifas_admin_token';
+const AUTH_TOKEN_KEY = 'almacen_admin_token';
 
 const client = axios.create({
   baseURL: apiBaseUrl,
@@ -34,7 +34,7 @@ client.interceptors.response.use(
     apiError.code = error?.response?.data?.code;
     apiError.details = error?.response?.data?.details;
 
-    if (apiError.status === 401 && !window.location.pathname.startsWith('/verificacion/abonos/')) {
+    if (apiError.status === 401) {
       window.localStorage.removeItem(AUTH_TOKEN_KEY);
       window.dispatchEvent(new Event('auth:logout'));
     }

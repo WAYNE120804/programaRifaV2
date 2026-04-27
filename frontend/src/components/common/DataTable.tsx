@@ -1,6 +1,6 @@
 const DataTable = ({ columns, data }) => {
   return (
-    <div className="overflow-hidden rounded-lg border border-slate-200 bg-white">
+    <div className="overflow-x-auto rounded-lg border border-slate-200 bg-white">
       <table className="min-w-full text-sm">
         <thead className="theme-table-head text-left text-xs uppercase">
           <tr>

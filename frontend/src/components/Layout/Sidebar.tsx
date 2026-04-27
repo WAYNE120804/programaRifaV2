@@ -1,58 +1,28 @@
 import { NavLink } from 'react-router-dom';
 import { useAppConfig } from '../../context/AppConfigContext';
 import { useAuth } from '../../context/AuthContext';
-import { useRifaContext } from '../../hooks/useRifaContext';
 
 const adminNavItems = [
-  { to: '/admin/rifas', label: 'Rifas' },
-  { to: '/admin/vendedores', label: 'Vendedores globales' },
-  { to: '/admin/usuarios', label: 'Usuarios', adminOnly: true },
-  { to: '/admin/configuracion', label: 'Configuracion', adminOnly: true },
-  { to: '/admin/configuracion-web', label: 'Configuracion pagina web', adminOnly: true },
-];
-
-const getRifaNavItems = (rifaId: string) => [
-  { to: `/rifas/${rifaId}`, label: 'Rifa', end: true },
-  { to: `/rifas/${rifaId}/boletas`, label: 'Boletas' },
-  { to: `/rifas/${rifaId}/juego`, label: 'Juego' },
-  { to: `/rifas/${rifaId}/vendedores`, label: 'Vendedores' },
-  { to: `/rifas/${rifaId}/asignaciones`, label: 'Asignaciones' },
-  { to: `/rifas/${rifaId}/devoluciones`, label: 'Devoluciones' },
-  { to: `/rifas/${rifaId}/abonos`, label: 'Abonos' },
-  { to: `/rifas/${rifaId}/gastos`, label: 'Gastos', adminOnly: true },
-  { to: `/rifas/${rifaId}/caja`, label: 'Caja', adminOnly: true },
-];
-
-const vendedorNavItems = [
-  { to: '/', label: 'Inicio' },
-  { to: '/boletas', label: 'Mis boletas' },
-  { to: '/mis-clientes', label: 'Mis clientes' },
-  { to: '/mis-pagos', label: 'Mis pagos' },
-  { to: '/abonos', label: 'Mi cuenta' },
-  { to: '/mis-recibos', label: 'Mis recibos' },
-  { to: '/mis-informes', label: 'Mis informes' },
+  { to: '/', label: 'Resumen' },
+  { to: '/categorias', label: 'Categorias', adminOnly: true },
+  { to: '/productos', label: 'Productos', adminOnly: true },
+  { to: '/clientes', label: 'Clientes' },
+  { to: '/ventas', label: 'Ventas' },
+  { to: '/caja', label: 'Caja diaria', roles: ['ADMIN', 'CAJERO'] },
+  { to: '/caja-general', label: 'Caja general', roles: ['ADMIN', 'CAJERO'] },
+  { to: '/fondos', label: 'Fondos', roles: ['ADMIN', 'CAJERO'] },
+  { to: '/gastos', label: 'Gastos/Pagos', roles: ['ADMIN', 'CAJERO'] },
+  { to: '/informes', label: 'Informes', adminOnly: true },
+  { to: '/usuarios', label: 'Usuarios', adminOnly: true },
+  { to: '/configuracion', label: 'Configuracion', adminOnly: true },
 ];
 
 const Sidebar = () => {
   const { config } = useAppConfig();
   const { user, logout } = useAuth();
-  const { rifaId, rifa, isRifaScope } = useRifaContext();
-  const specialScopeName =
-    user?.rol === 'VENDEDOR'
-      ? user.scopes.items?.find((item) => {
-          const name = item.vendedorNombre?.toUpperCase() || '';
-          return name === 'PAGINA WEB' || name.includes('BOT');
-        })?.vendedorNombre || null
-      : null;
-  const visibleNavItems =
-    user?.rol === 'VENDEDOR'
-      ? [
-          ...vendedorNavItems,
-          ...(specialScopeName ? [{ to: '/supervision-canal', label: 'Supervision canal' }] : []),
-        ]
-      : (isRifaScope && rifaId ? getRifaNavItems(rifaId) : adminNavItems).filter(
-          (item) => !item.adminOnly || user?.rol === 'ADMIN'
-        );
+  const visibleNavItems = adminNavItems.filter(
+    (item) => (!item.adminOnly || user?.rol === 'ADMIN') && (!item.roles || item.roles.includes(user?.rol || ''))
+  );
 
   return (
     <aside className="theme-sidebar flex h-screen w-60 flex-col border-r border-slate-200 p-6">
@@ -60,27 +30,19 @@ const Sidebar = () => {
         {config.logoDataUrl ? (
           <img
             src={config.logoDataUrl}
-            alt={config.nombreCasaRifera}
+            alt={config.nombreNegocio}
             className="h-12 w-12 rounded-full border border-slate-200 object-cover"
           />
         ) : (
           <div className="flex h-12 w-12 items-center justify-center rounded-full bg-slate-900 text-sm font-semibold text-white">
-            {config.nombreCasaRifera.slice(0, 2).toUpperCase()}
+            {config.nombreNegocio.slice(0, 2).toUpperCase()}
           </div>
         )}
         <div>
           <h1 className="theme-main-title text-lg font-semibold text-slate-800">
-            {config.nombreCasaRifera}
+            {config.nombreNegocio}
           </h1>
-          <p className="text-xs text-slate-500">
-            {user?.rol === 'VENDEDOR'
-              ? specialScopeName
-                ? `Panel ${specialScopeName.toLowerCase()}`
-                : 'Panel vendedor'
-              : isRifaScope
-                ? rifa?.nombre || 'Panel de rifa'
-                : 'Panel administrativo'}
-          </p>
+          <p className="text-xs text-slate-500">Base administrativa limpia</p>
         </div>
       </div>
       <nav className="mt-6 flex flex-col gap-2 text-sm">
@@ -88,7 +50,6 @@ const Sidebar = () => {
           <NavLink
             key={item.to}
             to={item.to}
-            end={item.end}
             className={({ isActive }) =>
               `theme-nav-label rounded-md px-3 py-2 transition-colors ${
                 isActive ? 'theme-sidebar-link-active' : 'theme-sidebar-link'

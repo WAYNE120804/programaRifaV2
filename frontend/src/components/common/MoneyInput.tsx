@@ -1,27 +1,23 @@
 import { useEffect, useState } from 'react';
+
 import { formatCOPNumber, parseNumber } from '../../utils/money';
 
 type MoneyInputProps = {
   label: string;
   value: string | number;
-  onChange?: (event: { target: { name: string; value: number } }) => void;
-  name: string;
+  onChange?: (value: number) => void;
   required?: boolean;
 };
 
-const MoneyInput = ({
-  label,
-  value,
-  onChange,
-  name,
-  required = false,
-}: MoneyInputProps) => {
+const MoneyInput = ({ label, value, onChange, required = false }: MoneyInputProps) => {
   const [display, setDisplay] = useState(value ? formatCOPNumber(value) : '');
 
   useEffect(() => {
-    setDisplay(value === '' || value === null || typeof value === 'undefined'
-      ? ''
-      : formatCOPNumber(value));
+    setDisplay(
+      value === '' || value === null || typeof value === 'undefined'
+        ? ''
+        : formatCOPNumber(value)
+    );
   }, [value]);
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -30,13 +26,13 @@ const MoneyInput = ({
 
     if (!digitsOnly) {
       setDisplay('');
-      onChange?.({ target: { name, value: 0 } });
+      onChange?.(0);
       return;
     }
 
     const numericValue = parseNumber(digitsOnly);
     setDisplay(formatCOPNumber(numericValue));
-    onChange?.({ target: { name, value: numericValue } });
+    onChange?.(numericValue);
   };
 
   const handleBlur = () => {
@@ -56,7 +52,6 @@ const MoneyInput = ({
         onChange={handleChange}
         onBlur={handleBlur}
         onFocus={handleFocus}
-        name={name}
         required={required}
         inputMode="numeric"
       />

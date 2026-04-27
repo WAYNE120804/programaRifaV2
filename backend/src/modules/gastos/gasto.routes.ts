@@ -1,12 +1,11 @@
 import { Router } from 'express';
+
 import { RolUsuario } from '../../lib/prisma-client';
 import { requireRole } from '../../middlewares/auth';
-
-import { getAllGastos, getGasto, postAnularGasto, postGasto } from './gasto.controller';
+import { getGasto, getGastos, postGasto } from './gasto.controller';
 
 export const gastoRouter = Router();
 
-gastoRouter.get('/', requireRole(RolUsuario.ADMIN), getAllGastos);
-gastoRouter.get('/:id', requireRole(RolUsuario.ADMIN), getGasto);
-gastoRouter.post('/', requireRole(RolUsuario.ADMIN), postGasto);
-gastoRouter.post('/:id/anular', requireRole(RolUsuario.ADMIN), postAnularGasto);
+gastoRouter.get('/', requireRole(RolUsuario.ADMIN, RolUsuario.CAJERO), getGastos);
+gastoRouter.get('/:id', requireRole(RolUsuario.ADMIN, RolUsuario.CAJERO), getGasto);
+gastoRouter.post('/', requireRole(RolUsuario.ADMIN, RolUsuario.CAJERO), postGasto);

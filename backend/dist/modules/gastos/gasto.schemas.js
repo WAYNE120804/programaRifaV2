@@ -1,65 +1,54 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.parseCreateGastoPayload = parseCreateGastoPayload;
-exports.parseAnularGastoPayload = parseAnularGastoPayload;
-const app_error_1 = require("../../lib/app-error");
+exports.parseGastoPayload = parseGastoPayload;
 const prisma_client_1 = require("../../lib/prisma-client");
-const categoriaGastoValues = new Set(Object.values(prisma_client_1.CategoriaGasto));
+const app_error_1 = require("../../lib/app-error");
+function parseOptionalString(value) {
+    if (typeof value !== 'string') {
+        return null;
+    }
+    const normalized = value.trim();
+    return normalized ? normalized : null;
+}
 function parseRequiredString(value, fieldName) {
-    if (typeof value !== 'string' || value.trim().length === 0) {
+    const parsed = parseOptionalString(value);
+    if (!parsed) {
         throw new app_error_1.AppError(`El campo "${fieldName}" es obligatorio.`);
     }
-    return value.trim();
+    return parsed;
 }
-function parseRequiredPositiveNumber(value, fieldName) {
-    const numericValue = Number(value);
-    if (!Number.isFinite(numericValue) || numericValue <= 0) {
-        throw new app_error_1.AppError(`El campo "${fieldName}" debe ser un numero mayor a 0.`);
+function parsePositiveMoney(value, fieldName) {
+    const parsed = Number(value);
+    if (!Number.isFinite(parsed) || parsed <= 0) {
+        throw new app_error_1.AppError(`El campo "${fieldName}" debe ser mayor a cero.`);
     }
-    return Number(numericValue.toFixed(2));
+    return parsed;
 }
-function parseOptionalDate(value, fieldName) {
-    if (value === undefined || value === null || value === '') {
-        return undefined;
+function parseOrigen(value) {
+    if (typeof value === 'string' && value in prisma_client_1.OrigenGasto) {
+        return value;
     }
-    const rawValue = String(value).trim();
-    const dateOnlyMatch = rawValue.match(/^(\d{4})-(\d{2})-(\d{2})$/);
-    if (dateOnlyMatch) {
-        const [, year, month, day] = dateOnlyMatch;
-        const now = new Date();
-        const date = new Date(Number(year), Number(month) - 1, Number(day), now.getHours(), now.getMinutes(), now.getSeconds(), now.getMilliseconds());
-        if (Number.isNaN(date.getTime())) {
-            throw new app_error_1.AppError(`El campo "${fieldName}" debe ser una fecha valida.`);
-        }
-        return date;
-    }
-    const date = new Date(rawValue);
-    if (Number.isNaN(date.getTime())) {
-        throw new app_error_1.AppError(`El campo "${fieldName}" debe ser una fecha valida.`);
-    }
-    return date;
+    throw new app_error_1.AppError('Debes seleccionar un origen valido para el pago.');
 }
-function parseCategoriaGasto(value) {
-    const rawValue = typeof value === 'string' && value.trim() ? value.trim().toUpperCase() : 'OTROS';
-    if (!categoriaGastoValues.has(rawValue)) {
-        throw new app_error_1.AppError('La categoria del gasto no es valida.');
+function parseCategoria(value) {
+    if (typeof value === 'string' && value in prisma_client_1.CategoriaGasto) {
+        return value;
     }
-    return rawValue;
+    throw new app_error_1.AppError('Debes seleccionar un concepto valido para el gasto.');
 }
-function parseCreateGastoPayload(input) {
+function parseGastoPayload(input) {
+    const origen = parseOrigen(input.origen);
+    const fondoId = parseOptionalString(input.fondoId);
+    if (origen === prisma_client_1.OrigenGasto.FONDO_META && !fondoId) {
+        throw new app_error_1.AppError('Debes seleccionar el fondo/meta origen del pago.');
+    }
     return {
-        rifaId: parseRequiredString(input.rifaId, 'rifaId'),
-        subCajaId: typeof input.subCajaId === 'string' && input.subCajaId.trim().length > 0
-            ? input.subCajaId.trim()
-            : undefined,
-        categoria: parseCategoriaGasto(input.categoria),
-        valor: parseRequiredPositiveNumber(input.valor, 'valor'),
-        fecha: parseOptionalDate(input.fecha, 'fecha'),
+        origen,
+        fondoId,
+        categoria: parseCategoria(input.categoria),
         descripcion: parseRequiredString(input.descripcion, 'descripcion'),
-    };
-}
-function parseAnularGastoPayload(input) {
-    return {
-        motivo: parseRequiredString(input.motivo, 'motivo'),
+        valor: parsePositiveMoney(input.valor, 'valor'),
+        soporte: parseOptionalString(input.soporte),
+        observacion: parseOptionalString(input.observacion),
     };
 }

@@ -5,7 +5,6 @@ exports.getMe = getMe;
 exports.getUsuarios = getUsuarios;
 exports.postUsuario = postUsuario;
 exports.patchUsuarioActivo = patchUsuarioActivo;
-exports.patchUsuarioScopes = patchUsuarioScopes;
 const auth_service_1 = require("./auth.service");
 const auth_schemas_1 = require("./auth.schemas");
 function getIdParam(value) {
@@ -56,14 +55,6 @@ async function postUsuario(req, res, next) {
 async function patchUsuarioActivo(req, res, next) {
     try {
         res.json(await (0, auth_service_1.toggleUsuarioActivo)(getIdParam(req.params.id), parseBoolean(req.body?.activo)));
-    }
-    catch (error) {
-        next(error);
-    }
-}
-async function patchUsuarioScopes(req, res, next) {
-    try {
-        res.json(await (0, auth_service_1.updateUsuarioScopes)(getIdParam(req.params.id), (0, auth_schemas_1.parseUsuarioScopesPayload)(req.body || {})));
     }
     catch (error) {
         next(error);

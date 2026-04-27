@@ -4,17 +4,12 @@ import { RolUsuario } from '../lib/prisma-client';
 import { AppError } from '../lib/app-error';
 import { verifyAuthToken } from '../lib/auth-token';
 import { getPrisma } from '../lib/prisma';
-import { serializeUserScopes } from '../modules/auth/auth.utils';
 
 type AuthenticatedUser = {
   id: string;
   nombre: string;
   email: string;
   rol: RolUsuario;
-  scopes: {
-    vendedorIds: string[];
-    rifaVendedorIds: string[];
-  };
 };
 
 declare global {
@@ -69,12 +64,6 @@ export async function authenticateRequest(
         email: true,
         rol: true,
         activo: true,
-        vendedorScopes: {
-          select: {
-            vendedorId: true,
-            rifaVendedorId: true,
-          },
-        },
       },
     });
 
@@ -89,7 +78,6 @@ export async function authenticateRequest(
       nombre: usuario.nombre,
       email: usuario.email,
       rol: usuario.rol,
-      scopes: serializeUserScopes(usuario.vendedorScopes),
     };
 
     next();

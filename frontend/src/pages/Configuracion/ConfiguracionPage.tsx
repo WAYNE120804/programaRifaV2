@@ -148,7 +148,6 @@ function extractPaletteFromDataUrl(dataUrl: string) {
 function buildThemeFromPalette(palette: string[]): ThemeColors {
   const primary = palette[0] || '#1d4ed8';
   const secondary = palette[1] || '#eab308';
-  const accent = palette[2] || '#0f766e';
   const darkBase = mixHex(primary, '#0f172a', 0.65);
 
   return {
@@ -164,26 +163,21 @@ function buildThemeFromPalette(palette: string[]): ThemeColors {
     summaryLabelText: mixHex(primary, '#94a3b8', 0.78),
     summaryValueText: darkBase,
     tableHeaderBg: mixHex(secondary, '#ffffff', 0.3),
-    tableHeaderText: getReadableText(mixHex(secondary, '#ffffff', 0.3)) === '#ffffff'
-      ? '#0f172a'
-      : '#0f172a',
+    tableHeaderText: '#0f172a',
   };
 }
 
 const ConfiguracionPage = () => {
   const { config, saveConfig } = useAppConfig();
   const [form, setForm] = useState({
-    nombreCasaRifera: 'Rifas Admin',
+    nombreNegocio: 'Almacen Admin',
     logoDataUrl: null as string | null,
-    reglamentoDataUrl: null as string | null,
-    reglamentoNombreArchivo: '',
-    responsableNombre: '',
-    responsableTelefono: '',
-    responsableDireccion: '',
-    responsableCiudad: '',
-    responsableDepartamento: '',
-    numeroResolucionAutorizacion: '',
-    entidadAutoriza: '',
+    propietarioNombre: '',
+    propietarioTelefono: '',
+    direccion: '',
+    ciudad: '',
+    departamento: '',
+    notasRecibo: '',
     themeColors: {
       sidebarBg: '#ffffff',
       sidebarButtonBg: '#ffffff',
@@ -209,17 +203,14 @@ const ConfiguracionPage = () => {
 
   useEffect(() => {
     setForm({
-      nombreCasaRifera: config.nombreCasaRifera || 'Rifas Admin',
+      nombreNegocio: config.nombreNegocio || 'Almacen Admin',
       logoDataUrl: config.logoDataUrl || null,
-      reglamentoDataUrl: config.reglamentoDataUrl || null,
-      reglamentoNombreArchivo: config.reglamentoNombreArchivo || '',
-      responsableNombre: config.responsableNombre || '',
-      responsableTelefono: config.responsableTelefono || '',
-      responsableDireccion: config.responsableDireccion || '',
-      responsableCiudad: config.responsableCiudad || '',
-      responsableDepartamento: config.responsableDepartamento || '',
-      numeroResolucionAutorizacion: config.numeroResolucionAutorizacion || '',
-      entidadAutoriza: config.entidadAutoriza || '',
+      propietarioNombre: config.propietarioNombre || '',
+      propietarioTelefono: config.propietarioTelefono || '',
+      direccion: config.direccion || '',
+      ciudad: config.ciudad || '',
+      departamento: config.departamento || '',
+      notasRecibo: config.notasRecibo || '',
       themeColors: config.themeColors,
     });
   }, [config]);
@@ -251,7 +242,7 @@ const ConfiguracionPage = () => {
       setState((prev) => ({
         ...prev,
         error: '',
-        success: 'Se sugirieron colores automaticamente desde el logo. Puedes ajustarlos manualmente.',
+        success: 'Se sugirieron colores automáticamente desde el logo. Puedes ajustarlos manualmente.',
         paletteLoading: false,
       }));
     } catch (error) {
@@ -259,33 +250,6 @@ const ConfiguracionPage = () => {
         ...prev,
         paletteLoading: false,
         error: error instanceof Error ? error.message : 'No se pudo cargar el logo.',
-      }));
-    }
-  };
-
-  const handleReglamentoChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
-
-    if (!file) {
-      return;
-    }
-
-    try {
-      const reglamentoDataUrl = await fileToDataUrl(file);
-      setForm((prev) => ({
-        ...prev,
-        reglamentoDataUrl,
-        reglamentoNombreArchivo: file.name,
-      }));
-      setState((prev) => ({
-        ...prev,
-        error: '',
-        success: 'Reglamento cargado correctamente. Guarda la configuracion para dejarlo activo.',
-      }));
-    } catch (error) {
-      setState((prev) => ({
-        ...prev,
-        error: error instanceof Error ? error.message : 'No se pudo cargar el reglamento.',
       }));
     }
   };
@@ -338,13 +302,13 @@ const ConfiguracionPage = () => {
       setState((prev) => ({
         ...prev,
         saving: false,
-        success: 'Configuracion guardada correctamente.',
+        success: 'Configuración guardada correctamente.',
       }));
     } catch (error) {
       setState((prev) => ({
         ...prev,
         saving: false,
-        error: error instanceof Error ? error.message : 'No se pudo guardar la configuracion.',
+        error: error instanceof Error ? error.message : 'No se pudo guardar la configuración.',
       }));
     }
   };
@@ -362,31 +326,31 @@ const ConfiguracionPage = () => {
         >
           <div className="rounded-lg bg-white p-6 shadow-sm">
             <h3 className="text-base font-semibold text-slate-800">
-              Datos de la casa rifera
+              Datos del negocio
             </h3>
             <p className="mt-1 text-sm text-slate-500">
-              Esta informacion se usa en el menu y en la impresion de planillas.
+              Esta información se usará en el panel, en la tirilla y en los futuros reportes del almacén.
             </p>
 
             <div className="mt-6 grid gap-4">
               <label className="text-sm">
-                <span className="text-slate-600">Nombre de la casa rifera</span>
+                <span className="text-slate-600">Nombre del negocio</span>
                 <input
                   className="mt-1 w-full rounded-md border border-slate-300 px-3 py-2"
-                  value={form.nombreCasaRifera}
+                  value={form.nombreNegocio}
                   onChange={(event) =>
                     setForm((prev) => ({
                       ...prev,
-                      nombreCasaRifera: event.target.value,
+                      nombreNegocio: event.target.value,
                     }))
                   }
-                  placeholder="Ej: Rifas Chinchina"
+                  placeholder="Ej: Almacen Wayne"
                   required
                 />
               </label>
 
               <label className="text-sm">
-                <span className="text-slate-600">Logo de la empresa</span>
+                <span className="text-slate-600">Logo del negocio</span>
                 <input
                   type="file"
                   accept="image/*"
@@ -394,7 +358,7 @@ const ConfiguracionPage = () => {
                   onChange={handleFileChange}
                 />
                 <p className="mt-1 text-xs text-slate-400">
-                  Se guarda en el sistema para usarlo en las planillas impresas.
+                  Se guarda en el sistema para usarlo en la cabecera del panel y en las futuras tirillas.
                 </p>
               </label>
 
@@ -422,74 +386,40 @@ const ConfiguracionPage = () => {
                 </div>
               ) : null}
 
-              <label className="text-sm">
-                <span className="text-slate-600">Reglamento de la rifa</span>
-                <input
-                  type="file"
-                  accept=".pdf,.doc,.docx,.txt,.png,.jpg,.jpeg"
-                  className="mt-1 block w-full text-sm text-slate-600"
-                  onChange={handleReglamentoChange}
-                />
-                <p className="mt-1 text-xs text-slate-400">
-                  Este archivo quedara listo para mostrarse despues en el panel publico.
-                </p>
-              </label>
-
-              {form.reglamentoDataUrl ? (
-                <div className="flex flex-wrap items-center gap-3 text-sm">
-                  <span className="text-slate-600">
-                    Reglamento cargado: {form.reglamentoNombreArchivo || 'Archivo adjunto'}
-                  </span>
-                  <button
-                    type="button"
-                    className="rounded-md border border-rose-300 px-3 py-2 text-sm text-rose-700"
-                    onClick={() =>
-                      setForm((prev) => ({
-                        ...prev,
-                        reglamentoDataUrl: null,
-                        reglamentoNombreArchivo: '',
-                      }))
-                    }
-                  >
-                    Quitar reglamento
-                  </button>
-                </div>
-              ) : null}
-
               <div className="mt-2 border-t border-slate-200 pt-4">
                 <h4 className="text-sm font-semibold text-slate-800">
-                  Responsable y autorizacion
+                  Datos operativos
                 </h4>
                 <p className="mt-1 text-sm text-slate-500">
-                  Estos datos quedaran listos para impresion y para la futura pagina publica de venta.
+                  Datos mínimos del negocio para recibos e identificación interna.
                 </p>
               </div>
 
               <div className="grid gap-4 md:grid-cols-2">
                 <label className="text-sm">
-                  <span className="text-slate-600">Nombre del responsable</span>
+                  <span className="text-slate-600">Propietario / administrador</span>
                   <input
                     className="mt-1 w-full rounded-md border border-slate-300 px-3 py-2"
-                    value={form.responsableNombre}
+                    value={form.propietarioNombre}
                     onChange={(event) =>
                       setForm((prev) => ({
                         ...prev,
-                        responsableNombre: event.target.value,
+                        propietarioNombre: event.target.value,
                       }))
                     }
-                    placeholder="Ej: Juan Perez"
+                    placeholder="Ej: Jhon Sebastian Diaz"
                   />
                 </label>
 
                 <label className="text-sm">
-                  <span className="text-slate-600">Telefono del responsable</span>
+                  <span className="text-slate-600">Teléfono</span>
                   <input
                     className="mt-1 w-full rounded-md border border-slate-300 px-3 py-2"
-                    value={form.responsableTelefono}
+                    value={form.propietarioTelefono}
                     onChange={(event) =>
                       setForm((prev) => ({
                         ...prev,
-                        responsableTelefono: event.target.value,
+                        propietarioTelefono: event.target.value,
                       }))
                     }
                     placeholder="Ej: 3001234567"
@@ -498,14 +428,14 @@ const ConfiguracionPage = () => {
               </div>
 
               <label className="text-sm">
-                <span className="text-slate-600">Direccion del responsable</span>
+                <span className="text-slate-600">Dirección</span>
                 <input
                   className="mt-1 w-full rounded-md border border-slate-300 px-3 py-2"
-                  value={form.responsableDireccion}
+                  value={form.direccion}
                   onChange={(event) =>
                     setForm((prev) => ({
                       ...prev,
-                      responsableDireccion: event.target.value,
+                      direccion: event.target.value,
                     }))
                   }
                   placeholder="Ej: Calle 10 # 5-12"
@@ -517,14 +447,14 @@ const ConfiguracionPage = () => {
                   <span className="text-slate-600">Ciudad</span>
                   <input
                     className="mt-1 w-full rounded-md border border-slate-300 px-3 py-2"
-                    value={form.responsableCiudad}
+                    value={form.ciudad}
                     onChange={(event) =>
                       setForm((prev) => ({
                         ...prev,
-                        responsableCiudad: event.target.value,
+                        ciudad: event.target.value,
                       }))
                     }
-                    placeholder="Ej: Chinchina"
+                    placeholder="Ej: Bogotá"
                   />
                 </label>
 
@@ -532,59 +462,39 @@ const ConfiguracionPage = () => {
                   <span className="text-slate-600">Departamento</span>
                   <input
                     className="mt-1 w-full rounded-md border border-slate-300 px-3 py-2"
-                    value={form.responsableDepartamento}
+                    value={form.departamento}
                     onChange={(event) =>
                       setForm((prev) => ({
                         ...prev,
-                        responsableDepartamento: event.target.value,
+                        departamento: event.target.value,
                       }))
                     }
-                    placeholder="Ej: Caldas"
+                    placeholder="Ej: Cundinamarca"
                   />
                 </label>
               </div>
 
-              <div className="grid gap-4 md:grid-cols-2">
-                <label className="text-sm">
-                  <span className="text-slate-600">Entidad que autoriza</span>
-                  <input
-                    className="mt-1 w-full rounded-md border border-slate-300 px-3 py-2"
-                    value={form.entidadAutoriza}
-                    onChange={(event) =>
-                      setForm((prev) => ({
-                        ...prev,
-                        entidadAutoriza: event.target.value,
-                      }))
-                    }
-                    placeholder="Ej: EDSA o COLJUEGOS"
-                  />
-                </label>
-
-                <label className="text-sm">
-                  <span className="text-slate-600">Numero de resolucion</span>
-                  <input
-                    className="mt-1 w-full rounded-md border border-slate-300 px-3 py-2"
-                    value={form.numeroResolucionAutorizacion}
-                    onChange={(event) =>
-                      setForm((prev) => ({
-                        ...prev,
-                        numeroResolucionAutorizacion: event.target.value,
-                      }))
-                    }
-                    placeholder="Ej: 2026-001"
-                  />
-                </label>
-              </div>
+              <label className="text-sm">
+                <span className="text-slate-600">Notas para tirilla / recibo</span>
+                <textarea
+                  className="mt-1 min-h-28 w-full rounded-md border border-slate-300 px-3 py-2"
+                  value={form.notasRecibo}
+                  onChange={(event) =>
+                    setForm((prev) => ({
+                      ...prev,
+                      notasRecibo: event.target.value,
+                    }))
+                  }
+                  placeholder="Ej: Cambios solo con factura. Gracias por su compra."
+                />
+              </label>
 
               <div className="mt-2 border-t border-slate-200 pt-4">
                 <h4 className="text-sm font-semibold text-slate-800">
                   Colores del panel administrativo
                 </h4>
                 <p className="mt-1 text-sm text-slate-500">
-                  Estos colores ya controlan sidebar, menu activo, titulos y encabezados de tablas. Luego se pueden extender al panel publico.
-                </p>
-                <p className="mt-1 text-xs text-slate-400">
-                  Si subes un logo, el sistema puede sugerir una paleta automaticamente y luego la puedes retocar a mano.
+                  Estos colores controlan sidebar, menú activo, títulos y encabezados de tablas.
                 </p>
               </div>
 
@@ -644,49 +554,42 @@ const ConfiguracionPage = () => {
                 {form.logoDataUrl ? (
                   <img
                     src={form.logoDataUrl}
-                    alt={form.nombreCasaRifera}
+                    alt={form.nombreNegocio}
                     className="h-20 w-20 rounded-full border border-slate-200 object-cover"
                   />
                 ) : (
                   <div className="flex h-20 w-20 items-center justify-center rounded-full bg-slate-900 text-lg font-semibold text-white">
-                    {form.nombreCasaRifera.slice(0, 2).toUpperCase()}
+                    {form.nombreNegocio.slice(0, 2).toUpperCase()}
                   </div>
                 )}
                 <div>
                   <p className="text-xs uppercase tracking-[0.3em] text-slate-400">
-                    Casa rifera
+                    Negocio
                   </p>
                   <h4 className="text-xl font-semibold text-slate-800">
-                    {form.nombreCasaRifera || 'Rifas Admin'}
+                    {form.nombreNegocio || 'Almacen Admin'}
                   </h4>
                   <p className="text-sm text-slate-500">
-                    Este encabezado se reutiliza al imprimir boletas.
-                  </p>
-                  <p className="mt-2 text-sm text-slate-500">
-                    Reglamento: {form.reglamentoNombreArchivo || 'Sin archivo cargado'}
+                    Vista previa de la cabecera base del sistema.
                   </p>
                   <div className="mt-4 space-y-1 text-sm text-slate-600">
                     <p>
-                      <span className="font-medium text-slate-800">Responsable:</span>{' '}
-                      {form.responsableNombre || 'N/A'}
+                      <span className="font-medium text-slate-800">Propietario:</span>{' '}
+                      {form.propietarioNombre || 'N/A'}
                     </p>
                     <p>
                       <span className="font-medium text-slate-800">Telefono:</span>{' '}
-                      {form.responsableTelefono || 'N/A'}
+                      {form.propietarioTelefono || 'N/A'}
                     </p>
                     <p>
                       <span className="font-medium text-slate-800">Ubicacion:</span>{' '}
-                      {[form.responsableDireccion, form.responsableCiudad, form.responsableDepartamento]
+                      {[form.direccion, form.ciudad, form.departamento]
                         .filter(Boolean)
                         .join(' - ') || 'N/A'}
                     </p>
                     <p>
-                      <span className="font-medium text-slate-800">Autoriza:</span>{' '}
-                      {form.entidadAutoriza || 'N/A'}
-                    </p>
-                    <p>
-                      <span className="font-medium text-slate-800">Resolucion:</span>{' '}
-                      {form.numeroResolucionAutorizacion || 'N/A'}
+                      <span className="font-medium text-slate-800">Nota de recibo:</span>{' '}
+                      {form.notasRecibo || 'N/A'}
                     </p>
                   </div>
                 </div>

@@ -43,31 +43,27 @@ const LoginPage = () => {
             Panel administrativo
           </p>
           <h1 className="mt-3 text-4xl font-semibold uppercase text-slate-900">
-            {config.nombreCasaRifera}
+            {config.nombreNegocio}
           </h1>
           <p className="mt-4 text-base text-slate-600">
-            Accede con tu usuario para administrar rifas, vendedores, caja, gastos, abonos,
-            premios y el futuro canal publico de venta. Los vendedores pueden ingresar con su
-            documento o con correo segun el tipo de usuario.
+            Esta versión ya quedó depurada de la lógica de rifas. Desde aquí se administrará la reconstrucción del sistema para el almacén de ropa.
           </p>
 
           <div className="mt-8 grid gap-4 sm:grid-cols-2">
             <div className="rounded-2xl border border-slate-200 bg-slate-50 p-5">
               <p className="text-xs font-semibold uppercase tracking-[0.12em] text-slate-500">
-                Seguridad
+                Uso interno
               </p>
               <p className="mt-2 text-sm text-slate-700">
-                El panel ya no queda abierto al publico. Todas las rutas administrativas requieren
-                inicio de sesion.
+                No hay rutas públicas ni lógica web de clientes. El sistema queda solamente para uso interno administrativo.
               </p>
             </div>
             <div className="rounded-2xl border border-slate-200 bg-slate-50 p-5">
               <p className="text-xs font-semibold uppercase tracking-[0.12em] text-slate-500">
-                Usuarios
+                Base limpia
               </p>
               <p className="mt-2 text-sm text-slate-700">
-                Los administradores pueden crear nuevos usuarios y desactivar accesos cuando sea
-                necesario.
+                Se conservaron autenticación, usuarios, configuración visual y la estructura base para arrancar el nuevo dominio del almacén.
               </p>
             </div>
           </div>
@@ -86,7 +82,7 @@ const LoginPage = () => {
 
             <label className="block">
               <span className="mb-2 block text-sm font-medium text-slate-700">
-                Documento o correo
+                Correo o identificador
               </span>
               <input
                 value={identifier}
@@ -94,7 +90,7 @@ const LoginPage = () => {
                 type="text"
                 autoComplete="username"
                 className="w-full rounded-xl border border-slate-300 px-4 py-3 outline-none transition focus:border-slate-500"
-                placeholder="1234567890 o admin@rifas.local"
+                placeholder="admin@almacen.local"
               />
             </label>
 

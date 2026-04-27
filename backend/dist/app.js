@@ -14,18 +14,6 @@ const routes_1 = require("./routes");
 const publicApiRules = [
     { method: 'GET', pattern: /^\/api\/health(?:\/.*)?$/ },
     { method: 'POST', pattern: /^\/api\/auth\/login$/ },
-    { method: 'GET', pattern: /^\/api\/auth\/me$/ },
-    { method: 'GET', pattern: /^\/api\/configuracion$/ },
-    { method: 'GET', pattern: /^\/api\/boletas\/publicas$/ },
-    { method: 'GET', pattern: /^\/api\/boletas\/publicas\/ficha\/[^/]+$/ },
-    { method: 'GET', pattern: /^\/api\/rifas\/publicas$/ },
-    { method: 'GET', pattern: /^\/api\/rifas\/[^/]+$/ },
-    { method: 'GET', pattern: /^\/api\/checkout-publico\/reservas\/[^/]+$/ },
-    { method: 'POST', pattern: /^\/api\/checkout-publico\/reservas$/ },
-    { method: 'POST', pattern: /^\/api\/checkout-publico\/reservas\/[^/]+\/wompi$/ },
-    { method: 'POST', pattern: /^\/api\/checkout-publico\/reservas\/[^/]+\/wompi\/reconcile$/ },
-    { method: 'POST', pattern: /^\/api\/checkout-publico\/wompi\/webhook$/ },
-    { method: 'GET', pattern: /^\/api\/recibos\/codigo\/[^/]+$/ },
 ];
 function isPublicApiRoute(method, path) {
     return publicApiRules.some((rule) => rule.method === method.toUpperCase() && rule.pattern.test(path));
@@ -38,9 +26,9 @@ function createApp() {
     app.use(serialize_response_1.serializeResponse);
     app.get('/', (_req, res) => {
         res.json({
-            name: 'Sistema de Rifas API',
+            name: 'Sistema Administrativo de Almacen API',
             status: 'ok',
-            phase: 'fase-0',
+            phase: 'base-limpia',
         });
     });
     app.use((req, res, next) => {

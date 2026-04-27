@@ -1,90 +1,57 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getAllCajas = getAllCajas;
-exports.getCaja = getCaja;
-exports.getCajaResumen = getCajaResumen;
-exports.getSubCajas = getSubCajas;
-exports.postSubCaja = postSubCaja;
-exports.removeSubCaja = removeSubCaja;
-exports.postPrepareWebChannel = postPrepareWebChannel;
-exports.postPrepareBotChannel = postPrepareBotChannel;
+exports.getCajaDiariaActual = getCajaDiariaActual;
+exports.postAperturaCajaDiaria = postAperturaCajaDiaria;
+exports.postCierreCajaDiaria = postCierreCajaDiaria;
+exports.getCajaGeneralActual = getCajaGeneralActual;
+exports.postTrasladoCajaGeneral = postTrasladoCajaGeneral;
+exports.postSalidaCajaGeneral = postSalidaCajaGeneral;
 const caja_service_1 = require("./caja.service");
 const caja_schemas_1 = require("./caja.schemas");
-function getStringParam(value) {
-    return Array.isArray(value) ? value[0] : value || '';
-}
-async function getAllCajas(req, res, next) {
+async function getCajaDiariaActual(req, res, next) {
     try {
-        const data = await (0, caja_service_1.listCajas)(getStringParam(req.query.rifaId));
-        res.json(data);
+        const fecha = typeof req.query.fecha === 'string' ? req.query.fecha : undefined;
+        res.json(await (0, caja_service_1.getCajaDiaria)(fecha));
     }
     catch (error) {
         next(error);
     }
 }
-async function getCaja(req, res, next) {
+async function postAperturaCajaDiaria(req, res, next) {
     try {
-        const data = await (0, caja_service_1.getCajaById)(getStringParam(req.params.id));
-        res.json(data);
+        res.status(201).json(await (0, caja_service_1.abrirCajaDiaria)((0, caja_schemas_1.parseAperturaCajaPayload)(req.body || {}), req.authUser?.id));
     }
     catch (error) {
         next(error);
     }
 }
-async function getCajaResumen(req, res, next) {
+async function postCierreCajaDiaria(req, res, next) {
     try {
-        const rifaId = getStringParam(req.query.rifaId);
-        const data = await (0, caja_service_1.getCajaResumenByRifa)(rifaId);
-        res.json(data);
+        res.json(await (0, caja_service_1.cerrarCajaDiaria)((0, caja_schemas_1.parseCierreCajaPayload)(req.body || {}), req.authUser?.id));
     }
     catch (error) {
         next(error);
     }
 }
-async function getSubCajas(req, res, next) {
+async function getCajaGeneralActual(_req, res, next) {
     try {
-        const rifaId = getStringParam(req.query.rifaId);
-        const data = await (0, caja_service_1.listSubCajasByRifa)(rifaId, req.authUser);
-        res.json(data);
+        res.json(await (0, caja_service_1.getCajaGeneral)());
     }
     catch (error) {
         next(error);
     }
 }
-async function postSubCaja(req, res, next) {
+async function postTrasladoCajaGeneral(req, res, next) {
     try {
-        const payload = (0, caja_schemas_1.parseCreateSubCajaPayload)(req.body);
-        const data = await (0, caja_service_1.createSubCaja)(payload);
-        res.status(201).json(data);
+        res.status(201).json(await (0, caja_service_1.trasladarDesdeCajaDiaria)((0, caja_schemas_1.parseTrasladoCajaGeneralPayload)(req.body || {}), req.authUser?.id));
     }
     catch (error) {
         next(error);
     }
 }
-async function removeSubCaja(req, res, next) {
+async function postSalidaCajaGeneral(req, res, next) {
     try {
-        await (0, caja_service_1.deleteSubCaja)(getStringParam(req.params.id));
-        res.status(204).send();
-    }
-    catch (error) {
-        next(error);
-    }
-}
-async function postPrepareWebChannel(req, res, next) {
-    try {
-        const payload = (0, caja_schemas_1.parsePrepareWebChannelPayload)(req.body);
-        const data = await (0, caja_service_1.prepareWebChannelByRifa)(payload.rifaId);
-        res.status(201).json(data);
-    }
-    catch (error) {
-        next(error);
-    }
-}
-async function postPrepareBotChannel(req, res, next) {
-    try {
-        const payload = (0, caja_schemas_1.parsePrepareBotChannelPayload)(req.body);
-        const data = await (0, caja_service_1.prepareBotChannelByRifa)(payload.rifaId);
-        res.status(201).json(data);
+        res.status(201).json(await (0, caja_service_1.registrarSalidaCajaGeneral)((0, caja_schemas_1.parseSalidaCajaGeneralPayload)(req.body || {}), req.authUser?.id));
     }
     catch (error) {
         next(error);

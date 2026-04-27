@@ -16,5 +16,5 @@ export const formatCOPNumber = (value) => {
 
 export const parseNumber = (value) => {
   if (value === '' || value === null || value === undefined) return 0;
-  return Number(String(value).replace(/[^0-9.-]+/g, '')) || 0;
+  return Number(String(value).replace(/\D+/g, '')) || 0;
 };

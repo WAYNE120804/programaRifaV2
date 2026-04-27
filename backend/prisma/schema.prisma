@@ -1,7 +1,5 @@
 generator client {
-  provider   = "prisma-client-js"
-  engineType = "binary"
-  output     = "../generated/prisma-client"
+  provider = "prisma-client-js"
 }
 
 datasource db {
@@ -9,44 +7,51 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-//////////////////////////////////////
-// ENUMS
-//////////////////////////////////////
-
 enum RolUsuario {
   ADMIN
-  VENDEDOR
   CAJERO
+  VENDEDOR
 }
 
-enum EstadoRifa {
-  BORRADOR
-  ACTIVA
-  CERRADA
-  SORTEADA
-  ANULADA
+enum EstadoProducto {
+  ACTIVO
+  INACTIVO
+  AGOTADO
 }
 
-enum EstadoBoleta {
-  DISPONIBLE
-  ASIGNADA
-  RESERVADA
-  VENDIDA
-  PAGADA
-  DEVUELTA
-  ANULADA
+enum GeneroProducto {
+  MASCULINO
+  FEMENINO
+  UNISEX
+}
+
+enum TipoCodigoProducto {
+  INTERNO
+  BARRAS
+}
+
+enum TipoMovimientoInventario {
+  ENTRADA_INICIAL
+  COMPRA
+  AJUSTE_ENTRADA
+  AJUSTE_SALIDA
+  VENTA
+  DEVOLUCION_CLIENTE
+  DEVOLUCION_PROVEEDOR
+  SEPARADO
+  ENTREGA_SEPARADO
+  CREDITO
+  SALIDA_PRESTAMO
+  RETORNO_PRESTAMO
+  TRUEQUE_SALIDA
+  TRUEQUE_ENTRADA
+  MERMA
 }
 
 enum EstadoVenta {
-  PENDIENTE
-  ABONANDO
+  ABIERTA
   PAGADA
-  CANCELADA
-}
-
-enum TipoMovimientoCaja {
-  INGRESO
-  EGRESO
+  ANULADA
 }
 
 enum MetodoPago {
@@ -54,576 +59,632 @@ enum MetodoPago {
   NEQUI
   DAVIPLATA
   TRANSFERENCIA
-  WOMPI
+  TARJETA
+  MIXTO
+  OTRO
 }
 
-enum EstadoPago {
-  PENDIENTE
+enum EstadoPagoVenta {
   CONFIRMADO
-  RECHAZADO
-}
-
-enum TipoPremio {
-  MAYOR
-  ANTICIPADO
-}
-
-enum DestinoDevolucion {
-  DISPONIBLE
-  FUERA_CIRCULACION
+  ANULADO
 }
 
 enum CategoriaGasto {
-  SUELDOS
-  PUBLICIDAD
+  NOMINA
   ARRIENDO
-  SERVICIOS_PUBLICOS
-  GASOLINA_TRANSPORTE
-  IMPRESION_PAPELERIA
-  PREMIOS_LOGISTICA
+  SERVICIOS
+  PROVEEDOR
+  TRANSPORTE
+  MERCADEO
   MANTENIMIENTO
-  COMISIONES_BANCARIAS
+  IMPUESTOS
+  PAPELERIA
   OTROS
 }
 
-//////////////////////////////////////
-// CONFIGURACION
-//////////////////////////////////////
-
-model ConfiguracionSistema {
-  id                           String   @id @default(cuid())
-  clave                        String   @unique @default("principal")
-  nombreCasaRifera             String   @default("Rifas Admin")
-  logoDataUrl                  String?  @db.Text
-  responsableNombre            String?
-  responsableTelefono          String?
-  responsableDireccion         String?
-  responsableCiudad            String?
-  responsableDepartamento      String?
-  numeroResolucionAutorizacion String?
-  entidadAutoriza              String?
-  createdAt                    DateTime @default(now())
-  updatedAt                    DateTime @updatedAt
+enum TipoMovimientoCaja {
+  INGRESO
+  EGRESO
+  TRASLADO_SALIDA
+  TRASLADO_ENTRADA
+  APERTURA
+  CIERRE
 }
 
-//////////////////////////////////////
-// USUARIO
-//////////////////////////////////////
+enum TipoCaja {
+  PRINCIPAL
+  DIARIA
+  MAYOR
+  BANCARIA
+  OTRO
+}
+
+enum EstadoCaja {
+  ABIERTA
+  CERRADA
+  BLOQUEADA
+}
+
+enum OrigenApartadoFondo {
+  CAJA_DIARIA
+  CAJA_GENERAL
+}
+
+enum OrigenGasto {
+  CAJA_DIARIA
+  CAJA_GENERAL
+  FONDO_META
+}
+
+enum EstadoSeparado {
+  ACTIVO
+  PAGADO
+  ENTREGADO
+  VENCIDO
+  CANCELADO
+}
+
+enum EstadoCredito {
+  ACTIVO
+  PAGADO
+  VENCIDO
+  CANCELADO
+}
+
+enum EstadoSalidaProducto {
+  PRESTADO
+  DEVUELTO
+  VENDIDO_EXTERNAMENTE
+  TRUEQUEADO
+  CANCELADO
+}
+
+enum TipoSalidaProducto {
+  PRESTAMO
+  CONSIGNACION
+  TRUEQUE
+  MUESTRA
+  OTRO
+}
 
 model Usuario {
-  id        String   @id @default(cuid())
+  id        String     @id @default(cuid())
   nombre    String
-  email     String   @unique
+  email     String     @unique
   password  String
   rol       RolUsuario
-  activo    Boolean  @default(true)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  activo    Boolean    @default(true)
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
 
-  rifasCreadas  Rifa[] @relation("RifaCreatedBy")
-  rifasEditadas Rifa[] @relation("RifaUpdatedBy")
-
-  asignaciones          AsignacionBoletas[]
-  devoluciones         DevolucionBoletas[]
-  abonosRegistrados    AbonoVendedor[]
-  pagosClienteRegistrados PagoCliente[]
-  gastosRegistrados    Gasto[]
-  juegosRegistrados    JuegoRegistro[]
-  movimientos          MovimientoCaja[]
-  vendedorScopes       UsuarioVendedorScope[]
-  clientesCreados      Cliente[] @relation("ClienteCreatedBy")
+  movimientosInventario MovimientoInventario[]
+  ventas                 Venta[]
+  pagosVenta             PagoVenta[]
+  gastos                 Gasto[]
+  movimientosCaja        MovimientoCaja[]
+  cierresCaja            CierreCaja[]          @relation("CierreCajaUsuario")
+  retirosCajaMayor       RetiroCajaMayor[]
+  apartadosFondo         FondoApartado[]
+  clientesCreados        Cliente[]             @relation("ClienteCreadoPor")
+  separadosCreados       Separado[]            @relation("SeparadoCreadoPor")
+  abonosSeparado         SeparadoAbono[]
+  creditosCreados        Credito[]             @relation("CreditoCreadoPor")
+  pagosCredito           CreditoPago[]
+  salidasProducto        SalidaProducto[]
 }
 
-//////////////////////////////////////
-// RIFA
-//////////////////////////////////////
-
-model Rifa {
-  id           String     @id @default(cuid())
-  nombre       String
-  loteriaNombre String     @default("Sin definir")
-  numeroCifras Int        @default(4)
-  fechaInicio  DateTime
-  fechaFin     DateTime
-  precioBoleta Decimal    @db.Decimal(10,2)
-  estado       EstadoRifa @default(BORRADOR)
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  createdById String?
-  updatedById String?
-
-  createdBy Usuario? @relation("RifaCreatedBy", fields: [createdById], references: [id])
-  updatedBy Usuario? @relation("RifaUpdatedBy", fields: [updatedById], references: [id])
-
-  boletas     Boleta[]
-  vendedores  RifaVendedor[]
-  ventas      Venta[]
-  gastos      Gasto[]
-  cajas       Caja[]
-  movimientos MovimientoCaja[]
-  premios     Premio[]
-
-  @@index([estado])
-}
-
-//////////////////////////////////////
-// PREMIO
-//////////////////////////////////////
-
-model Premio {
-  id        String      @id @default(cuid())
-  rifaId    String
-  nombre    String
+model CategoriaProducto {
+  id          String    @id @default(cuid())
+  nombre      String    @unique
+  codigo      String?   @unique @db.VarChar(2)
   descripcion String?
-  imagenesJson Json?
-  tipo      TipoPremio
-  mostrarValor Boolean  @default(false)
-  valor     Decimal?    @db.Decimal(12,2)
-  fecha     DateTime
+  activa      Boolean   @default(true)
+  orden       Int       @default(0)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
 
-  createdAt DateTime @default(now())
+  productos Producto[]
 
-  rifa Rifa @relation(fields: [rifaId], references: [id])
-
-  boletas BoletaPremio[]
-  juegos  JuegoRegistro[]
-
-  @@index([rifaId])
+  @@index([activa, nombre])
 }
 
-//////////////////////////////////////
-// RELACION BOLETA - PREMIO
-//////////////////////////////////////
+model Producto {
+  id               String         @id @default(cuid())
+  categoriaId      String
+  nombre           String
+  descripcion      String?
+  marca            String?
+  genero           GeneroProducto @default(UNISEX)
+  estado           EstadoProducto @default(ACTIVO)
+  imagenUrl        String?
+  notas            String?        @db.Text
+  createdAt        DateTime       @default(now())
+  updatedAt        DateTime       @updatedAt
 
-model BoletaPremio {
-  id        String @id @default(cuid())
-  boletaId  String
-  premioId  String
+  categoria            CategoriaProducto     @relation(fields: [categoriaId], references: [id])
+  variantes            ProductoVariante[]
 
-  boleta Boleta @relation(fields: [boletaId], references: [id])
-  premio Premio @relation(fields: [premioId], references: [id])
-
-  @@unique([boletaId, premioId])
+  @@index([categoriaId, nombre])
+  @@index([estado, nombre])
 }
 
-//////////////////////////////////////
-// BOLETA
-//////////////////////////////////////
+model ProductoVariante {
+  id                  String         @id @default(cuid())
+  productoId          String
+  talla               String
+  color               String
+  sku                 String         @unique
+  costoPromedio       Decimal        @default(0) @db.Decimal(12,2)
+  precioVenta         Decimal        @default(0) @db.Decimal(12,2)
+  stockActual         Int            @default(0)
+  stockMinimo         Int            @default(0)
+  estado              EstadoProducto @default(ACTIVO)
+  permiteDecimal      Boolean        @default(false)
+  createdAt           DateTime       @default(now())
+  updatedAt           DateTime       @updatedAt
 
-model Boleta {
-  id           String       @id @default(cuid())
-  rifaId       String
-  numero       String
-  codigoBarras String?      @unique
-  publicToken  String?      @unique
-  estado       EstadoBoleta @default(DISPONIBLE)
-  juega        Boolean      @default(false)
-  precio       Decimal      @db.Decimal(10,2)
+  producto             Producto              @relation(fields: [productoId], references: [id], onDelete: Cascade)
+  codigos              CodigoProducto[]
+  movimientosInventario MovimientoInventario[]
+  ventaItems           VentaItem[]
+  separadoItems        SeparadoItem[]
+  creditoItems         CreditoItem[]
+  salidaItems          SalidaProductoItem[]
 
-  rifaVendedorId String?
-  clienteId      String?
-  ventaId        String?
-
-  reservadaHasta DateTime?
-  devueltaPorVendedorNombre String?
-  devueltaObservacion       String?
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  rifa         Rifa          @relation(fields: [rifaId], references: [id])
-  rifaVendedor RifaVendedor? @relation(fields: [rifaVendedorId], references: [id])
-  cliente      Cliente?      @relation(fields: [clienteId], references: [id])
-  venta        Venta?        @relation(fields: [ventaId], references: [id])
-
-  premios      BoletaPremio[]
-  asignaciones AsignacionDetalle[]
-  devoluciones DevolucionDetalle[]
-
-  @@unique([rifaId, numero])
-  @@index([estado])
-  @@index([rifaId, estado])
-  @@index([rifaId, rifaVendedorId])
-  @@index([rifaId, rifaVendedorId, estado])
+  @@unique([productoId, color, talla])
+  @@index([productoId, estado])
+  @@index([estado, stockActual])
 }
 
-//////////////////////////////////////
-// VENDEDORES
-//////////////////////////////////////
+model CodigoProducto {
+  id          String            @id @default(cuid())
+  varianteId   String
+  codigo      String            @unique
+  tipo        TipoCodigoProducto @default(BARRAS)
+  principal   Boolean           @default(false)
+  createdAt   DateTime          @default(now())
 
-model Vendedor {
-  id        String  @id @default(cuid())
-  nombre    String
-  telefono  String?
-  documento String?
-  direccion String?
+  variante ProductoVariante @relation(fields: [varianteId], references: [id], onDelete: Cascade)
 
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  rifas       RifaVendedor[]
-  movimientos MovimientoCaja[]
-  usuarioScopes UsuarioVendedorScope[]
+  @@index([varianteId, principal])
 }
-
-model RifaVendedor {
-  id         String @id @default(cuid())
-  rifaId     String
-  vendedorId String
-
-  comisionPct Decimal @db.Decimal(5,2)
-  precioCasa  Decimal @db.Decimal(10,2)
-  saldoActual Decimal @default(0) @db.Decimal(12,2)
-
-  rifa     Rifa     @relation(fields: [rifaId], references: [id])
-  vendedor Vendedor @relation(fields: [vendedorId], references: [id])
-
-  asignaciones AsignacionBoletas[]
-  devoluciones DevolucionBoletas[]
-  abonos       AbonoVendedor[]
-  boletas      Boleta[]
-  juegos       JuegoRegistro[]
-  usuarioScopes UsuarioVendedorScope[]
-  ventas       Venta[]
-
-  @@index([rifaId])
-  @@unique([rifaId, vendedorId])
-}
-
-model UsuarioVendedorScope {
-  id             String   @id @default(cuid())
-  usuarioId      String
-  vendedorId     String?
-  rifaVendedorId String?
-  createdAt      DateTime @default(now())
-  updatedAt      DateTime @updatedAt
-
-  usuario      Usuario       @relation(fields: [usuarioId], references: [id])
-  vendedor     Vendedor?     @relation(fields: [vendedorId], references: [id])
-  rifaVendedor RifaVendedor? @relation(fields: [rifaVendedorId], references: [id])
-
-  @@index([usuarioId])
-  @@index([vendedorId])
-  @@index([rifaVendedorId])
-  @@unique([usuarioId, vendedorId])
-  @@unique([usuarioId, rifaVendedorId])
-}
-
-//////////////////////////////////////
-// ASIGNACION
-//////////////////////////////////////
-
-model AsignacionBoletas {
-  id             String   @id @default(cuid())
-  rifaVendedorId String
-  cantidad       Int
-  fecha          DateTime @default(now())
-
-  usuarioId String?
-
-  rifaVendedor RifaVendedor @relation(fields: [rifaVendedorId], references: [id])
-  usuario      Usuario?     @relation(fields: [usuarioId], references: [id])
-
-  detalle AsignacionDetalle[]
-}
-
-model AsignacionDetalle {
-  id           String @id @default(cuid())
-  asignacionId String
-  boletaId     String
-
-  asignacion AsignacionBoletas @relation(fields: [asignacionId], references: [id])
-  boleta     Boleta            @relation(fields: [boletaId], references: [id])
-}
-
-//////////////////////////////////////
-// DEVOLUCION
-//////////////////////////////////////
-
-model DevolucionBoletas {
-  id             String   @id @default(cuid())
-  rifaVendedorId String
-  destino        DestinoDevolucion @default(DISPONIBLE)
-  fecha          DateTime @default(now())
-  usuarioId      String?
-
-  rifaVendedor RifaVendedor @relation(fields: [rifaVendedorId], references: [id])
-  usuario      Usuario?     @relation(fields: [usuarioId], references: [id])
-  detalle      DevolucionDetalle[]
-}
-
-model DevolucionDetalle {
-  id           String @id @default(cuid())
-  devolucionId String
-  boletaId     String
-
-  devolucion DevolucionBoletas @relation(fields: [devolucionId], references: [id])
-  boleta     Boleta            @relation(fields: [boletaId], references: [id])
-}
-
-//////////////////////////////////////
-// CLIENTE
-//////////////////////////////////////
 
 model Cliente {
-  id       String  @id @default(cuid())
-  nombre   String
-  email    String?
-  telefono String?
-  documento String?
-  createdByUsuarioId String?
-  createdAt DateTime @default(now())
-  updatedAt DateTime @default(now()) @updatedAt
+  id               String    @id @default(cuid())
+  nombreCompleto    String
+  cedula           String    @unique
+  telefonoCelular   String
+  email            String?
+  fechaNacimiento  DateTime?
+  direccion        String?
+  observaciones    String?   @db.Text
+  createdById      String?
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
 
-  ventas      Venta[]
-  boletas     Boleta[]
-  movimientos MovimientoCaja[]
-  createdByUsuario Usuario? @relation("ClienteCreatedBy", fields: [createdByUsuarioId], references: [id])
+  createdBy     Usuario?        @relation("ClienteCreadoPor", fields: [createdById], references: [id])
+  ventas        Venta[]
+  separados     Separado[]
+  creditos      Credito[]
+  salidasProducto SalidaProducto[]
+
+  @@index([nombreCompleto])
+  @@index([telefonoCelular])
 }
 
-//////////////////////////////////////
-// VENTA
-//////////////////////////////////////
+model MovimientoInventario {
+  id              String                  @id @default(cuid())
+  varianteId      String
+  usuarioId       String?
+  tipo            TipoMovimientoInventario
+  cantidad        Int
+  stockAnterior   Int
+  stockPosterior  Int
+  costoUnitario   Decimal?                @db.Decimal(12,2)
+  precioUnitario  Decimal?                @db.Decimal(12,2)
+  detalle         String?                 @db.Text
+  referenciaTipo  String?
+  referenciaId    String?
+  createdAt       DateTime                @default(now())
 
-model Venta {
-  id        String @id @default(cuid())
-  clienteId String
-  rifaId    String
-  rifaVendedorId String?
-  canalOrigen     String?
-  referenciaExterna String?
-  sesionExternaId String?
-  linkPagoUrl     String?
-  linkPagoEnviadoAt DateTime?
-  linkPagoAbiertoAt DateTime?
-  requiereSeguimientoHumano Boolean @default(false)
-  seguimientoMotivo String? @db.Text
+  variante ProductoVariante @relation(fields: [varianteId], references: [id], onDelete: Cascade)
+  usuario  Usuario? @relation(fields: [usuarioId], references: [id])
 
-  estado         EstadoVenta @default(PENDIENTE)
-  total          Decimal     @db.Decimal(12,2)
-  saldoPendiente Decimal     @db.Decimal(12,2)
-  referenciaPago String?     @unique
-  pasarelaPago   String?
-  pasarelaEstado String?
-  pasarelaTransaccionId String?
-  createdAt      DateTime    @default(now())
-  updatedAt      DateTime    @updatedAt
-
-  cliente Cliente @relation(fields: [clienteId], references: [id])
-  rifa    Rifa    @relation(fields: [rifaId], references: [id])
-  rifaVendedor RifaVendedor? @relation(fields: [rifaVendedorId], references: [id])
-
-  boletas     Boleta[]
-  pagos       PagoCliente[]
-  movimientos MovimientoCaja[]
-
-  @@index([rifaVendedorId])
-  @@index([canalOrigen])
-  @@index([referenciaExterna])
-  @@index([sesionExternaId])
+  @@index([varianteId, createdAt])
+  @@index([tipo, createdAt])
+  @@index([referenciaTipo, referenciaId])
 }
-
-//////////////////////////////////////
-// PAGOS CLIENTE
-//////////////////////////////////////
-
-model PagoCliente {
-  id         String      @id @default(cuid())
-  ventaId    String
-  monto      Decimal     @db.Decimal(12,2)
-  fecha      DateTime    @default(now())
-  metodoPago MetodoPago
-  estado     EstadoPago  @default(PENDIENTE)
-  descripcion String?    @db.Text
-  subCajaId  String?
-  usuarioId  String?
-
-  venta Venta @relation(fields: [ventaId], references: [id])
-  subCaja SubCaja? @relation(fields: [subCajaId], references: [id])
-  usuario Usuario? @relation(fields: [usuarioId], references: [id])
-  recibo  PagoClienteRecibo?
-
-  movimientos MovimientoCaja[]
-}
-
-model PagoClienteRecibo {
-  id            String   @id @default(cuid())
-  pagoClienteId String   @unique
-  consecutivo   Int
-  codigoUnico   String   @unique
-  fecha         DateTime @default(now())
-
-  pagoCliente PagoCliente @relation(fields: [pagoClienteId], references: [id])
-}
-
-//////////////////////////////////////
-// ABONO VENDEDOR
-//////////////////////////////////////
-
-model AbonoVendedor {
-  id             String      @id @default(cuid())
-  rifaVendedorId String
-  subCajaId      String?
-  usuarioId      String?
-  valor          Decimal     @db.Decimal(12,2)
-  fecha          DateTime    @default(now())
-  descripcion    String?     @db.Text
-  metodoPago     MetodoPago
-  estado         EstadoPago  @default(PENDIENTE)
-  anuladoAt      DateTime?
-  anuladoMotivo  String?     @db.Text
-  saldoAnterior  Decimal     @db.Decimal(12,2)
-  saldoDespues   Decimal     @db.Decimal(12,2)
-  boletasActuales Int        @default(0)
-
-  rifaVendedor RifaVendedor @relation(fields: [rifaVendedorId], references: [id])
-  subCaja      SubCaja?     @relation(fields: [subCajaId], references: [id])
-  usuario      Usuario?     @relation(fields: [usuarioId], references: [id])
-  recibo       Recibo?
-
-  movimientos MovimientoCaja[]
-}
-
-//////////////////////////////////////
-// RECIBO
-//////////////////////////////////////
-
-model Recibo {
-  id          String   @id @default(cuid())
-  abonoId     String   @unique
-  consecutivo Int
-  codigoUnico String   @unique
-  fecha       DateTime @default(now())
-
-  abono AbonoVendedor @relation(fields: [abonoId], references: [id])
-}
-
-//////////////////////////////////////
-// CAJA
-//////////////////////////////////////
 
 model Caja {
-  id     String  @id @default(cuid())
-  nombre String
-  saldo  Decimal @default(0) @db.Decimal(12,2)
+  id           String      @id @default(cuid())
+  nombre       String      @unique
+  tipo         TipoCaja    @default(DIARIA)
+  estado       EstadoCaja  @default(ABIERTA)
+  saldoActual  Decimal     @default(0) @db.Decimal(12,2)
+  descripcion  String?
+  permiteVenta Boolean     @default(true)
+  createdAt    DateTime    @default(now())
+  updatedAt    DateTime    @updatedAt
 
-  rifaId String
+  ventas            Venta[]
+  pagosVenta        PagoVenta[]
+  gastos            Gasto[]
+  movimientos       MovimientoCaja[]
+  cierres           CierreCaja[]
+  retirosOrigen     RetiroCajaMayor[] @relation("RetiroCajaOrigen")
+  retirosDestino    RetiroCajaMayor[] @relation("RetiroCajaDestino")
+  apartadosFondo     FondoApartado[]
+  abonosSeparado    SeparadoAbono[]
+  pagosCredito      CreditoPago[]
 
-  rifa        Rifa              @relation(fields: [rifaId], references: [id])
-  subcajas    SubCaja[]
-  movimientos MovimientoCaja[]
-
-  @@unique([rifaId, nombre])
+  @@index([tipo, estado])
 }
 
-//////////////////////////////////////
-// SUBCAJA
-//////////////////////////////////////
+model Venta {
+  id             String       @id @default(cuid())
+  clienteId      String?
+  usuarioId      String?
+  cajaId         String?
+  numero         Int          @default(autoincrement())
+  estado         EstadoVenta  @default(ABIERTA)
+  subtotal       Decimal      @default(0) @db.Decimal(12,2)
+  descuento      Decimal      @default(0) @db.Decimal(12,2)
+  total          Decimal      @default(0) @db.Decimal(12,2)
+  totalPagado    Decimal      @default(0) @db.Decimal(12,2)
+  utilidadTotal  Decimal      @default(0) @db.Decimal(12,2)
+  observaciones  String?      @db.Text
+  anuladaAt      DateTime?
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
 
-model SubCaja {
-  id     String  @id @default(cuid())
-  nombre String
-  saldo  Decimal @default(0) @db.Decimal(12,2)
-
-  cajaId String
-
-  caja        Caja              @relation(fields: [cajaId], references: [id])
-  movimientos MovimientoCaja[]
-  abonos      AbonoVendedor[]
-  pagosCliente PagoCliente[]
-  gastos      Gasto[]
-
-  @@unique([cajaId, nombre])
-}
-
-//////////////////////////////////////
-// MOVIMIENTO CAJA
-//////////////////////////////////////
-
-model MovimientoCaja {
-  id          String   @id @default(cuid())
-  tipo        TipoMovimientoCaja
-  valor       Decimal  @db.Decimal(12,2)
-  descripcion String?
-  fecha       DateTime @default(now())
-
-  cajaId    String
-  subCajaId String?
-
-  rifaId     String?
-  vendedorId String?
-  clienteId  String?
-  ventaId    String?
-  gastoId    String?
-
-  pagoClienteId   String?
-  abonoVendedorId String?
-
-  usuarioId String?
-
-  caja    Caja     @relation(fields: [cajaId], references: [id])
-  subCaja SubCaja? @relation(fields: [subCajaId], references: [id])
-
-  rifa     Rifa?     @relation(fields: [rifaId], references: [id])
-  vendedor Vendedor? @relation(fields: [vendedorId], references: [id])
-  cliente  Cliente?  @relation(fields: [clienteId], references: [id])
-  venta    Venta?    @relation(fields: [ventaId], references: [id])
-  gasto    Gasto?    @relation(fields: [gastoId], references: [id])
-
-  pagoCliente   PagoCliente?   @relation(fields: [pagoClienteId], references: [id])
-  abonoVendedor AbonoVendedor? @relation(fields: [abonoVendedorId], references: [id])
-
+  cliente Cliente? @relation(fields: [clienteId], references: [id])
   usuario Usuario? @relation(fields: [usuarioId], references: [id])
+  caja    Caja?    @relation(fields: [cajaId], references: [id])
 
-  @@index([rifaId])
+  items        VentaItem[]
+  pagos        PagoVenta[]
+  movimientosCaja MovimientoCaja[]
+
+  @@unique([numero])
+  @@index([estado, createdAt])
+  @@index([clienteId, createdAt])
 }
 
-//////////////////////////////////////
-// GASTO
-//////////////////////////////////////
+model VentaItem {
+  id             String   @id @default(cuid())
+  ventaId        String
+  varianteId     String
+  cantidad       Int
+  costoUnitario  Decimal  @default(0) @db.Decimal(12,2)
+  precioUnitario Decimal  @default(0) @db.Decimal(12,2)
+  descuento      Decimal  @default(0) @db.Decimal(12,2)
+  subtotal       Decimal  @default(0) @db.Decimal(12,2)
+  utilidad       Decimal  @default(0) @db.Decimal(12,2)
+  createdAt      DateTime @default(now())
+
+  venta    Venta    @relation(fields: [ventaId], references: [id], onDelete: Cascade)
+  variante ProductoVariante @relation(fields: [varianteId], references: [id])
+
+  @@index([ventaId])
+  @@index([varianteId])
+}
+
+model PagoVenta {
+  id          String           @id @default(cuid())
+  ventaId      String
+  usuarioId    String?
+  cajaId       String?
+  metodo       MetodoPago
+  estado       EstadoPagoVenta @default(CONFIRMADO)
+  valor        Decimal         @db.Decimal(12,2)
+  referencia   String?
+  observacion  String?         @db.Text
+  createdAt    DateTime        @default(now())
+
+  venta   Venta    @relation(fields: [ventaId], references: [id], onDelete: Cascade)
+  usuario Usuario? @relation(fields: [usuarioId], references: [id])
+  caja    Caja?    @relation(fields: [cajaId], references: [id])
+
+  movimientosCaja MovimientoCaja[]
+
+  @@index([ventaId, createdAt])
+  @@index([cajaId, createdAt])
+}
 
 model Gasto {
-  id          String   @id @default(cuid())
-  rifaId      String
-  subCajaId   String?
-  usuarioId   String?
-  categoria   CategoriaGasto @default(OTROS)
-  descripcion String
-  valor       Decimal  @db.Decimal(12,2)
-  fecha       DateTime @default(now())
-  anuladoAt   DateTime?
-  anuladoMotivo String? @db.Text
+  id           String         @id @default(cuid())
+  usuarioId     String?
+  cajaId        String?
+  fondoId       String?
+  origen        OrigenGasto    @default(CAJA_DIARIA)
+  categoria     CategoriaGasto @default(OTROS)
+  descripcion   String
+  valor         Decimal        @db.Decimal(12,2)
+  saldoOrigenAnterior  Decimal        @default(0) @db.Decimal(12,2)
+  saldoOrigenPosterior Decimal        @default(0) @db.Decimal(12,2)
+  soporte       String?
+  observacion   String?        @db.Text
+  anuladoAt     DateTime?
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
 
-  rifa         Rifa              @relation(fields: [rifaId], references: [id])
-  subCaja      SubCaja?          @relation(fields: [subCajaId], references: [id])
-  usuario      Usuario?          @relation(fields: [usuarioId], references: [id])
-  movimientos  MovimientoCaja[]
-  recibo       GastoRecibo?
+  usuario Usuario? @relation(fields: [usuarioId], references: [id])
+  caja    Caja?    @relation(fields: [cajaId], references: [id])
+  fondo   FondoMeta? @relation(fields: [fondoId], references: [id])
+
+  movimientosCaja MovimientoCaja[]
+
+  @@index([categoria, createdAt])
+  @@index([cajaId, createdAt])
+  @@index([fondoId, createdAt])
+  @@index([origen, createdAt])
 }
 
-model JuegoRegistro {
+model MovimientoCaja {
+  id             String              @id @default(cuid())
+  cajaId          String
+  usuarioId       String?
+  ventaId         String?
+  pagoVentaId     String?
+  gastoId         String?
+  tipo            TipoMovimientoCaja
+  valor           Decimal             @db.Decimal(12,2)
+  saldoAnterior   Decimal             @default(0) @db.Decimal(12,2)
+  saldoPosterior  Decimal             @default(0) @db.Decimal(12,2)
+  descripcion     String?
+  referenciaTipo  String?
+  referenciaId    String?
+  createdAt       DateTime            @default(now())
+
+  caja      Caja      @relation(fields: [cajaId], references: [id], onDelete: Cascade)
+  usuario   Usuario?  @relation(fields: [usuarioId], references: [id])
+  venta     Venta?    @relation(fields: [ventaId], references: [id])
+  pagoVenta PagoVenta? @relation(fields: [pagoVentaId], references: [id])
+  gasto     Gasto?    @relation(fields: [gastoId], references: [id])
+
+  @@index([cajaId, createdAt])
+  @@index([tipo, createdAt])
+}
+
+model CierreCaja {
+  id                String    @id @default(cuid())
+  cajaId            String
+  usuarioId         String?
+  fechaApertura     DateTime
+  fechaCierre       DateTime  @default(now())
+  saldoInicial      Decimal   @default(0) @db.Decimal(12,2)
+  saldoEsperado     Decimal   @default(0) @db.Decimal(12,2)
+  saldoReal         Decimal   @default(0) @db.Decimal(12,2)
+  diferencia        Decimal   @default(0) @db.Decimal(12,2)
+  observaciones     String?   @db.Text
+  createdAt         DateTime  @default(now())
+
+  caja    Caja     @relation(fields: [cajaId], references: [id], onDelete: Cascade)
+  usuario Usuario? @relation("CierreCajaUsuario", fields: [usuarioId], references: [id])
+
+  @@index([cajaId, fechaCierre])
+}
+
+model RetiroCajaMayor {
+  id             String    @id @default(cuid())
+  usuarioId       String?
+  cajaOrigenId    String
+  cajaDestinoId   String?
+  valor           Decimal   @db.Decimal(12,2)
+  motivo          String
+  observacion     String?   @db.Text
+  createdAt       DateTime  @default(now())
+
+  usuario    Usuario? @relation(fields: [usuarioId], references: [id])
+  cajaOrigen Caja     @relation("RetiroCajaOrigen", fields: [cajaOrigenId], references: [id])
+  cajaDestino Caja?   @relation("RetiroCajaDestino", fields: [cajaDestinoId], references: [id])
+
+  @@index([cajaOrigenId, createdAt])
+  @@index([cajaDestinoId, createdAt])
+}
+
+model FondoMeta {
+  id          String   @id @default(cuid())
+  nombre      String   @unique
+  metaTotal   Decimal  @default(0) @db.Decimal(12,2)
+  acumulado   Decimal  @default(0) @db.Decimal(12,2)
+  notas       String?  @db.Text
+  activo      Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  apartados FondoApartado[]
+  gastos    Gasto[]
+
+  @@index([activo, nombre])
+}
+
+model FondoApartado {
+  id                   String              @id @default(cuid())
+  fondoId              String
+  usuarioId            String?
+  cajaId               String
+  origen               OrigenApartadoFondo
+  valor                Decimal             @db.Decimal(12,2)
+  saldoFondoAnterior   Decimal             @default(0) @db.Decimal(12,2)
+  saldoFondoPosterior  Decimal             @default(0) @db.Decimal(12,2)
+  saldoCajaAnterior    Decimal             @default(0) @db.Decimal(12,2)
+  saldoCajaPosterior   Decimal             @default(0) @db.Decimal(12,2)
+  observacion          String?             @db.Text
+  createdAt            DateTime            @default(now())
+
+  fondo   FondoMeta @relation(fields: [fondoId], references: [id], onDelete: Cascade)
+  usuario Usuario?  @relation(fields: [usuarioId], references: [id])
+  caja    Caja      @relation(fields: [cajaId], references: [id])
+
+  @@index([fondoId, createdAt])
+  @@index([cajaId, createdAt])
+  @@index([origen, createdAt])
+}
+
+model Separado {
+  id              String         @id @default(cuid())
+  clienteId        String
+  usuarioId        String?
+  estado           EstadoSeparado @default(ACTIVO)
+  fechaLimite      DateTime?
+  subtotal         Decimal        @default(0) @db.Decimal(12,2)
+  total            Decimal        @default(0) @db.Decimal(12,2)
+  totalAbonado     Decimal        @default(0) @db.Decimal(12,2)
+  saldoPendiente   Decimal        @default(0) @db.Decimal(12,2)
+  observaciones    String?        @db.Text
+  entregadoAt      DateTime?
+  canceladoAt      DateTime?
+  createdAt        DateTime       @default(now())
+  updatedAt        DateTime       @updatedAt
+
+  cliente Cliente  @relation(fields: [clienteId], references: [id])
+  usuario Usuario? @relation("SeparadoCreadoPor", fields: [usuarioId], references: [id])
+
+  items   SeparadoItem[]
+  abonos  SeparadoAbono[]
+
+  @@index([clienteId, estado])
+  @@index([fechaLimite])
+}
+
+model SeparadoItem {
   id             String   @id @default(cuid())
-  rifaVendedorId String
-  premioId       String
-  usuarioId      String?
-  fecha          DateTime @default(now())
-  totalBoletas   Int       @default(0)
+  separadoId      String
+  varianteId      String
+  cantidad        Int
+  costoUnitario   Decimal  @default(0) @db.Decimal(12,2)
+  precioUnitario  Decimal  @default(0) @db.Decimal(12,2)
+  subtotal        Decimal  @default(0) @db.Decimal(12,2)
+  createdAt       DateTime @default(now())
 
-  rifaVendedor RifaVendedor @relation(fields: [rifaVendedorId], references: [id])
-  premio       Premio       @relation(fields: [premioId], references: [id])
-  usuario      Usuario?     @relation(fields: [usuarioId], references: [id])
+  separado Separado @relation(fields: [separadoId], references: [id], onDelete: Cascade)
+  variante ProductoVariante @relation(fields: [varianteId], references: [id])
 
-  @@unique([rifaVendedorId, premioId])
+  @@index([separadoId])
+  @@index([varianteId])
 }
 
-model GastoRecibo {
-  id          String   @id @default(cuid())
-  gastoId      String   @unique
-  consecutivo  Int
-  codigoUnico  String   @unique
-  fecha        DateTime @default(now())
+model SeparadoAbono {
+  id          String     @id @default(cuid())
+  separadoId   String
+  usuarioId    String?
+  cajaId       String?
+  metodo       MetodoPago
+  valor        Decimal    @db.Decimal(12,2)
+  referencia   String?
+  observacion  String?    @db.Text
+  createdAt    DateTime   @default(now())
 
-  gasto Gasto @relation(fields: [gastoId], references: [id])
+  separado Separado @relation(fields: [separadoId], references: [id], onDelete: Cascade)
+  usuario  Usuario? @relation(fields: [usuarioId], references: [id])
+  caja     Caja?    @relation(fields: [cajaId], references: [id])
+
+  @@index([separadoId, createdAt])
+}
+
+model Credito {
+  id              String         @id @default(cuid())
+  clienteId        String
+  usuarioId        String?
+  estado           EstadoCredito @default(ACTIVO)
+  subtotal         Decimal       @default(0) @db.Decimal(12,2)
+  total            Decimal       @default(0) @db.Decimal(12,2)
+  totalPagado      Decimal       @default(0) @db.Decimal(12,2)
+  saldoPendiente   Decimal       @default(0) @db.Decimal(12,2)
+  fechaInicio      DateTime      @default(now())
+  fechaLimite      DateTime?
+  observaciones    String?       @db.Text
+  entregadoAt      DateTime?
+  canceladoAt      DateTime?
+  createdAt        DateTime      @default(now())
+  updatedAt        DateTime      @updatedAt
+
+  cliente Cliente  @relation(fields: [clienteId], references: [id])
+  usuario Usuario? @relation("CreditoCreadoPor", fields: [usuarioId], references: [id])
+
+  items  CreditoItem[]
+  pagos  CreditoPago[]
+
+  @@index([clienteId, estado])
+  @@index([fechaLimite])
+}
+
+model CreditoItem {
+  id             String   @id @default(cuid())
+  creditoId       String
+  varianteId      String
+  cantidad        Int
+  costoUnitario   Decimal  @default(0) @db.Decimal(12,2)
+  precioUnitario  Decimal  @default(0) @db.Decimal(12,2)
+  subtotal        Decimal  @default(0) @db.Decimal(12,2)
+  createdAt       DateTime @default(now())
+
+  credito  Credito  @relation(fields: [creditoId], references: [id], onDelete: Cascade)
+  variante ProductoVariante @relation(fields: [varianteId], references: [id])
+
+  @@index([creditoId])
+  @@index([varianteId])
+}
+
+model CreditoPago {
+  id          String     @id @default(cuid())
+  creditoId    String
+  usuarioId    String?
+  cajaId       String?
+  metodo       MetodoPago
+  valor        Decimal    @db.Decimal(12,2)
+  referencia   String?
+  observacion  String?    @db.Text
+  createdAt    DateTime   @default(now())
+
+  credito Credito @relation(fields: [creditoId], references: [id], onDelete: Cascade)
+  usuario Usuario? @relation(fields: [usuarioId], references: [id])
+  caja    Caja?    @relation(fields: [cajaId], references: [id])
+
+  @@index([creditoId, createdAt])
+}
+
+model SalidaProducto {
+  id                String               @id @default(cuid())
+  clienteId          String?
+  usuarioId          String?
+  tipo              TipoSalidaProducto
+  estado            EstadoSalidaProducto @default(PRESTADO)
+  responsableNombre  String
+  responsableCedula  String?
+  responsableTelefono String?
+  destino            String?
+  fechaCompromiso    DateTime?
+  observaciones      String?              @db.Text
+  valorRecibido      Decimal?             @db.Decimal(12,2)
+  createdAt          DateTime             @default(now())
+  updatedAt          DateTime             @updatedAt
+  cerradoAt          DateTime?
+
+  cliente Cliente? @relation(fields: [clienteId], references: [id])
+  usuario Usuario? @relation(fields: [usuarioId], references: [id])
+
+  items SalidaProductoItem[]
+
+  @@index([estado, createdAt])
+  @@index([tipo, createdAt])
+  @@index([clienteId])
+}
+
+model SalidaProductoItem {
+  id              String   @id @default(cuid())
+  salidaId         String
+  varianteId       String
+  cantidad         Int
+  costoUnitario    Decimal? @db.Decimal(12,2)
+  precioReferencia Decimal? @db.Decimal(12,2)
+  observacion      String?  @db.Text
+  createdAt        DateTime @default(now())
+
+  salida   SalidaProducto @relation(fields: [salidaId], references: [id], onDelete: Cascade)
+  variante ProductoVariante @relation(fields: [varianteId], references: [id])
+
+  @@index([salidaId])
+  @@index([varianteId])
 }

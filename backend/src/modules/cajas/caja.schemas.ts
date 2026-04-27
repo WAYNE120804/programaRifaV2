@@ -1,42 +1,96 @@
 import { AppError } from '../../lib/app-error';
 
-type SubCajaInput = {
-  rifaId?: unknown;
-  nombre?: unknown;
+export type AperturaCajaPayload = {
+  saldoInicial: number;
+  descripcion: string | null;
 };
 
-export type CreateSubCajaPayload = {
-  rifaId: string;
-  nombre: string;
+export type CierreCajaPayload = {
+  saldoReal: number;
+  observaciones: string | null;
 };
 
-export type PrepareWebChannelPayload = {
-  rifaId: string;
+export type TrasladoCajaGeneralPayload = {
+  cajaOrigenId: string | null;
+  valor: number;
+  motivo: string;
+  observacion: string | null;
 };
+
+export type SalidaCajaGeneralPayload = {
+  valor: number;
+  motivo: string;
+  observacion: string | null;
+};
+
+function parseMoney(value: unknown, fieldName: string) {
+  const parsed = Number(value ?? 0);
+
+  if (!Number.isFinite(parsed) || parsed < 0) {
+    throw new AppError(`El campo "${fieldName}" debe ser un valor valido mayor o igual a cero.`);
+  }
+
+  return parsed;
+}
+
+function parseOptionalString(value: unknown) {
+  if (typeof value !== 'string') {
+    return null;
+  }
+
+  const normalized = value.trim();
+  return normalized ? normalized : null;
+}
 
 function parseRequiredString(value: unknown, fieldName: string) {
-  if (typeof value !== 'string' || value.trim().length === 0) {
+  const parsed = parseOptionalString(value);
+
+  if (!parsed) {
     throw new AppError(`El campo "${fieldName}" es obligatorio.`);
   }
 
-  return value.trim();
+  return parsed;
 }
 
-export function parseCreateSubCajaPayload(input: SubCajaInput): CreateSubCajaPayload {
+function parsePositiveMoney(value: unknown, fieldName: string) {
+  const parsed = parseMoney(value, fieldName);
+
+  if (parsed <= 0) {
+    throw new AppError(`El campo "${fieldName}" debe ser mayor a cero.`);
+  }
+
+  return parsed;
+}
+
+export function parseAperturaCajaPayload(input: Record<string, unknown>): AperturaCajaPayload {
   return {
-    rifaId: parseRequiredString(input.rifaId, 'rifaId'),
-    nombre: parseRequiredString(input.nombre, 'nombre'),
+    saldoInicial: parseMoney(input.saldoInicial, 'saldoInicial'),
+    descripcion: parseOptionalString(input.descripcion),
   };
 }
 
-export function parsePrepareWebChannelPayload(input: { rifaId?: unknown }): PrepareWebChannelPayload {
+export function parseCierreCajaPayload(input: Record<string, unknown>): CierreCajaPayload {
   return {
-    rifaId: parseRequiredString(input.rifaId, 'rifaId'),
+    saldoReal: parseMoney(input.saldoReal, 'saldoReal'),
+    observaciones: parseOptionalString(input.observaciones),
   };
 }
 
-export function parsePrepareBotChannelPayload(input: { rifaId?: unknown }): PrepareWebChannelPayload {
+export function parseTrasladoCajaGeneralPayload(
+  input: Record<string, unknown>
+): TrasladoCajaGeneralPayload {
   return {
-    rifaId: parseRequiredString(input.rifaId, 'rifaId'),
+    cajaOrigenId: parseOptionalString(input.cajaOrigenId),
+    valor: parsePositiveMoney(input.valor, 'valor'),
+    motivo: parseRequiredString(input.motivo, 'motivo'),
+    observacion: parseOptionalString(input.observacion),
+  };
+}
+
+export function parseSalidaCajaGeneralPayload(input: Record<string, unknown>): SalidaCajaGeneralPayload {
+  return {
+    valor: parsePositiveMoney(input.valor, 'valor'),
+    motivo: parseRequiredString(input.motivo, 'motivo'),
+    observacion: parseOptionalString(input.observacion),
   };
 }

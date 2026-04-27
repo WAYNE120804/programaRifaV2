@@ -10,7 +10,7 @@ import {
 import client from '../api/client';
 import { endpoints } from '../api/endpoints';
 
-const AUTH_TOKEN_KEY = 'rifas_admin_token';
+const AUTH_TOKEN_KEY = 'almacen_admin_token';
 
 type AuthUser = {
   id: string;
@@ -18,16 +18,6 @@ type AuthUser = {
   email: string;
   rol: string;
   activo: boolean;
-  scopes: {
-    vendedorIds: string[];
-    rifaVendedorIds: string[];
-    items?: Array<{
-      vendedorId: string | null;
-      rifaVendedorId: string | null;
-      vendedorNombre: string | null;
-      rifaNombre: string | null;
-    }>;
-  };
 };
 
 type AuthContextValue = {

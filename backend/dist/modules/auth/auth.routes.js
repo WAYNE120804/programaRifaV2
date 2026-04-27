@@ -10,7 +10,6 @@ exports.usuarioRouter = (0, express_1.Router)();
 exports.authRouter.post('/login', auth_controller_1.postLogin);
 exports.authRouter.get('/me', auth_1.authenticateRequest, auth_controller_1.getMe);
 exports.usuarioRouter.use(auth_1.authenticateRequest);
-exports.usuarioRouter.get('/', (0, auth_1.requireRole)(prisma_client_1.RolUsuario.ADMIN, prisma_client_1.RolUsuario.CAJERO), auth_controller_1.getUsuarios);
+exports.usuarioRouter.get('/', (0, auth_1.requireRole)(prisma_client_1.RolUsuario.ADMIN), auth_controller_1.getUsuarios);
 exports.usuarioRouter.post('/', (0, auth_1.requireRole)(prisma_client_1.RolUsuario.ADMIN), auth_controller_1.postUsuario);
 exports.usuarioRouter.patch('/:id/activo', (0, auth_1.requireRole)(prisma_client_1.RolUsuario.ADMIN), auth_controller_1.patchUsuarioActivo);
-exports.usuarioRouter.patch('/:id/scopes', (0, auth_1.requireRole)(prisma_client_1.RolUsuario.ADMIN), auth_controller_1.patchUsuarioScopes);

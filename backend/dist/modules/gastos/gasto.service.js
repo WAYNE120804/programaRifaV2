@@ -2,48 +2,10 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.listGastos = listGastos;
 exports.getGastoById = getGastoById;
-exports.createGasto = createGasto;
-exports.getGastoReciboById = getGastoReciboById;
-exports.getGastoReciboByCodigo = getGastoReciboByCodigo;
-exports.anularGasto = anularGasto;
+exports.registrarGasto = registrarGasto;
+const prisma_client_1 = require("../../lib/prisma-client");
 const app_error_1 = require("../../lib/app-error");
 const prisma_1 = require("../../lib/prisma");
-const gastoInclude = {
-    usuario: {
-        select: {
-            id: true,
-            nombre: true,
-            email: true,
-            rol: true,
-        },
-    },
-    rifa: {
-        select: {
-            id: true,
-            nombre: true,
-            precioBoleta: true,
-            numeroCifras: true,
-        },
-    },
-    subCaja: {
-        select: {
-            id: true,
-            nombre: true,
-            caja: {
-                select: {
-                    id: true,
-                    nombre: true,
-                },
-            },
-        },
-    },
-    recibo: true,
-};
-const gastoReciboInclude = {
-    gasto: {
-        include: gastoInclude,
-    },
-};
 function prismaClient() {
     const prisma = (0, prisma_1.getPrisma)();
     if (!prisma) {
@@ -51,246 +13,276 @@ function prismaClient() {
     }
     return prisma;
 }
-function normalizeSegment(value) {
-    return value
-        .toUpperCase()
-        .replace(/[^A-Z0-9]+/g, '')
-        .slice(0, 8);
+function formatDateKey(date = new Date()) {
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
 }
-function extractRifaSegment(rifaNombre) {
-    const words = String(rifaNombre || '')
-        .toUpperCase()
-        .replace(/[^A-Z0-9\s]+/g, ' ')
-        .split(/\s+/)
-        .filter(Boolean);
-    if (words.length === 0) {
-        return 'GASTO';
-    }
-    if (words.length === 1) {
-        return normalizeSegment(words[0]);
-    }
-    return normalizeSegment(words.map((word) => word.charAt(0)).join('') || words[0]);
+function getDateRange(dateKey = formatDateKey()) {
+    const [year, month, day] = dateKey.split('-').map(Number);
+    const start = new Date(year, month - 1, day, 0, 0, 0, 0);
+    const end = new Date(year, month - 1, day + 1, 0, 0, 0, 0);
+    return { start, end };
 }
-function extractValorSegment(valor) {
-    return String(Math.round(valor)).padStart(4, '0');
-}
-function buildCodigoUnico(input) {
-    const rifaSegment = extractRifaSegment(input.rifaNombre);
-    const consecutivoSegment = String(input.consecutivo).padStart(6, '0');
-    const valorSegment = extractValorSegment(input.valor);
-    return `GST-${rifaSegment}-${consecutivoSegment}-${valorSegment}`;
-}
-async function listGastos(filters) {
-    return prismaClient().gasto.findMany({
+async function findDailyCaja(tx) {
+    const { start, end } = getDateRange();
+    return tx.caja.findFirst({
         where: {
-            ...(filters?.rifaId ? { rifaId: filters.rifaId } : {}),
-            ...(filters?.categoria ? { categoria: filters.categoria } : {}),
-            ...(filters?.usuarioId ? { usuarioId: filters.usuarioId } : {}),
+            tipo: prisma_client_1.TipoCaja.DIARIA,
+            createdAt: {
+                gte: start,
+                lt: end,
+            },
         },
-        include: gastoInclude,
-        orderBy: {
-            fecha: 'desc',
+        orderBy: [{ createdAt: 'desc' }],
+    });
+}
+async function findOrCreateGeneralCaja(tx) {
+    const existing = await tx.caja.findFirst({
+        where: { tipo: prisma_client_1.TipoCaja.MAYOR },
+        orderBy: [{ createdAt: 'asc' }],
+    });
+    if (existing) {
+        return existing;
+    }
+    const caja = await tx.caja.create({
+        data: {
+            nombre: 'Caja general',
+            tipo: prisma_client_1.TipoCaja.MAYOR,
+            estado: prisma_client_1.EstadoCaja.ABIERTA,
+            saldoActual: 0,
+            descripcion: 'Caja general para consolidar dinero fuera de la operacion diaria.',
+            permiteVenta: false,
         },
     });
+    await tx.movimientoCaja.create({
+        data: {
+            cajaId: caja.id,
+            tipo: prisma_client_1.TipoMovimientoCaja.APERTURA,
+            valor: 0,
+            saldoAnterior: 0,
+            saldoPosterior: 0,
+            descripcion: 'Creacion de caja general',
+            referenciaTipo: 'CAJA',
+            referenciaId: caja.id,
+        },
+    });
+    return caja;
+}
+function mapMoneyFields(gasto) {
+    return {
+        ...gasto,
+        valor: Number(gasto.valor || 0),
+        saldoOrigenAnterior: Number(gasto.saldoOrigenAnterior || 0),
+        saldoOrigenPosterior: Number(gasto.saldoOrigenPosterior || 0),
+    };
+}
+async function listGastos() {
+    const prisma = prismaClient();
+    const [gastos, cajaDiaria, cajaGeneral, fondos] = await Promise.all([
+        prisma.gasto.findMany({
+            where: { anuladoAt: null },
+            include: {
+                usuario: {
+                    select: {
+                        id: true,
+                        nombre: true,
+                        email: true,
+                        rol: true,
+                    },
+                },
+                caja: {
+                    select: {
+                        id: true,
+                        nombre: true,
+                        tipo: true,
+                        estado: true,
+                        saldoActual: true,
+                    },
+                },
+                fondo: {
+                    select: {
+                        id: true,
+                        nombre: true,
+                        acumulado: true,
+                        activo: true,
+                    },
+                },
+            },
+            orderBy: [{ createdAt: 'desc' }],
+            take: 100,
+        }),
+        prisma.$transaction((tx) => findDailyCaja(tx)),
+        prisma.$transaction((tx) => findOrCreateGeneralCaja(tx)),
+        prisma.fondoMeta.findMany({
+            where: { activo: true },
+            orderBy: [{ nombre: 'asc' }],
+        }),
+    ]);
+    const totalGastos = gastos.reduce((sum, gasto) => sum + Number(gasto.valor || 0), 0);
+    const totalPorCategoria = Object.values(prisma_client_1.CategoriaGasto).map((categoria) => ({
+        categoria,
+        total: gastos
+            .filter((gasto) => gasto.categoria === categoria)
+            .reduce((sum, gasto) => sum + Number(gasto.valor || 0), 0),
+    }));
+    return {
+        gastos: gastos.map(mapMoneyFields),
+        resumen: {
+            totalGastos,
+            totalRegistros: gastos.length,
+            totalPorCategoria,
+        },
+        origenes: Object.values(prisma_client_1.OrigenGasto),
+        categorias: Object.values(prisma_client_1.CategoriaGasto),
+        cajas: {
+            CAJA_DIARIA: cajaDiaria
+                ? {
+                    id: cajaDiaria.id,
+                    nombre: cajaDiaria.nombre,
+                    estado: cajaDiaria.estado,
+                    saldoActual: Number(cajaDiaria.saldoActual || 0),
+                }
+                : null,
+            CAJA_GENERAL: cajaGeneral
+                ? {
+                    id: cajaGeneral.id,
+                    nombre: cajaGeneral.nombre,
+                    estado: cajaGeneral.estado,
+                    saldoActual: Number(cajaGeneral.saldoActual || 0),
+                }
+                : null,
+        },
+        fondos: fondos.map((fondo) => ({
+            ...fondo,
+            acumulado: Number(fondo.acumulado || 0),
+            metaTotal: Number(fondo.metaTotal || 0),
+        })),
+    };
 }
 async function getGastoById(id) {
     const gasto = await prismaClient().gasto.findUnique({
         where: { id },
-        include: gastoInclude,
-    });
-    if (!gasto) {
-        throw new app_error_1.AppError('El gasto no existe.', 404);
-    }
-    return gasto;
-}
-async function createGasto(payload, usuarioId) {
-    const prisma = prismaClient();
-    const rifa = await prisma.rifa.findUnique({
-        where: { id: payload.rifaId },
-        select: {
-            id: true,
-            nombre: true,
-        },
-    });
-    if (!rifa) {
-        throw new app_error_1.AppError('La rifa seleccionada no existe.', 404);
-    }
-    let subCaja = null;
-    if (payload.subCajaId) {
-        subCaja = await prisma.subCaja.findUnique({
-            where: { id: payload.subCajaId },
-            select: {
-                id: true,
-                nombre: true,
-                caja: {
-                    select: {
-                        id: true,
-                        rifaId: true,
-                    },
+        include: {
+            usuario: {
+                select: {
+                    id: true,
+                    nombre: true,
+                    email: true,
+                    rol: true,
                 },
             },
-        });
-        if (!subCaja) {
-            throw new app_error_1.AppError('La subcaja seleccionada no existe.', 404);
-        }
-        if (subCaja.caja.rifaId !== payload.rifaId) {
-            throw new app_error_1.AppError('La subcaja seleccionada no pertenece a la rifa del gasto.', 409);
-        }
+            caja: {
+                select: {
+                    id: true,
+                    nombre: true,
+                    tipo: true,
+                    estado: true,
+                    saldoActual: true,
+                },
+            },
+            fondo: {
+                select: {
+                    id: true,
+                    nombre: true,
+                    acumulado: true,
+                    activo: true,
+                },
+            },
+            movimientosCaja: {
+                orderBy: [{ createdAt: 'desc' }],
+                take: 1,
+            },
+        },
+    });
+    if (!gasto || gasto.anuladoAt) {
+        throw new app_error_1.AppError('El gasto no existe.', 404);
     }
-    return prisma.$transaction(async (tx) => {
-        const ultimoRecibo = await tx.gastoRecibo.findFirst({
-            select: {
-                consecutivo: true,
-            },
-            orderBy: {
-                consecutivo: 'desc',
-            },
-        });
-        const consecutivo = (ultimoRecibo?.consecutivo || 0) + 1;
-        const fecha = payload.fecha || new Date();
+    return mapMoneyFields(gasto);
+}
+async function registrarGasto(payload, usuarioId) {
+    const prisma = prismaClient();
+    await prisma.$transaction(async (tx) => {
+        if (payload.origen === prisma_client_1.OrigenGasto.FONDO_META) {
+            const fondo = await tx.fondoMeta.findUnique({ where: { id: payload.fondoId || '' } });
+            if (!fondo) {
+                throw new app_error_1.AppError('El fondo/meta seleccionado no existe.', 404);
+            }
+            if (!fondo.activo) {
+                throw new app_error_1.AppError('El fondo/meta seleccionado esta inactivo.', 409);
+            }
+            const saldoAnterior = Number(fondo.acumulado || 0);
+            if (saldoAnterior < payload.valor) {
+                throw new app_error_1.AppError('El fondo/meta no tiene saldo suficiente para este pago.', 409);
+            }
+            const saldoPosterior = saldoAnterior - payload.valor;
+            await tx.gasto.create({
+                data: {
+                    usuarioId,
+                    fondoId: fondo.id,
+                    origen: payload.origen,
+                    categoria: payload.categoria,
+                    descripcion: payload.descripcion,
+                    valor: payload.valor,
+                    saldoOrigenAnterior: saldoAnterior,
+                    saldoOrigenPosterior: saldoPosterior,
+                    soporte: payload.soporte,
+                    observacion: payload.observacion,
+                },
+            });
+            await tx.fondoMeta.update({
+                where: { id: fondo.id },
+                data: { acumulado: saldoPosterior },
+            });
+            return;
+        }
+        const caja = payload.origen === prisma_client_1.OrigenGasto.CAJA_GENERAL
+            ? await findOrCreateGeneralCaja(tx)
+            : await findDailyCaja(tx);
+        if (!caja) {
+            throw new app_error_1.AppError('No hay una caja diaria disponible para registrar el pago.', 404);
+        }
+        if (payload.origen === prisma_client_1.OrigenGasto.CAJA_DIARIA && caja.estado !== prisma_client_1.EstadoCaja.ABIERTA) {
+            throw new app_error_1.AppError('La caja diaria debe estar abierta para registrar pagos.', 409);
+        }
+        const saldoAnterior = Number(caja.saldoActual || 0);
+        if (saldoAnterior < payload.valor) {
+            throw new app_error_1.AppError('El origen seleccionado no tiene saldo suficiente para este pago.', 409);
+        }
+        const saldoPosterior = saldoAnterior - payload.valor;
         const gasto = await tx.gasto.create({
             data: {
-                rifaId: payload.rifaId,
-                subCajaId: payload.subCajaId,
                 usuarioId,
+                cajaId: caja.id,
+                origen: payload.origen,
                 categoria: payload.categoria,
-                valor: payload.valor,
-                fecha,
                 descripcion: payload.descripcion,
+                valor: payload.valor,
+                saldoOrigenAnterior: saldoAnterior,
+                saldoOrigenPosterior: saldoPosterior,
+                soporte: payload.soporte,
+                observacion: payload.observacion,
             },
         });
-        if (subCaja) {
-            await Promise.all([
-                tx.caja.update({
-                    where: { id: subCaja.caja.id },
-                    data: {
-                        saldo: {
-                            decrement: payload.valor,
-                        },
-                    },
-                }),
-                tx.subCaja.update({
-                    where: { id: subCaja.id },
-                    data: {
-                        saldo: {
-                            decrement: payload.valor,
-                        },
-                    },
-                }),
-            ]);
-            await tx.movimientoCaja.create({
-                data: {
-                    tipo: 'EGRESO',
-                    valor: payload.valor,
-                    descripcion: payload.descripcion,
-                    fecha,
-                    cajaId: subCaja.caja.id,
-                    subCajaId: subCaja.id,
-                    rifaId: payload.rifaId,
-                    gastoId: gasto.id,
-                    usuarioId,
-                },
-            });
-        }
-        const recibo = await tx.gastoRecibo.create({
+        await tx.caja.update({
+            where: { id: caja.id },
+            data: { saldoActual: saldoPosterior },
+        });
+        await tx.movimientoCaja.create({
             data: {
+                cajaId: caja.id,
+                usuarioId,
                 gastoId: gasto.id,
-                consecutivo,
-                codigoUnico: buildCodigoUnico({
-                    rifaNombre: rifa.nombre,
-                    consecutivo,
-                    valor: payload.valor,
-                }),
-                fecha,
+                tipo: prisma_client_1.TipoMovimientoCaja.EGRESO,
+                valor: payload.valor,
+                saldoAnterior,
+                saldoPosterior,
+                descripcion: `${payload.categoria}: ${payload.descripcion}`,
+                referenciaTipo: 'GASTO',
+                referenciaId: gasto.id,
             },
-            include: gastoReciboInclude,
-        });
-        return recibo;
-    });
-}
-async function getGastoReciboById(id) {
-    const recibo = await prismaClient().gastoRecibo.findUnique({
-        where: { id },
-        include: gastoReciboInclude,
-    });
-    if (!recibo) {
-        throw new app_error_1.AppError('El recibo de gasto no existe.', 404);
-    }
-    return recibo;
-}
-async function getGastoReciboByCodigo(codigo) {
-    const recibo = await prismaClient().gastoRecibo.findUnique({
-        where: { codigoUnico: codigo },
-        include: gastoReciboInclude,
-    });
-    if (!recibo) {
-        throw new app_error_1.AppError('No existe un recibo de gasto con ese codigo.', 404);
-    }
-    return recibo;
-}
-async function anularGasto(gastoId, payload, usuarioId) {
-    const prisma = prismaClient();
-    const gasto = (await prisma.gasto.findUnique({
-        where: { id: gastoId },
-        include: {
-            subCaja: {
-                include: {
-                    caja: {
-                        select: {
-                            id: true,
-                        },
-                    },
-                },
-            },
-        },
-    }));
-    if (!gasto) {
-        throw new app_error_1.AppError('El gasto no existe.', 404);
-    }
-    if (gasto.anuladoAt) {
-        throw new app_error_1.AppError('El gasto ya fue anulado.', 409);
-    }
-    return prisma.$transaction(async (tx) => {
-        if (gasto.subCaja?.caja?.id && gasto.subCajaId) {
-            await Promise.all([
-                tx.caja.update({
-                    where: { id: gasto.subCaja.caja.id },
-                    data: {
-                        saldo: {
-                            increment: Number(gasto.valor),
-                        },
-                    },
-                }),
-                tx.subCaja.update({
-                    where: { id: gasto.subCajaId },
-                    data: {
-                        saldo: {
-                            increment: Number(gasto.valor),
-                        },
-                    },
-                }),
-            ]);
-            await tx.movimientoCaja.create({
-                data: {
-                    tipo: 'INGRESO',
-                    valor: Number(gasto.valor),
-                    descripcion: `Anulacion de gasto: ${payload.motivo}`,
-                    fecha: new Date(),
-                    cajaId: gasto.subCaja.caja.id,
-                    subCajaId: gasto.subCajaId,
-                    rifaId: gasto.rifaId,
-                    gastoId: gasto.id,
-                    usuarioId,
-                },
-            });
-        }
-        const updateData = {
-            anuladoAt: new Date(),
-            anuladoMotivo: payload.motivo,
-        };
-        await tx.gasto.update({
-            where: { id: gasto.id },
-            data: updateData,
         });
     });
+    return listGastos();
 }

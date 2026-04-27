@@ -1,105 +1,73 @@
 import type { NextFunction, Request, Response } from 'express';
 
 import {
-  createSubCaja,
-  deleteSubCaja,
-  getCajaById,
-  getCajaResumenByRifa,
-  listCajas,
-  listSubCajasByRifa,
-  prepareBotChannelByRifa,
-  prepareWebChannelByRifa,
+  abrirCajaDiaria,
+  cerrarCajaDiaria,
+  getCajaDiaria,
+  getCajaGeneral,
+  registrarSalidaCajaGeneral,
+  trasladarDesdeCajaDiaria,
 } from './caja.service';
 import {
-  parseCreateSubCajaPayload,
-  parsePrepareBotChannelPayload,
-  parsePrepareWebChannelPayload,
+  parseAperturaCajaPayload,
+  parseCierreCajaPayload,
+  parseSalidaCajaGeneralPayload,
+  parseTrasladoCajaGeneralPayload,
 } from './caja.schemas';
 
-function getStringParam(value: string | string[] | undefined) {
-  return Array.isArray(value) ? value[0] : value || '';
-}
-
-export async function getAllCajas(req: Request, res: Response, next: NextFunction) {
+export async function getCajaDiariaActual(req: Request, res: Response, next: NextFunction) {
   try {
-    const data = await listCajas(getStringParam(req.query.rifaId as string | string[] | undefined));
-    res.json(data);
+    const fecha = typeof req.query.fecha === 'string' ? req.query.fecha : undefined;
+    res.json(await getCajaDiaria(fecha));
   } catch (error) {
     next(error);
   }
 }
 
-export async function getCaja(req: Request, res: Response, next: NextFunction) {
+export async function postAperturaCajaDiaria(req: Request, res: Response, next: NextFunction) {
   try {
-    const data = await getCajaById(getStringParam(req.params.id));
-    res.json(data);
+    res.status(201).json(
+      await abrirCajaDiaria(parseAperturaCajaPayload(req.body || {}), req.authUser?.id)
+    );
   } catch (error) {
     next(error);
   }
 }
 
-export async function getCajaResumen(req: Request, res: Response, next: NextFunction) {
+export async function postCierreCajaDiaria(req: Request, res: Response, next: NextFunction) {
   try {
-    const rifaId = getStringParam(req.query.rifaId as string | string[] | undefined);
-    const data = await getCajaResumenByRifa(rifaId);
-    res.json(data);
+    res.json(await cerrarCajaDiaria(parseCierreCajaPayload(req.body || {}), req.authUser?.id));
   } catch (error) {
     next(error);
   }
 }
 
-export async function getSubCajas(req: Request, res: Response, next: NextFunction) {
+export async function getCajaGeneralActual(_req: Request, res: Response, next: NextFunction) {
   try {
-    const rifaId = getStringParam(req.query.rifaId as string | string[] | undefined);
-    const data = await listSubCajasByRifa(rifaId, req.authUser);
-    res.json(data);
+    res.json(await getCajaGeneral());
   } catch (error) {
     next(error);
   }
 }
 
-export async function postSubCaja(req: Request, res: Response, next: NextFunction) {
+export async function postTrasladoCajaGeneral(req: Request, res: Response, next: NextFunction) {
   try {
-    const payload = parseCreateSubCajaPayload(req.body);
-    const data = await createSubCaja(payload);
-    res.status(201).json(data);
+    res.status(201).json(
+      await trasladarDesdeCajaDiaria(
+        parseTrasladoCajaGeneralPayload(req.body || {}),
+        req.authUser?.id
+      )
+    );
   } catch (error) {
     next(error);
   }
 }
 
-export async function removeSubCaja(req: Request, res: Response, next: NextFunction) {
+export async function postSalidaCajaGeneral(req: Request, res: Response, next: NextFunction) {
   try {
-    await deleteSubCaja(getStringParam(req.params.id));
-    res.status(204).send();
-  } catch (error) {
-    next(error);
-  }
-}
-
-export async function postPrepareWebChannel(
-  req: Request,
-  res: Response,
-  next: NextFunction
-) {
-  try {
-    const payload = parsePrepareWebChannelPayload(req.body);
-    const data = await prepareWebChannelByRifa(payload.rifaId);
-    res.status(201).json(data);
-  } catch (error) {
-    next(error);
-  }
-}
-
-export async function postPrepareBotChannel(
-  req: Request,
-  res: Response,
-  next: NextFunction
-) {
-  try {
-    const payload = parsePrepareBotChannelPayload(req.body);
-    const data = await prepareBotChannelByRifa(payload.rifaId);
-    res.status(201).json(data);
+    res.status(201).json(
+      await registrarSalidaCajaGeneral(parseSalidaCajaGeneralPayload(req.body || {}), req.authUser?.id)
+    );
   } catch (error) {
     next(error);
   }
